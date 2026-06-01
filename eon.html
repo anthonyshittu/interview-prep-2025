@@ -67,6 +67,8 @@
     .qa-q-text{font-size:13.5px;color:var(--text);line-height:1.5;flex:1;}
     .qa-q-arrow{color:var(--text-muted);font-size:12px;margin-top:2px;transition:transform 0.2s;}
     .qa-item.open .qa-q-arrow{transform:rotate(90deg);}
+    .qa-q span:last-child{color:var(--text-muted);font-size:16px;margin-left:auto;flex-shrink:0;transition:transform 0.2s;}
+    .qa-item.open .qa-q span:last-child{transform:rotate(45deg);}
     .qa-a{display:none;padding:13px 15px 15px 45px;background:var(--surface);border-top:1px solid var(--border);font-size:13.5px;color:var(--text-dim);line-height:1.7;}
     .qa-item.open .qa-a{display:block;}
     .qa-a ul{margin:8px 0 8px 18px;}.qa-a li{margin-bottom:6px;}
@@ -2542,7 +2544,10 @@ function BillingScreen() {
         btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${tab}'`))
     })
   }
-  function toggleQA(el) { el.classList.toggle('open') }
+  function toggleQA(el) {
+    const item = el.classList.contains('qa-item') ? el : el.closest('.qa-item');
+    item.classList.toggle('open');
+  }
   const done = new Set()
   function markDone(pageId, btn) {
     if (done.has(pageId)) return
