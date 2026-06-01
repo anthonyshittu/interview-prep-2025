@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mitra Bio — Engineering Interview Prep</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1e1e1e;
+      --surface3: #252525;
+      --border: #2a2a2a;
+      --accent: #c9a96e;
+      --accent2: #e8c99a;
+      --accent-dim: rgba(201,169,110,0.12);
+      --accent-glow: rgba(201,169,110,0.25);
+      --text: #e8e6e1;
+      --text-dim: #8a8680;
+      --text-muted: #555;
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.12);
+      --blue: #60a5fa;
+      --blue-dim: rgba(96,165,250,0.12);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.12);
+      --purple: #c084fc;
+      --purple-dim: rgba(192,132,252,0.12);
+      --yellow: #fbbf24;
+      --yellow-dim: rgba(251,191,36,0.12);
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── LAYOUT ── */
+    .app { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 270px;
+      min-width: 270px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .progress-bar-wrap {
+      margin-top: 14px;
+      background: var(--border);
+      border-radius: 99px;
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .nav { padding: 12px 0; flex: 1; }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 20px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      font-size: 13px;
+      color: var(--text-dim);
+      cursor: pointer;
+      border-radius: 0;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      user-select: none;
+    }
+
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+    .nav-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+    .nav-item .nav-check { margin-left: auto; font-size: 11px; color: var(--green); opacity: 0; transition: opacity 0.2s; }
+    .nav-item.done .nav-check { opacity: 1; }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: 270px;
+      flex: 1;
+      padding: 40px 48px;
+      max-width: calc(100vw - 270px);
+    }
+
+    /* ── PAGE ── */
+    .page { display: none; animation: fadeIn 0.2s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── TYPOGRAPHY ── */
+    .page-header { margin-bottom: 36px; }
+
+    .page-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 12px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .page-desc {
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 40px; }
+
+    /* ── GRID ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .card.accent-border { border-color: var(--accent); }
+    .card.green-border { border-color: var(--green); }
+    .card.blue-border { border-color: var(--blue); }
+    .card.purple-border { border-color: var(--purple); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      border-left: 3px solid;
+    }
+
+    .callout.gold { background: var(--accent-dim); border-color: var(--accent); color: var(--accent2); }
+    .callout.green { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+    .callout.blue { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+    .callout.red { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+    .callout.purple { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+    .callout.yellow { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+
+    .callout strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── Q&A ── */
+    .qa-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .qa-q {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      background: var(--surface2);
+      transition: background 0.15s;
+    }
+
+    .qa-q:hover { background: var(--surface3); }
+
+    .qa-q-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent);
+      min-width: 18px;
+      margin-top: 1px;
+    }
+
+    .qa-q-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .qa-q-arrow {
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 2px;
+      transition: transform 0.2s;
+    }
+
+    .qa-item.open .qa-q-arrow { transform: rotate(90deg); }
+
+    .qa-a {
+      display: none;
+      padding: 14px 16px 16px 46px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .qa-item.open .qa-a { display: block; }
+
+    .qa-a ul { margin: 8px 0 8px 18px; }
+    .qa-a ul li { margin-bottom: 6px; }
+    .qa-a strong { color: var(--text); }
+    .qa-a .highlight { color: var(--accent2); }
+
+    /* ── CODE ── */
+    pre {
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      overflow-x: auto;
+      margin: 14px 0;
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', Cascadia, monospace;
+      color: var(--accent2);
+    }
+
+    pre code { color: #e0ddd8; }
+
+    .kw { color: #c084fc; }
+    .fn { color: #60a5fa; }
+    .str { color: #4ade80; }
+    .cm { color: #555; font-style: italic; }
+    .ty { color: #fbbf24; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .badge.gold { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); }
+    .badge.green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+    .badge.blue { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
+    .badge.red { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+    .badge.purple { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); }
+
+    /* ── LIST ── */
+    .check-list { list-style: none; }
+    .check-list li {
+      padding: 7px 0 7px 26px;
+      position: relative;
+      font-size: 13.5px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      line-height: 1.5;
+    }
+    .check-list li:last-child { border-bottom: none; }
+    .check-list li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-size: 12px; top: 8px; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+
+    .tab {
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-dim);
+      transition: all 0.15s;
+    }
+
+    .tab.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── MARK-DONE ── */
+    .mark-done-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 9px 18px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .mark-done-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+    .mark-done-btn.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    th {
+      background: var(--surface2);
+      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(201,169,110,0.08), rgba(201,169,110,0.03));
+      border: 1px solid rgba(201,169,110,0.3);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .grid2, .grid3 { grid-template-columns: 1fr; }
+      .main { padding: 24px 20px; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .app { flex-direction: column; }
+      .main { margin-left: 0; max-width: 100%; }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+    /* ── FLASH CARD ── */
+    .flashcard {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .flashcard:hover { border-color: var(--accent); }
+    .flashcard .fc-front { font-size: 16px; font-weight: 600; color: var(--text); }
+    .flashcard .fc-back { display: none; font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+    .flashcard.flipped .fc-front { display: none; }
+    .flashcard.flipped .fc-back { display: block; }
+    .flashcard .fc-hint { font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+
+    /* ── TIMER ── */
+    .timer-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .timer-display { font-family: monospace; color: var(--accent); font-size: 14px; font-weight: 700; }
+    .timer-btn { background: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; color: var(--text-dim); cursor: pointer; font-size: 11px; }
+    .timer-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── STAR RATING ── */
+    .difficulty {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+    .difficulty span { font-size: 11px; color: var(--text-muted); }
+    .difficulty .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+    .difficulty .dot.filled { background: var(--accent); }
+
+    /* ── TOOLTIP ── */
+    [data-tip] { position: relative; cursor: help; }
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: var(--text);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      border: 1px solid var(--border);
+      z-index: 200;
+    }
+    [data-tip]:hover::after { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">Mitra Bio</div>
+      <div class="sidebar-title">Engineering Interview Prep</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Round 2 · Engineering Team</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0 of 9 sections reviewed</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section-label">Company</div>
+      <div class="nav-item active" data-page="overview" onclick="showPage('overview',this)">
+        <span class="nav-icon">🧬</span> Company & Role Overview
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Technical</div>
+      <div class="nav-item" data-page="frontend" onclick="showPage('frontend',this)">
+        <span class="nav-icon">⚛️</span> React & Next.js Deep Dive
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="typescript" onclick="showPage('typescript',this)">
+        <span class="nav-icon">🔷</span> TypeScript Mastery
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="ecommerce" onclick="showPage('ecommerce',this)">
+        <span class="nav-icon">🛒</span> Shopify & Headless Commerce
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="bff" onclick="showPage('bff',this)">
+        <span class="nav-icon">🔗</span> BFF & API Architecture
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="quality" onclick="showPage('quality',this)">
+        <span class="nav-icon">🧪</span> Testing, CI/CD & Quality
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="uxperf" onclick="showPage('uxperf',this)">
+        <span class="nav-icon">✨</span> UX, Performance & Luxury UI
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Advanced Technical</div>
+      <div class="nav-item" data-page="systemdesign" onclick="showPage('systemdesign',this)">
+        <span class="nav-icon">🏗️</span> System Design
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="security" onclick="showPage('security',this)">
+        <span class="nav-icon">🔐</span> Security, GDPR & Health Data
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="realtime" onclick="showPage('realtime',this)">
+        <span class="nav-icon">⚡</span> Real-time & Async Patterns
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="database" onclick="showPage('database',this)">
+        <span class="nav-icon">🗄️</span> Database & Data Modelling
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="observability" onclick="showPage('observability',this)">
+        <span class="nav-icon">📊</span> Monitoring & Observability
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Prep</div>
+      <div class="nav-item" data-page="behavioral" onclick="showPage('behavioral',this)">
+        <span class="nav-icon">🗣️</span> Behavioral & Product Thinking
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="questions" onclick="showPage('questions',this)">
+        <span class="nav-icon">💬</span> Your Questions to Ask Them
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="flashcards" onclick="showPage('flashcards',this)">
+        <span class="nav-icon">🃏</span> Quick-Fire Flash Cards
+        <span class="nav-check">✓</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════════════
+         PAGE: OVERVIEW
+    ══════════════════════════════════════════ -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div class="page-tag">Start Here</div>
+        <div class="page-title">Company & Role Overview</div>
+        <div class="page-desc">Know the mission, the product, the investors, and exactly what this role demands before you walk in.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Interview Context</strong>
+          Round 2 with the Engineering Team — multiple engineers, likely including the Head of Engineering. Expect technical depth, system design, and product-thinking questions. They want to see you think, not just recall facts.
+        </div>
+
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Who is Mitra Bio?</h3>
+            <ul class="check-list">
+              <li>Skincare company at the intersection of <strong>epigenetics</strong> and longevity science</li>
+              <li>Non-invasive skin sampling + advanced data analysis</li>
+              <li>Goal: highly personalised, science-backed skincare</li>
+              <li>Website: <strong>mitrabio.tech</strong></li>
+              <li>Positioned as a <strong>luxury consumer data product</strong></li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Investors & Signal</h3>
+            <ul class="check-list">
+              <li><strong>Khosla Ventures</strong> — tier-1 Silicon Valley VC, hard science bets</li>
+              <li><strong>Illumina</strong> — world's leading genomics company (strategic investor)</li>
+              <li><strong>Innovate UK</strong> — UK government deep-tech grant</li>
+              <li>Signal: serious science, long-term vision, not a fad product</li>
+              <li>Early stage → your work ships to real users fast</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>What This Role Actually Is</h2>
+        <div class="callout blue">
+          <strong>Key Insight</strong>
+          The JD explicitly says "not a ticket-taking role." They want product ownership, not task execution. Engineers here define what gets built as much as how.
+        </div>
+
+        <div class="grid3">
+          <div class="card">
+            <div class="badge gold">Must Have</div>
+            <h3 style="margin-top:10px">Frontend Excellence</h3>
+            <p>Premium consumer UI. Think luxury brand digital experience. Performance, animation, accessibility, responsiveness — all non-negotiable.</p>
+          </div>
+          <div class="card">
+            <div class="badge blue">Must Have</div>
+            <h3 style="margin-top:10px">E-Commerce Integration</h3>
+            <p>Shopify or headless commerce. Building BFF layers, connecting checkout, subscriptions, product APIs to the frontend.</p>
+          </div>
+          <div class="card">
+            <div class="badge purple">Must Have</div>
+            <h3 style="margin-top:10px">Product Mindset</h3>
+            <p>You propose features, push back on bad ideas, understand users, and make call on trade-offs. Not waiting to be told what to build.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The Tech Stack (Likely)</h2>
+        <p>The JD signals this clearly. Prepare to speak fluently about all of these:</p>
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Technology</th><th>Your Angle</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Frontend Framework</td><td>Next.js 14+ (App Router)</td><td>RSC, server actions, streaming, routing patterns</td></tr>
+            <tr><td>Language</td><td>TypeScript</td><td>Strict mode, generics, discriminated unions, utility types</td></tr>
+            <tr><td>Styling</td><td>Tailwind CSS + Framer Motion</td><td>Design system, animations, responsive UI</td></tr>
+            <tr><td>Commerce</td><td>Shopify Storefront API / Hydrogen</td><td>Cart, checkout, product queries, webhooks</td></tr>
+            <tr><td>Backend/BFF</td><td>Next.js API Routes / tRPC / REST</td><td>Data aggregation, auth, external API calls</td></tr>
+            <tr><td>Database</td><td>Likely Postgres + Supabase or Firebase</td><td>Schema design, queries, RLS</td></tr>
+            <tr><td>Data/Science Platform</td><td>Internal APIs from data science team</td><td>Consuming ML model outputs, skin reports</td></tr>
+            <tr><td>CI/CD</td><td>Vercel + GitHub Actions</td><td>Preview deploys, test gates, env management</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Day-One Priorities They'll Likely Mention</h2>
+        <div class="grid2">
+          <div class="card green-border">
+            <h3>Customer Journey</h3>
+            <p>Landing → sample kit purchase → results dashboard. Each step is a high-stakes conversion moment. Your job is to make it feel seamless and premium.</p>
+          </div>
+          <div class="card accent-border">
+            <h3>Skin Report Interface</h3>
+            <p>Visualising complex epigenetic data in an intuitive, beautiful way for consumers who are not scientists. Data viz + UX empathy = critical.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('overview', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: FRONTEND
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-frontend">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">React & Next.js Deep Dive</div>
+        <div class="page-desc">The core of your day-to-day. Expect deep questions on rendering strategies, App Router, state management, and performance.</div>
+      </div>
+
+      <div class="section">
+        <h2>Next.js App Router — Critical Concepts</h2>
+
+        <div class="callout gold">
+          <strong>Most Likely Interview Topic</strong>
+          "Walk me through how you'd architect a Next.js app for our customer-facing site" — they will ask something like this.
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('rendering','rsc')">RSC vs Client</div>
+          <div class="tab" onclick="switchTab('rendering','streaming')">Streaming & Suspense</div>
+          <div class="tab" onclick="switchTab('rendering','routing')">Routing Patterns</div>
+          <div class="tab" onclick="switchTab('rendering','caching')">Caching Strategy</div>
+        </div>
+
+        <div id="tab-rendering-rsc" class="tab-content active">
+          <div class="grid2">
+            <div class="card">
+              <div class="badge green">Server Component</div>
+              <h3 style="margin-top:10px">React Server Components</h3>
+              <ul class="check-list">
+                <li>Default in App Router — rendered on server, zero JS sent</li>
+                <li>Can be <code>async</code> — fetch data directly in component</li>
+                <li>Cannot use hooks, event handlers, browser APIs</li>
+                <li>Perfect for: product pages, reports, static content</li>
+                <li>Can import Client Components (not vice versa for server-only code)</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="badge blue">Client Component</div>
+              <h3 style="margin-top:10px">Client Components</h3>
+              <ul class="check-list">
+                <li>Add <code>'use client'</code> directive at top of file</li>
+                <li>Can use hooks, event listeners, browser APIs</li>
+                <li>Hydrated on client — ship JS to the browser</li>
+                <li>Push these as low in the tree as possible</li>
+                <li>Perfect for: cart, checkout UI, interactive forms</li>
+              </ul>
+            </div>
+          </div>
+          <pre><code><span class="cm">// Server Component — fetches data, no JS sent</span>
+<span class="kw">export default async function</span> <span class="fn">SkinReport</span>({ id }: { id: <span class="ty">string</span> }) {
+  <span class="kw">const</span> report = <span class="kw">await</span> <span class="fn">fetchReport</span>(id) <span class="cm">// direct DB/API call</span>
+  <span class="kw">return</span> &lt;ReportDisplay report={report} /&gt;
+}
+
+<span class="cm">// Client Component — interactive</span>
+<span class="str">'use client'</span>
+<span class="kw">export function</span> <span class="fn">AddToCartButton</span>({ productId }: Props) {
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">false</span>)
+  <span class="kw">return</span> &lt;button onClick={() => <span class="fn">addToCart</span>(productId)}&gt;Add&lt;/button&gt;
+}</code></pre>
+        </div>
+
+        <div id="tab-rendering-streaming" class="tab-content">
+          <p>Streaming allows you to show parts of the UI progressively — critical for a luxury experience where users should see content immediately, not wait for the slowest data fetch.</p>
+          <pre><code><span class="cm">// app/report/[id]/page.tsx</span>
+<span class="kw">import</span> { Suspense } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="kw">export default function</span> <span class="fn">ReportPage</span>() {
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;ReportHeader /&gt; <span class="cm">// renders immediately</span>
+      &lt;Suspense fallback={&lt;SkeletonChart /&gt;}&gt;
+        &lt;EpigeneticChart /&gt; <span class="cm">// streams in when ready</span>
+      &lt;/Suspense&gt;
+      &lt;Suspense fallback={&lt;SkeletonRecommendations /&gt;}&gt;
+        &lt;ProductRecommendations /&gt; <span class="cm">// independent stream</span>
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+          <div class="callout green">
+            <strong>Interview Tip</strong>
+            Mention that Suspense boundaries let you avoid waterfall fetches — each async component fetches in parallel, streams independently. This cuts perceived load time for luxury users.
+          </div>
+        </div>
+
+        <div id="tab-rendering-routing" class="tab-content">
+          <table>
+            <thead><tr><th>Pattern</th><th>Use Case at Mitra Bio</th><th>Key Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Route Groups <code>(group)</code></td><td>Marketing vs. App layout separation</td><td>Share layouts without affecting URL</td></tr>
+              <tr><td>Parallel Routes <code>@slot</code></td><td>Dashboard with independent panels</td><td>Multiple pages in same layout</td></tr>
+              <tr><td>Intercepting Routes <code>(..)</code></td><td>Product quickview modal over feed</td><td>Show modal without losing context</td></tr>
+              <tr><td>Dynamic Segments <code>[id]</code></td><td>Individual skin reports, product pages</td><td>generateStaticParams for SSG</td></tr>
+              <tr><td>Catch-all <code>[...slug]</code></td><td>CMS-driven marketing pages</td><td>Flexible content routing</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tab-rendering-caching" class="tab-content">
+          <p>Next.js has 4 caching layers. Understanding them is essential for performance at scale.</p>
+          <table>
+            <thead><tr><th>Layer</th><th>What it caches</th><th>When to invalidate</th></tr></thead>
+            <tbody>
+              <tr><td>Request Memoization</td><td>fetch() calls in a single render</td><td>Automatic per-request</td></tr>
+              <tr><td>Data Cache</td><td>fetch() responses (persistent)</td><td><code>revalidate</code> or <code>cache: 'no-store'</code></td></tr>
+              <tr><td>Full Route Cache</td><td>Rendered RSC + HTML</td><td>On-demand revalidation, redeploy</td></tr>
+              <tr><td>Router Cache</td><td>Client-side prefetched segments</td><td>Navigating away / session end</td></tr>
+            </tbody>
+          </table>
+          <pre><code><span class="cm">// Shopify product data — revalidate every hour</span>
+<span class="kw">const</span> products = <span class="kw">await</span> <span class="fn">fetch</span>(shopifyUrl, {
+  next: { revalidate: <span class="ty">3600</span>, tags: [<span class="str">'products'</span>] }
+})
+
+<span class="cm">// User skin report — never cache (personal data)</span>
+<span class="kw">const</span> report = <span class="kw">await</span> <span class="fn">fetch</span>(reportUrl, {
+  cache: <span class="str">'no-store'</span>,
+  headers: { Authorization: `Bearer ${token}` }
+})</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>State Management at Scale</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Server State</h3>
+            <p>Use <strong>React Query / TanStack Query</strong> for data that lives on the server. Handles caching, refetching, loading/error states elegantly.</p>
+            <div class="badge green">Recommended for Mitra Bio</div>
+            <p style="margin-top:8px">Skin reports, product catalogue, user profile — all server state.</p>
+          </div>
+          <div class="card">
+            <h3>Client State</h3>
+            <p>Prefer <strong>Zustand</strong> for global client state. Lightweight, TypeScript-first, no boilerplate. Use React <code>useState</code> and <code>useReducer</code> for local component state.</p>
+            <div class="badge blue">Keep it minimal</div>
+            <p style="margin-top:8px">Cart state, UI state (modals, filters), user preferences.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Likely Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How would you decide whether to use a Server Component or Client Component for a given piece of UI?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            Start Server Component by default. Shift to Client only when I need: interactivity (event handlers, hooks), browser APIs, or real-time subscriptions. The decision tree I use:
+            <ul>
+              <li>Does it fetch data? → Server (async component)</li>
+              <li>Does it respond to user interaction? → Client</li>
+              <li>Does it use <code>useState</code>, <code>useEffect</code>, <code>useContext</code>? → Client</li>
+              <li>Is it a layout wrapper or pure display? → Server</li>
+            </ul>
+            <span class="highlight">Key point:</span> I push Client Components as deep in the tree as possible so the bundle is minimal. For example, a product page is a Server Component, but the "Add to Cart" button is a small Client Component imported into it.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle authentication with Next.js App Router?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            I've used <strong>NextAuth.js (Auth.js v5)</strong> and custom JWT solutions. In App Router:
+            <ul>
+              <li>Use Middleware (<code>middleware.ts</code>) to protect routes before they render — redirect unauthenticated users at the edge</li>
+              <li>Read session in Server Components via <code>getServerSession()</code> or the new <code>auth()</code> helper</li>
+              <li>Pass auth token from server to Client Components via props, not exposed to window</li>
+              <li>For Mitra Bio's use case: skin reports are private data — hard protection at middleware level, secondary check at API route level</li>
+            </ul>
+            Never trust client-side auth checks alone. Always validate on the server.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">Walk me through how you'd build a "skin results dashboard" page from a performance perspective.</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Architecture approach:</strong>
+            <ul>
+              <li><strong>Route:</strong> <code>/app/results/[reportId]</code> — dynamic, user-specific, no SSG (personal data)</li>
+              <li><strong>Auth wall:</strong> Middleware verifies JWT, redirects if unauthenticated</li>
+              <li><strong>Layout:</strong> Server Component fetches user metadata (name, kit status) — fast, no JS cost</li>
+              <li><strong>Streaming:</strong> Wrap heavy sections (charts, ML insights) in Suspense with skeleton loaders — user sees header instantly</li>
+              <li><strong>Data:</strong> Multiple parallel fetches for different report sections, streamed independently</li>
+              <li><strong>Charts:</strong> Client Component using a library like Recharts or Nivo, lazy-loaded with <code>dynamic(() => import(...))</code></li>
+              <li><strong>Prefetch:</strong> Prefetch report data during "processing" screen so results appear instantly when navigated to</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('frontend', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: TYPESCRIPT
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-typescript">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">TypeScript Mastery</div>
+        <div class="page-desc">They will probe your TypeScript depth — not just "I use TypeScript" but pattern design, complex type inference, and runtime safety.</div>
+      </div>
+
+      <div class="section">
+        <h2>Key Patterns to Know Cold</h2>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('ts','generics')">Generics</div>
+          <div class="tab" onclick="switchTab('ts','discriminated')">Discriminated Unions</div>
+          <div class="tab" onclick="switchTab('ts','utility')">Utility Types</div>
+          <div class="tab" onclick="switchTab('ts','runtime')">Runtime Safety</div>
+        </div>
+
+        <div id="tab-ts-generics" class="tab-content active">
+          <p>Use generics to build reusable, type-safe components and utilities without losing type information.</p>
+          <pre><code><span class="cm">// Generic API response wrapper</span>
+<span class="kw">interface</span> <span class="ty">ApiResponse</span>&lt;T&gt; {
+  data: T
+  error: <span class="ty">string</span> | <span class="kw">null</span>
+  metadata: { timestamp: <span class="ty">number</span>; requestId: <span class="ty">string</span> }
+}
+
+<span class="cm">// Constrained generics — only accept objects with an `id`</span>
+<span class="kw">function</span> <span class="fn">findById</span>&lt;T <span class="kw">extends</span> { id: <span class="ty">string</span> }&gt;(items: T[], id: <span class="ty">string</span>): T | <span class="kw">undefined</span> {
+  <span class="kw">return</span> items.<span class="fn">find</span>(item => item.id === id)
+}
+
+<span class="cm">// Generic hook for data fetching</span>
+<span class="kw">function</span> <span class="fn">useReport</span>&lt;T&gt;(endpoint: <span class="ty">string</span>) {
+  <span class="kw">const</span> [data, setData] = <span class="fn">useState</span>&lt;T | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">return</span> { data, loading, error }
+}</code></pre>
+        </div>
+
+        <div id="tab-ts-discriminated" class="tab-content">
+          <p>Discriminated unions are essential for modelling product states, API responses, and complex UI states safely.</p>
+          <pre><code><span class="cm">// Model skin report states — no invalid states possible</span>
+<span class="kw">type</span> <span class="ty">ReportState</span> =
+  | { status: <span class="str">'idle'</span> }
+  | { status: <span class="str">'processing'</span>; estimatedMinutes: <span class="ty">number</span> }
+  | { status: <span class="str">'ready'</span>; report: <span class="ty">SkinReport</span>; generatedAt: <span class="ty">Date</span> }
+  | { status: <span class="str">'error'</span>; message: <span class="ty">string</span>; retryable: <span class="ty">boolean</span> }
+
+<span class="cm">// TypeScript narrows the type in each branch</span>
+<span class="kw">function</span> <span class="fn">renderReport</span>(state: <span class="ty">ReportState</span>) {
+  <span class="kw">switch</span> (state.status) {
+    <span class="kw">case</span> <span class="str">'processing'</span>:
+      <span class="kw">return</span> &lt;Processing minutes={state.estimatedMinutes} /&gt; <span class="cm">// TS knows estimatedMinutes exists</span>
+    <span class="kw">case</span> <span class="str">'ready'</span>:
+      <span class="kw">return</span> &lt;Report data={state.report} /&gt; <span class="cm">// TS knows report exists</span>
+    <span class="kw">case</span> <span class="str">'error'</span>:
+      <span class="kw">return</span> &lt;ErrorView retry={state.retryable} msg={state.message} /&gt;
+    <span class="kw">default</span>:
+      <span class="kw">return</span> &lt;Idle /&gt;
+  }
+}</code></pre>
+        </div>
+
+        <div id="tab-ts-utility" class="tab-content">
+          <pre><code><span class="cm">// Common utility types and when to use them</span>
+
+<span class="kw">type</span> <span class="ty">SkinReport</span> = {
+  id: <span class="ty">string</span>; userId: <span class="ty">string</span>; generatedAt: <span class="ty">Date</span>
+  biomarkers: <span class="ty">Biomarker</span>[]; recommendations: <span class="ty">Product</span>[]
+}
+
+<span class="kw">type</span> <span class="ty">ReportPreview</span> = <span class="ty">Pick</span>&lt;<span class="ty">SkinReport</span>, <span class="str">'id'</span> | <span class="str">'generatedAt'</span>&gt;
+<span class="kw">type</span> <span class="ty">ReportUpdate</span> = <span class="ty">Partial</span>&lt;<span class="ty">SkinReport</span>&gt;
+<span class="kw">type</span> <span class="ty">ReadonlyReport</span> = <span class="ty">Readonly</span>&lt;<span class="ty">SkinReport</span>&gt;
+<span class="kw">type</span> <span class="ty">ReportWithoutId</span> = <span class="ty">Omit</span>&lt;<span class="ty">SkinReport</span>, <span class="str">'id'</span>&gt; <span class="cm">// for create payloads</span>
+
+<span class="cm">// Record for mapped types</span>
+<span class="kw">type</span> <span class="ty">BiomarkerMap</span> = <span class="ty">Record</span>&lt;<span class="ty">BiomarkerKey</span>, <span class="ty">number</span>&gt;
+
+<span class="cm">// ReturnType and Parameters for type inference</span>
+<span class="kw">type</span> <span class="ty">FetchResult</span> = <span class="ty">Awaited</span>&lt;<span class="ty">ReturnType</span>&lt;<span class="kw">typeof</span> <span class="fn">fetchReport</span>&gt;&gt;</code></pre>
+        </div>
+
+        <div id="tab-ts-runtime" class="tab-content">
+          <div class="callout yellow">
+            <strong>Important</strong>
+            TypeScript types disappear at runtime. Always validate external data (API responses, user input) at boundaries.
+          </div>
+          <pre><code><span class="cm">// Use Zod for runtime type validation</span>
+<span class="kw">import</span> { z } <span class="kw">from</span> <span class="str">'zod'</span>
+
+<span class="kw">const</span> <span class="ty">SkinReportSchema</span> = z.<span class="fn">object</span>({
+  id: z.<span class="fn">string</span>().<span class="fn">uuid</span>(),
+  userId: z.<span class="fn">string</span>(),
+  biomarkers: z.<span class="fn">array</span>(z.<span class="fn">object</span>({
+    key: z.<span class="fn">enum</span>([<span class="str">'hydration'</span>, <span class="str">'elasticity'</span>, <span class="str">'microbiome'</span>]),
+    score: z.<span class="fn">number</span>().<span class="fn">min</span>(<span class="ty">0</span>).<span class="fn">max</span>(<span class="ty">100</span>),
+  })),
+  generatedAt: z.<span class="fn">string</span>().<span class="fn">datetime</span>(),
+})
+
+<span class="kw">type</span> <span class="ty">SkinReport</span> = z.<span class="fn">infer</span>&lt;<span class="kw">typeof</span> <span class="ty">SkinReportSchema</span>&gt; <span class="cm">// type derived from schema</span>
+
+<span class="kw">const</span> <span class="fn">parseReport</span> = (raw: <span class="kw">unknown</span>): <span class="ty">SkinReport</span> => {
+  <span class="kw">return</span> <span class="ty">SkinReportSchema</span>.<span class="fn">parse</span>(raw) <span class="cm">// throws if invalid</span>
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Common Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">What's the difference between <code>interface</code> and <code>type</code> in TypeScript? When do you use each?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            Both define shapes. Key differences:
+            <ul>
+              <li><strong>interface</strong>: Declaration merging (can be extended across files), class implementation, slightly better error messages for object shapes</li>
+              <li><strong>type</strong>: Can represent unions, intersections, primitives, tuples, mapped types — more expressive</li>
+              <li><strong>My rule:</strong> Use <code>interface</code> for public API shapes and class contracts. Use <code>type</code> for unions, computed/mapped types, and aliases for complex types.</li>
+              <li>In practice at a company like Mitra Bio: I'd use <code>interface</code> for domain models (SkinReport, User, Product) and <code>type</code> for state unions, utility types, and function signatures.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle strict null checks and avoid null-related runtime errors?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            Always enable <code>"strict": true</code> in tsconfig which enables <code>strictNullChecks</code>. Practices I follow:
+            <ul>
+              <li>Use optional chaining (<code>report?.biomarkers?.[0]?.score</code>) for safe access</li>
+              <li>Nullish coalescing (<code>score ?? 0</code>) instead of <code>||</code> (which also catches <code>0</code>, <code>''</code>)</li>
+              <li>Explicit guard functions: <code>if (!report) return &lt;EmptyState /&gt;</code> before use</li>
+              <li>Never use non-null assertion (<code>!</code>) unless I have a 100% guarantee — use type guards instead</li>
+              <li>Zod validation at API boundaries so data entering my types is guaranteed non-null where declared</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('typescript', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: ECOMMERCE
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-ecommerce">
+      <div class="page-header">
+        <div class="page-tag">Technical · High Priority</div>
+        <div class="page-title">Shopify & Headless Commerce</div>
+        <div class="page-desc">The JD specifically calls out Shopify and headless commerce. Expect this to be a major focus. Know the Storefront API, cart mechanics, and subscription patterns.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Why This Matters for Mitra Bio</strong>
+          Their product involves purchasing a physical skin sampling kit, then ongoing subscription to the platform. This is classic e-commerce + subscription + digital product — all of which go through Shopify.
+        </div>
+
+        <h2>The Headless Commerce Model</h2>
+        <div class="highlight-box">
+          <h3 style="color:var(--accent);margin-bottom:12px">Traditional vs Headless</h3>
+          <div class="grid2">
+            <div>
+              <div class="badge red">Traditional Shopify</div>
+              <ul class="check-list" style="margin-top:10px">
+                <li>Liquid templates — locked to Shopify's rendering</li>
+                <li>Limited customisation of UX</li>
+                <li>No integration with Next.js frontend</li>
+                <li>Poor performance (extra JS, rigid structure)</li>
+              </ul>
+            </div>
+            <div>
+              <div class="badge green">Headless Shopify</div>
+              <ul class="check-list" style="margin-top:10px">
+                <li>Shopify as backend only (inventory, payments, fulfilment)</li>
+                <li>Your Next.js app as the frontend — full control</li>
+                <li>Storefront API or Hydrogen SDK for data</li>
+                <li>Premium UX, animations, personalisation possible</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Shopify Storefront API</h2>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('shopify','products')">Products</div>
+          <div class="tab" onclick="switchTab('shopify','cart')">Cart & Checkout</div>
+          <div class="tab" onclick="switchTab('shopify','subscriptions')">Subscriptions</div>
+          <div class="tab" onclick="switchTab('shopify','webhooks')">Webhooks</div>
+        </div>
+
+        <div id="tab-shopify-products" class="tab-content active">
+          <p>The Storefront API is a public, token-authenticated GraphQL API. Used to fetch products, collections, and search.</p>
+          <pre><code><span class="cm">// lib/shopify.ts — Shopify client wrapper</span>
+<span class="kw">const</span> STOREFRONT_API = <span class="str">`https://${SHOP_DOMAIN}/api/2024-01/graphql.json`</span>
+
+<span class="kw">async function</span> <span class="fn">shopifyFetch</span>&lt;T&gt;(query: <span class="ty">string</span>, variables?: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="kw">unknown</span>&gt;): <span class="ty">Promise</span>&lt;T&gt; {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(STOREFRONT_API, {
+    method: <span class="str">'POST'</span>,
+    headers: {
+      <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>,
+      <span class="str">'X-Shopify-Storefront-Access-Token'</span>: process.env.SHOPIFY_STOREFRONT_TOKEN!,
+    },
+    body: <span class="fn">JSON.stringify</span>({ query, variables }),
+    next: { revalidate: <span class="ty">3600</span>, tags: [<span class="str">'products'</span>] },
+  })
+  <span class="kw">const</span> { data, errors } = <span class="kw">await</span> res.<span class="fn">json</span>()
+  <span class="kw">if</span> (errors) <span class="kw">throw new</span> <span class="fn">Error</span>(errors[<span class="ty">0</span>].message)
+  <span class="kw">return</span> data <span class="kw">as</span> T
+}
+
+<span class="cm">// Fetch skin kit product with all variants</span>
+<span class="kw">const</span> GET_PRODUCT = <span class="str">`
+  query GetProduct($handle: String!) {
+    product(handle: $handle) {
+      id title description
+      priceRange { minVariantPrice { amount currencyCode } }
+      variants(first: 10) {
+        edges { node { id title availableForSale selectedOptions { name value } } }
+      }
+      images(first: 5) {
+        edges { node { url altText width height } }
+      }
+    }
+  }
+`</span></code></pre>
+        </div>
+
+        <div id="tab-shopify-cart" class="tab-content">
+          <p>Shopify's Cart API (Storefront API) provides cart mutation operations. The cart lives server-side; the cartId is stored client-side (cookie/localStorage).</p>
+          <pre><code><span class="cm">// Cart operations — mutations</span>
+<span class="kw">const</span> CREATE_CART = <span class="str">`
+  mutation CartCreate($lines: [CartLineInput!]) {
+    cartCreate(input: { lines: $lines }) {
+      cart { id checkoutUrl totalQuantity cost { totalAmount { amount } } }
+      userErrors { field message }
+    }
+  }
+`</span>
+
+<span class="kw">const</span> ADD_TO_CART = <span class="str">`
+  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart { id lines(first: 20) { edges { node { id quantity merchandise { ... on ProductVariant { id title } } } } } }
+    }
+  }
+`</span>
+
+<span class="cm">// Server Action approach (Next.js 14+)</span>
+<span class="str">'use server'</span>
+<span class="kw">export async function</span> <span class="fn">addToCart</span>(variantId: <span class="ty">string</span>, quantity: <span class="ty">number</span>) {
+  <span class="kw">const</span> cartId = <span class="fn">cookies</span>().<span class="fn">get</span>(<span class="str">'cartId'</span>)?.value
+  <span class="kw">if</span> (!cartId) {
+    <span class="kw">const</span> { cartCreate } = <span class="kw">await</span> <span class="fn">shopifyFetch</span>(CREATE_CART, { lines: [{ merchandiseId: variantId, quantity }] })
+    <span class="fn">cookies</span>().<span class="fn">set</span>(<span class="str">'cartId'</span>, cartCreate.cart.id, { httpOnly: <span class="kw">true</span>, sameSite: <span class="str">'strict'</span> })
+    <span class="kw">return</span> cartCreate.cart
+  }
+  <span class="kw">return</span> <span class="fn">shopifyFetch</span>(ADD_TO_CART, { cartId, lines: [{ merchandiseId: variantId, quantity }] })
+}</code></pre>
+        </div>
+
+        <div id="tab-shopify-subscriptions" class="tab-content">
+          <div class="callout blue">
+            <strong>Mitra Bio's Likely Model</strong>
+            One-time kit purchase + recurring subscription for platform access / additional tests. This is a classic Shopify Subscriptions use case.
+          </div>
+          <table>
+            <thead><tr><th>Approach</th><th>How It Works</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Shopify Subscriptions API</strong></td><td>Native Shopify feature (2022+). Selling plans attached to products.</td><td>Simple monthly/annual plans</td></tr>
+              <tr><td><strong>Recharge</strong></td><td>3rd party app, battle-tested, handles failed payments, dunning</td><td>Complex subscription logic</td></tr>
+              <tr><td><strong>Stripe Billing + Shopify</strong></td><td>Stripe handles recurring, Shopify handles physical fulfilment</td><td>Custom logic, digital-first</td></tr>
+            </tbody>
+          </table>
+          <p>Key things to handle: failed payment recovery, pause/cancel flows, subscription management UI, proration on upgrades.</p>
+        </div>
+
+        <div id="tab-shopify-webhooks" class="tab-content">
+          <p>Webhooks notify your backend of Shopify events in real-time. Critical for Mitra Bio's sample → results flow.</p>
+          <pre><code><span class="cm">// app/api/webhooks/shopify/route.ts</span>
+<span class="kw">import</span> { createHmac } <span class="kw">from</span> <span class="str">'crypto'</span>
+
+<span class="kw">export async function</span> <span class="fn">POST</span>(req: <span class="ty">Request</span>) {
+  <span class="kw">const</span> body = <span class="kw">await</span> req.<span class="fn">text</span>()
+  <span class="kw">const</span> hmac = req.headers.<span class="fn">get</span>(<span class="str">'x-shopify-hmac-sha256'</span>)
+
+  <span class="cm">// Always verify webhook signatures</span>
+  <span class="kw">const</span> digest = <span class="fn">createHmac</span>(<span class="str">'sha256'</span>, process.env.SHOPIFY_WEBHOOK_SECRET!)
+    .<span class="fn">update</span>(body, <span class="str">'utf8'</span>).<span class="fn">digest</span>(<span class="str">'base64'</span>)
+
+  <span class="kw">if</span> (digest !== hmac) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Unauthorized'</span>, { status: <span class="ty">401</span> })
+
+  <span class="kw">const</span> event = <span class="fn">JSON.parse</span>(body)
+
+  <span class="kw">switch</span> (req.headers.<span class="fn">get</span>(<span class="str">'x-shopify-topic'</span>)) {
+    <span class="kw">case</span> <span class="str">'orders/paid'</span>:
+      <span class="kw">await</span> <span class="fn">triggerSampleKitDispatch</span>(event)
+      <span class="kw">break</span>
+    <span class="kw">case</span> <span class="str">'orders/fulfilled'</span>:
+      <span class="kw">await</span> <span class="fn">notifyCustomerOfDelivery</span>(event)
+      <span class="kw">break</span>
+  }
+
+  <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'OK'</span>, { status: <span class="ty">200</span> })
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>E-Commerce Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How would you architect the Mitra Bio purchase flow — from landing page to kit dispatch confirmation?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>End-to-end flow:</strong>
+            <ul>
+              <li><strong>1. Product page</strong> (Next.js RSC) — fetches product data from Shopify Storefront API, ISR with 1hr revalidation</li>
+              <li><strong>2. Add to Cart</strong> (Server Action) — creates/updates Shopify cart, stores cartId in httpOnly cookie</li>
+              <li><strong>3. Cart page</strong> — shows line items, upsell subscription option, promo code input</li>
+              <li><strong>4. Checkout</strong> — redirect to Shopify checkout (or custom checkout via Storefront API). Shopify handles payments (PCI compliance handled for you).</li>
+              <li><strong>5. Order webhook</strong> — <code>orders/paid</code> webhook hits our API, triggers fulfilment queue for sample kit</li>
+              <li><strong>6. Account creation</strong> — on first purchase, create user account, send verification email with portal link</li>
+              <li><strong>7. Kit tracking</strong> — <code>orders/fulfilled</code> webhook updates user's dashboard with tracking info</li>
+              <li><strong>8. Sample received</strong> — lab system webhook triggers "processing" state in user dashboard</li>
+              <li><strong>9. Results ready</strong> — email + push notification, deep link to results dashboard</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle cart persistence and recovery in a headless Shopify setup?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>Store <code>cartId</code> in an <strong>httpOnly, Secure cookie</strong> — survives page refreshes, not accessible to XSS</li>
+              <li>On page load, verify cart still exists via <code>cart(id:)</code> query — Shopify carts expire after 10 days</li>
+              <li>If cart expired, create a new one silently — never show the user an error for this</li>
+              <li>For authenticated users: associate cart with customer account using <code>cartBuyerIdentityUpdate</code> — enables cart recovery emails</li>
+              <li>Abandoned cart: Shopify's built-in abandoned checkout emails cover this, or use Klaviyo for more sophisticated flows</li>
+              <li>Cross-device sync: Logged-in users can pick up their cart on any device via the associated customer cart</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">What are the performance considerations for a headless Shopify storefront?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>ISR for product pages</strong> — statically generated but refreshed periodically. Product content rarely changes.</li>
+              <li><strong>Edge caching</strong> — deploy to Vercel Edge, serve from nearest PoP globally</li>
+              <li><strong>Image optimisation</strong> — Next.js Image component + Shopify CDN URLs, serve WebP/AVIF with proper sizing</li>
+              <li><strong>GraphQL field selection</strong> — only fetch what you need; avoid over-fetching (unlike REST)</li>
+              <li><strong>Prefetch cart state</strong> — use <code>router.prefetch</code> so cart page loads instantly</li>
+              <li><strong>Minimal client JS</strong> — RSC for product display, client components only for interactive elements</li>
+              <li><strong>Lazy-load non-critical</strong> — reviews, upsells, chat widgets load after main content</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('ecommerce', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: BFF
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-bff">
+      <div class="page-header">
+        <div class="page-tag">Technical · Architecture</div>
+        <div class="page-title">BFF & API Architecture</div>
+        <div class="page-desc">Backend-for-Frontend is explicitly mentioned in the JD. Know why it exists, when to use it, and how to build it with Next.js.</div>
+      </div>
+
+      <div class="section">
+        <h2>What is a BFF?</h2>
+        <div class="highlight-box">
+          <p>A <strong>Backend-for-Frontend</strong> is a dedicated API layer that sits between your frontend and your downstream services. Rather than the frontend calling multiple services directly, the BFF aggregates, transforms, and adapts data specifically for the frontend's needs.</p>
+          <div class="grid2" style="margin-top:16px">
+            <div>
+              <div class="badge red">Without BFF</div>
+              <ul class="check-list" style="margin-top:8px">
+                <li>Frontend calls Shopify, reports API, user API separately</li>
+                <li>Waterfall fetches — slow</li>
+                <li>Frontend receives more data than needed</li>
+                <li>Auth logic duplicated or exposed</li>
+                <li>Multiple API tokens in client bundle</li>
+              </ul>
+            </div>
+            <div>
+              <div class="badge green">With BFF</div>
+              <ul class="check-list" style="margin-top:8px">
+                <li>One call to BFF → BFF fans out to services in parallel</li>
+                <li>Aggregated, shaped response tailored to UI needs</li>
+                <li>Secrets/tokens stay on server</li>
+                <li>Auth enforced at BFF layer</li>
+                <li>Easy to iterate without touching downstream services</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>BFF with Next.js Route Handlers</h2>
+        <pre><code><span class="cm">// app/api/dashboard/route.ts — BFF endpoint for user dashboard</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(request: <span class="ty">Request</span>) {
+  <span class="kw">const</span> session = <span class="kw">await</span> <span class="fn">getServerSession</span>()
+  <span class="kw">if</span> (!session) <span class="kw">return</span> <span class="fn">Response</span>.<span class="fn">json</span>({ error: <span class="str">'Unauthorized'</span> }, { status: <span class="ty">401</span> })
+
+  <span class="cm">// Fan out to multiple services in parallel</span>
+  <span class="kw">const</span> [latestReport, orderHistory, recommendations, subscription] = <span class="kw">await</span> <span class="fn">Promise.allSettled</span>([
+    <span class="fn">fetchLatestReport</span>(session.user.id),       <span class="cm">// Data Science API</span>
+    <span class="fn">fetchOrderHistory</span>(session.shopifyCustomerId), <span class="cm">// Shopify Admin API</span>
+    <span class="fn">fetchRecommendations</span>(session.user.id),     <span class="cm">// ML Recommendations</span>
+    <span class="fn">fetchSubscriptionStatus</span>(session.user.id),  <span class="cm">// Billing Service</span>
+  ])
+
+  <span class="cm">// Shape response for the frontend — only what's needed</span>
+  <span class="kw">return</span> <span class="fn">Response</span>.<span class="fn">json</span>({
+    report: latestReport.status === <span class="str">'fulfilled'</span> ? latestReport.value : <span class="kw">null</span>,
+    orders: orderHistory.status === <span class="str">'fulfilled'</span> ? orderHistory.value.<span class="fn">map</span>(<span class="fn">toOrderSummary</span>) : [],
+    recommendations: recommendations.status === <span class="str">'fulfilled'</span> ? recommendations.value : [],
+    isPremium: subscription.status === <span class="str">'fulfilled'</span> ? subscription.value.active : <span class="kw">false</span>,
+  })
+}</code></pre>
+
+        <div class="callout green">
+          <strong>Note: Promise.allSettled vs Promise.all</strong>
+          Use <code>allSettled</code> so one failing service doesn't crash the whole dashboard. The frontend handles partial data gracefully — show what you have, indicate what failed.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>tRPC — Type-Safe BFF</h2>
+        <div class="callout blue">
+          <strong>When to Suggest tRPC</strong>
+          If the team uses TypeScript end-to-end, tRPC gives you type-safe API calls with zero code generation. The server procedure types flow directly to the client — no more "is this field a string or number?" at runtime.
+        </div>
+        <pre><code><span class="cm">// server/routers/report.ts</span>
+<span class="kw">export const</span> reportRouter = <span class="fn">createTRPCRouter</span>({
+  getLatest: <span class="fn">protectedProcedure</span>
+    .<span class="fn">input</span>(z.<span class="fn">object</span>({ userId: z.<span class="fn">string</span>() }))
+    .<span class="fn">query</span>(<span class="kw">async</span> ({ ctx, input }) => {
+      <span class="kw">return</span> <span class="fn">fetchReport</span>(input.userId) <span class="cm">// return type inferred automatically</span>
+    }),
+})
+
+<span class="cm">// In the component — fully typed, autocomplete works</span>
+<span class="kw">const</span> { data: report } = api.report.<span class="fn">getLatest</span>.<span class="fn">useQuery</span>({ userId })
+<span class="cm">// report.biomarkers[0].score — TypeScript knows this shape</span></code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">When would you not use a BFF? What are its drawbacks?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            BFFs add complexity — another layer to maintain, another failure point, another performance hop. I'd avoid them when:
+            <ul>
+              <li>The app only calls one or two simple APIs — not worth the overhead</li>
+              <li>Services are already well-aggregated (e.g., a GraphQL API already returns what you need)</li>
+              <li>Team is very small — the BFF just means more code to own</li>
+            </ul>
+            For Mitra Bio, a BFF makes sense because: multiple distinct services (Shopify, data science platform, billing), sensitive API keys that must not be exposed, and complex data aggregation for the dashboard. The trade-off is worth it.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle error propagation from backend services through a BFF to the UI?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            I use a layered approach:
+            <ul>
+              <li><strong>At the service call:</strong> Wrap in try/catch, convert to a typed error result — never let raw service errors propagate</li>
+              <li><strong>At the BFF:</strong> Use <code>Promise.allSettled</code> — partial data is better than no data. Log errors with correlation IDs for debugging.</li>
+              <li><strong>HTTP status codes:</strong> Return meaningful status (401 for auth, 404 for not found, 503 if critical service is down)</li>
+              <li><strong>Error shapes:</strong> Return consistent <code>{ error: { code, message, retryable } }</code> that the frontend can pattern-match on</li>
+              <li><strong>In the UI:</strong> Discriminated union states — idle / loading / success / error. Show recovery options (retry, contact support) based on error type.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('bff', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: QUALITY
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-quality">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">Testing, CI/CD & Engineering Quality</div>
+        <div class="page-desc">The JD calls out testing, CI/CD, and code quality explicitly. Know what to test, how to test it, and how to structure a quality pipeline.</div>
+      </div>
+
+      <div class="section">
+        <h2>Testing Strategy — The Right Approach</h2>
+
+        <div class="callout gold">
+          <strong>Testing Pyramid for Mitra Bio</strong>
+          A consumer SaaS product needs confidence at every level. Focus on integration and E2E tests for critical user journeys (purchase, checkout, results view). Unit tests for business logic and utility functions.
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Tools</th><th>What to Test</th><th>Coverage Target</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unit</strong></td>
+              <td>Vitest / Jest</td>
+              <td>Pure functions, business logic, type validators, utility functions</td>
+              <td>High — easy and fast</td>
+            </tr>
+            <tr>
+              <td><strong>Integration</strong></td>
+              <td>Vitest + msw</td>
+              <td>API routes, BFF aggregation, Shopify webhook handlers</td>
+              <td>Medium — critical paths</td>
+            </tr>
+            <tr>
+              <td><strong>Component</strong></td>
+              <td>Testing Library + Vitest</td>
+              <td>Interactive UI components, form flows, cart interactions</td>
+              <td>Medium — user-facing components</td>
+            </tr>
+            <tr>
+              <td><strong>E2E</strong></td>
+              <td>Playwright</td>
+              <td>Purchase flow, auth, report viewing, subscription management</td>
+              <td>Low count, high value — critical journeys</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre><code><span class="cm">// Integration test for BFF endpoint with msw mocking</span>
+<span class="kw">import</span> { http, HttpResponse } <span class="kw">from</span> <span class="str">'msw'</span>
+<span class="kw">import</span> { setupServer } <span class="kw">from</span> <span class="str">'msw/node'</span>
+
+<span class="kw">const</span> server = <span class="fn">setupServer</span>(
+  http.<span class="fn">get</span>(<span class="str">'*/api/reports/latest'</span>, () =>
+    HttpResponse.<span class="fn">json</span>({ id: <span class="str">'report-1'</span>, biomarkers: [{ key: <span class="str">'hydration'</span>, score: <span class="ty">78</span> }] })
+  )
+)
+
+<span class="fn">describe</span>(<span class="str">'dashboard BFF'</span>, () => {
+  <span class="fn">it</span>(<span class="str">'returns shaped dashboard data on success'</span>, <span class="kw">async</span> () => {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">GET</span>(<span class="fn">mockRequest</span>(<span class="str">'/api/dashboard'</span>))
+    <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>()
+
+    <span class="fn">expect</span>(data.report).toBeDefined()
+    <span class="fn">expect</span>(data.report.biomarkers[<span class="ty">0</span>].score).<span class="fn">toBe</span>(<span class="ty">78</span>)
+    <span class="fn">expect</span>(data.isPremium).<span class="fn">toBe</span>(<span class="kw">false</span>) <span class="cm">// billing service not mocked</span>
+  })
+})</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>CI/CD Pipeline</h2>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>On Every PR</h3>
+            <ul class="check-list">
+              <li>TypeScript type checking (<code>tsc --noEmit</code>)</li>
+              <li>ESLint + Prettier format check</li>
+              <li>Unit + integration tests</li>
+              <li>Bundle size check (fail if +15%)</li>
+              <li>Vercel preview deployment with unique URL</li>
+              <li>Lighthouse CI on preview URL</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>On Merge to Main</h3>
+            <ul class="check-list">
+              <li>All PR checks re-run</li>
+              <li>E2E tests (Playwright) against staging</li>
+              <li>Shopify webhook integration smoke tests</li>
+              <li>Auto-deploy to production via Vercel</li>
+              <li>Smoke test suite on production</li>
+              <li>Rollback trigger if error rate spikes</li>
+            </ul>
+          </div>
+        </div>
+
+        <pre><code><span class="cm"># .github/workflows/ci.yml</span>
+name: CI
+on: [pull_request]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run typecheck      <span class="cm"># tsc --noEmit</span>
+      - run: npm run lint           <span class="cm"># eslint + prettier</span>
+      - run: npm run test           <span class="cm"># vitest</span>
+      - run: npm run build          <span class="cm"># ensure it compiles</span>
+
+  e2e:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx playwright install chromium
+      - run: npm run test:e2e</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Code Quality Standards</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>What I enforce in code reviews</h3>
+            <ul class="check-list">
+              <li>No <code>any</code> types unless absolutely necessary and commented</li>
+              <li>Consistent error handling — no swallowed errors</li>
+              <li>Secrets never in client code — check for <code>process.env</code> leaks</li>
+              <li>Accessibility — semantic HTML, ARIA labels, keyboard nav</li>
+              <li>PR size — large PRs get split; reviewability matters</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tools I set up</h3>
+            <ul class="check-list">
+              <li><code>eslint-plugin-security</code> — catches common vulnerabilities</li>
+              <li><code>@next/eslint-plugin-next</code> — Next.js specific rules</li>
+              <li>Husky pre-commit: lint + type check before every commit</li>
+              <li>Renovate bot for dependency updates</li>
+              <li>CodeClimate or SonarCloud for complexity metrics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('quality', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: UX PERF
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-uxperf">
+      <div class="page-header">
+        <div class="page-tag">Product · Technical</div>
+        <div class="page-title">UX, Performance & Luxury UI</div>
+        <div class="page-desc">Mitra Bio is a premium consumer brand. The digital experience must match. This is where product instinct + technical execution meet.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>The Luxury Brand Standard</strong>
+          Think of brands like Aesop, The Ordinary, or NARS digitally. Every pixel, animation, and interaction reinforces the brand's premium positioning. Slow is not luxury. Jarring transitions are not luxury. Confusing UX is not luxury.
+        </div>
+
+        <h2>Core Web Vitals — What They Are & Why They Matter</h2>
+        <div class="grid3">
+          <div class="card">
+            <div class="badge green">LCP</div>
+            <h3 style="margin-top:8px">Largest Contentful Paint</h3>
+            <p>Time until the largest visible element renders. Target: <strong>&lt; 2.5s</strong>. For Mitra Bio: the hero image or product photo.</p>
+            <p><strong>Fix:</strong> Preload hero image, use Next.js Image with priority, server-side render critical content.</p>
+          </div>
+          <div class="card">
+            <div class="badge blue">CLS</div>
+            <h3 style="margin-top:8px">Cumulative Layout Shift</h3>
+            <p>Unexpected layout movement. Target: <strong>&lt; 0.1</strong>. A price jumping around on load feels broken and untrustworthy.</p>
+            <p><strong>Fix:</strong> Set image dimensions, use skeleton loaders with fixed dimensions, avoid injecting content above existing.</p>
+          </div>
+          <div class="card">
+            <div class="badge purple">INP</div>
+            <h3 style="margin-top:8px">Interaction to Next Paint</h3>
+            <p>Responsiveness to user input. Target: <strong>&lt; 200ms</strong>. Replaced FID in 2024. Measures all interactions.</p>
+            <p><strong>Fix:</strong> Avoid long tasks on main thread, use <code>startTransition</code> for non-urgent updates, debounce search inputs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Animation & Micro-interaction Patterns</h2>
+        <pre><code><span class="cm">// Framer Motion — entrance animations for report cards</span>
+<span class="kw">import</span> { motion } <span class="kw">from</span> <span class="str">'framer-motion'</span>
+
+<span class="kw">const</span> containerVariants = {
+  hidden: { opacity: <span class="ty">0</span> },
+  visible: {
+    opacity: <span class="ty">1</span>,
+    transition: { staggerChildren: <span class="ty">0.1</span>, delayChildren: <span class="ty">0.2</span> }
+  }
+}
+
+<span class="kw">const</span> itemVariants = {
+  hidden: { opacity: <span class="ty">0</span>, y: <span class="ty">20</span> },
+  visible: { opacity: <span class="ty">1</span>, y: <span class="ty">0</span>, transition: { duration: <span class="ty">0.5</span>, ease: [<span class="ty">0.22</span>, <span class="ty">1</span>, <span class="ty">0.36</span>, <span class="ty">1</span>] } }
+}
+
+<span class="kw">export function</span> <span class="fn">BiomarkerGrid</span>({ markers }: Props) {
+  <span class="kw">return</span> (
+    &lt;motion.div variants={containerVariants} initial=<span class="str">"hidden"</span> animate=<span class="str">"visible"</span>&gt;
+      {markers.<span class="fn">map</span>(m => (
+        &lt;motion.div key={m.key} variants={itemVariants}&gt;
+          &lt;BiomarkerCard {...m} /&gt;
+        &lt;/motion.div&gt;
+      ))}
+    &lt;/motion.div&gt;
+  )
+}
+
+<span class="cm">// CSS: respect user's reduced motion preference</span>
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Visualising Epigenetic Data</h2>
+        <div class="callout blue">
+          <strong>Design Challenge</strong>
+          Turning complex biomarker scores into something a non-scientist can understand and act on. This is a core UX challenge at Mitra Bio.
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>Data Viz Approaches</h3>
+            <ul class="check-list">
+              <li><strong>Radial charts</strong> (spider/radar) — show multiple biomarkers at a glance</li>
+              <li><strong>Progress rings</strong> — single metric, satisfying to see improve over time</li>
+              <li><strong>Trend lines</strong> — show improvement over multiple test periods</li>
+              <li><strong>Traffic light system</strong> — green/amber/red for immediate understanding</li>
+              <li><strong>Comparison view</strong> — vs. population average, vs. previous test</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Libraries</h3>
+            <ul class="check-list">
+              <li><strong>Recharts</strong> — React-native, composable, good defaults</li>
+              <li><strong>Nivo</strong> — beautiful defaults, more customisable</li>
+              <li><strong>D3.js</strong> — maximum control, higher complexity</li>
+              <li><strong>Observable Plot</strong> — great for data science outputs</li>
+              <li>All should be <strong>lazy-loaded</strong> — don't include chart JS in initial bundle</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Accessibility (A11y) — Non-negotiable</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>What I always do</h3>
+            <ul class="check-list">
+              <li>Semantic HTML — buttons are <code>&lt;button&gt;</code>, not <code>&lt;div onClick&gt;</code></li>
+              <li>ARIA labels on icon-only buttons and form inputs</li>
+              <li>Focus management in modals and drawers</li>
+              <li>Keyboard navigation for all interactive elements</li>
+              <li>Colour contrast ratio ≥ 4.5:1 for normal text</li>
+              <li>Skip-to-main-content link</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tools</h3>
+            <ul class="check-list">
+              <li><code>axe-core</code> in Playwright E2E tests — automated a11y audit</li>
+              <li><code>eslint-plugin-jsx-a11y</code> — catches issues at write time</li>
+              <li>Screen reader testing (VoiceOver, NVDA)</li>
+              <li>Keyboard-only navigation pass before release</li>
+              <li>Chrome Lighthouse a11y score in CI</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('uxperf', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: BEHAVIORAL
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-behavioral">
+      <div class="page-header">
+        <div class="page-tag">Prep</div>
+        <div class="page-title">Behavioral & Product Thinking</div>
+        <div class="page-desc">They said "not a ticket-taking role." This round will probe your product instinct, ownership mindset, and how you handle ambiguity and trade-offs.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Their Core Signals</strong>
+          "Scrappy, creative, deeply product-minded" · "Thrive in ambiguity" · "Move quickly without sacrificing quality" · "Equally comfortable obsessing over UX polish AND backend architecture"
+        </div>
+
+        <h2>Practice Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">Tell me about a time you improved a product experience significantly. What did you change and how did you measure success?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>STAR structure — adapt to your experience:</strong>
+            <ul>
+              <li><strong>Situation:</strong> Set the context — what product, what was the problem</li>
+              <li><strong>Task:</strong> What was your responsibility — were you leading this or part of a team?</li>
+              <li><strong>Action:</strong> What specifically did you do? Be concrete about technology and UX decisions</li>
+              <li><strong>Result:</strong> Quantify if possible — conversion rate, load time, error rate, user satisfaction score</li>
+            </ul>
+            <span class="highlight">Tip for Mitra Bio:</span> Pick an example where you had autonomy and made a product call, not just implemented a spec. They want to see you think about users, not just code.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle competing priorities — shipping fast vs. building it right?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>A framework I use:</strong>
+            <ul>
+              <li>First, clarify: what does "fast" mean here — is it a deadline, a discovery sprint, an MVP?</li>
+              <li>I differentiate between <strong>tech debt that is acceptable</strong> (a hard-coded string, a TODO) and <strong>tech debt that is dangerous</strong> (an insecure API endpoint, a data integrity issue)</li>
+              <li>I prefer to ship a smaller, high-quality scope than a large, fragile one — scope reduction is always on the table</li>
+              <li>Track technical debt explicitly — a logged item is managed debt; unlogged is hidden debt</li>
+              <li>For Mitra Bio specifically: consumer-facing bugs cost real customer trust and conversion. I'd be firm about quality gates on purchase flows, but more flexible on internal tooling.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">Describe a time you disagreed with a product or design decision. What did you do?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>What they want to hear:</strong>
+            <ul>
+              <li>You voiced the concern clearly and with evidence, not emotion</li>
+              <li>You understood the other perspective before pushing back</li>
+              <li>You were willing to try it the other way and learn from the outcome</li>
+              <li>You can disagree and commit — you don't sulk or undermine after the decision is made</li>
+            </ul>
+            <span class="highlight">Good pattern:</span> "I raised my concern, shared data to support it, offered an alternative. The team decided to go with the original plan. I built it with full effort, we tested it, and ultimately [it worked / it didn't work and we pivoted]. What I learned was..."
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">If you joined Mitra Bio tomorrow, what would be the first thing you'd want to do or improve?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>This is a product + initiative question. Strong answer structure:</strong>
+            <ul>
+              <li>Start with: "I'd spend the first week understanding — what's the user's current journey, what are the biggest pain points in the data?"</li>
+              <li>Then: "Based on what I see publicly and in the JD, I'd be drawn to [specific area] — for example, improving the time-to-insight from 'sample received' to 'results viewed' — that's a high-anxiety moment for customers."</li>
+              <li>Avoid: "I'd rewrite everything in X framework" — that's a red flag in senior interviews</li>
+              <li>Show: curiosity, user empathy, commercial awareness</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you approach onboarding into a new codebase and team?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Week 1:</strong> Read, don't write. Understand the architecture, the decisions, the trade-offs that led to the current state. Set up the dev environment end-to-end.</li>
+              <li><strong>Pair with a senior team member</strong> on first real ticket — get context, not just code</li>
+              <li><strong>Write down what confuses me</strong> — those gaps are where docs are missing and where I can add value later</li>
+              <li><strong>Ship something small</strong> in the first 2 weeks — proves I'm not just exploring, builds credibility</li>
+              <li><strong>Build relationships</strong> with product, data science, design — understand their pain points with the current platform</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you balance working in a fast-moving startup when requirements keep changing?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li>I treat changing requirements as signal, not noise — it usually means we learned something real about users or the market</li>
+              <li>I write code with <strong>low coupling</strong> — components and modules that are easy to swap or discard</li>
+              <li>I avoid over-engineering for hypothetical futures — YAGNI applies hard in early-stage</li>
+              <li>I ask "what would make this easy to change?" rather than "what would make this perfect right now?"</li>
+              <li>I communicate proactively when a requirement change is going to cost significantly more than the team might expect</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Product Thinking Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How would you design the "skin results" feature for a first-time user who doesn't understand epigenetics?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>My approach:</strong>
+            <ul>
+              <li><strong>Lead with outcomes, not data:</strong> "Your skin is 23% more hydrated than average" not "Hydration biomarker: 0.73"</li>
+              <li><strong>Progressive disclosure:</strong> Top-level summary → tap to expand into details → "learn more" for science</li>
+              <li><strong>Analogies:</strong> Use familiar references (e.g., comparing to a sleep score, fitness level)</li>
+              <li><strong>Prioritise:</strong> Show top 3 insights, not 20. Cognitive overload kills luxury feel.</li>
+              <li><strong>Action-oriented:</strong> Every insight should have a "what you can do" attached — links to recommended products</li>
+              <li><strong>Celebrate progress:</strong> If returning user, lead with what improved — emotional hook</li>
+              <li><strong>Animated reveal:</strong> Data doesn't just appear — it loads with meaning (meter fills up, score counts up)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('behavioral', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: QUESTIONS
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-questions">
+      <div class="page-header">
+        <div class="page-tag">Your Turn</div>
+        <div class="page-title">Questions to Ask the Engineering Team</div>
+        <div class="page-desc">Strong questions signal seniority, product thinking, and genuine interest. Aim to ask 4-6 from these across the interview. Tailor based on what comes up naturally.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout green">
+          <strong>Ground Rule</strong>
+          Never ask things you could find via Google (funding, product description, team size). Ask things only they can answer — internal dynamics, architecture decisions, honest challenges.
+        </div>
+
+        <h2>Technical Architecture</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">What does your current frontend architecture look like, and what are the main things you're not happy with about it?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Gets them to be honest about the current state. The answer tells you what your first 6 months will involve. If they say "it's great!" with no caveats, that's a yellow flag.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">How do the frontend and data science teams collaborate today? How do results from ML models get surfaced in the UI?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Reveals the interface between the product and the science. This is the most interesting part of Mitra Bio's tech stack — and where the frontend engineer plays a critical bridging role.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">How do you handle the personalisation layer — connecting a customer's report data to product recommendations in real time?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Shows you understand their business model (science → commerce) and are already thinking about how to build it.
+          </div>
+        </div>
+
+        <h2>Product & Process</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">What does "not a ticket-taking role" actually look like in practice here? Can you give me an example of a time an engineer significantly shaped the product direction?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Forces them to give a concrete example, not marketing speak. If they struggle to answer, it may mean autonomy is more aspirational than real.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">What's on the roadmap for the next 6 months that you're most excited about technically?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Shows you're thinking long-term and signals genuine curiosity about the work. Also tells you what you'd actually be building.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">How do you currently measure the success of the customer experience — beyond revenue? Do you have performance monitoring and UX analytics in place?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Reveals how data-driven they are about UX. A luxury brand that doesn't track Core Web Vitals or error rates is flying blind. Also positions you as someone who cares about outcomes.
+          </div>
+        </div>
+
+        <h2>Team & Culture</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">What does the engineering team's typical week look like? How much time is spent on greenfield features vs. maintenance and firefighting?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Real signal about the health of the codebase and the team's capacity. High firefighting ratio = either tech debt problem or product instability.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">What's been the biggest technical challenge you've faced in the last quarter, and how did you resolve it?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> Gets a real, honest answer. The types of problems they mention — and how they handled them — tells you a lot about the team's capability and culture.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">→</span>
+            <span class="qa-q-text">For someone joining remotely / primarily remote — how does the team stay aligned? What does good async collaboration look like here?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Why ask this:</strong> They mentioned openness to remote — ask about this directly. How mature is their remote culture? Are there regular in-person sprints? This affects your day-to-day significantly.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The One Closing Question</h2>
+        <div class="highlight-box">
+          <h3 style="color:var(--accent)">End every interview with this</h3>
+          <p style="font-size:15px;color:var(--text);margin-top:10px;">"Based on what we've discussed today, is there anything you'd want to know more about from me — any gaps you feel like we didn't cover?"</p>
+          <p style="margin-top:10px">This gives them a chance to voice concerns, and gives you a chance to address them before the interview ends rather than in a rejection email.</p>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('questions', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: SYSTEM DESIGN
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-systemdesign">
+      <div class="page-header">
+        <div class="page-tag">Advanced Technical</div>
+        <div class="page-title">System Design</div>
+        <div class="page-desc">Expect at least one system design question at this level. Know how to architect the Mitra Bio platform end-to-end — from purchase to personalised results.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Most Likely System Design Prompts</strong>
+          "Design the Mitra Bio customer platform" · "How would you design a system that turns raw biomarker data into personalised product recommendations?" · "Walk me through the architecture from kit purchase to results dashboard."
+        </div>
+
+        <h2>The Full Platform — Architecture Map</h2>
+        <div class="highlight-box">
+          <h3 style="color:var(--accent);margin-bottom:16px">Data Flow: Kit Purchase → Personalised Results</h3>
+          <table>
+            <thead><tr><th>Stage</th><th>Components</th><th>Key Design Decisions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>1. Discovery & Purchase</strong></td><td>Next.js frontend → Shopify Storefront API → Shopify checkout</td><td>ISR product pages, headless cart, Shopify handles PCI compliance</td></tr>
+              <tr><td><strong>2. Order Fulfilment</strong></td><td>Shopify webhook → BFF API → Fulfilment queue (SQS/Pub-Sub) → Lab LIMS</td><td>Async queue for reliability; idempotent webhook handler</td></tr>
+              <tr><td><strong>3. Sample Receipt</strong></td><td>Lab system → webhook → BFF → User DB update → Push notification</td><td>Status machine: ordered → dispatched → received → processing → ready</td></tr>
+              <tr><td><strong>4. Analysis Pipeline</strong></td><td>Lab data → Data Science service → ML models → Results DB</td><td>Owned by Data Science team; consume via internal API</td></tr>
+              <tr><td><strong>5. Results Delivery</strong></td><td>Results DB → BFF aggregation → Next.js dashboard → SSE/Polling for live status</td><td>Cache aggressively once generated; personal data — never CDN cache</td></tr>
+              <tr><td><strong>6. Personalisation</strong></td><td>Results + Purchase history → Recommendation engine → Product carousel</td><td>Shopify product IDs returned by ML model; BFF fetches product details</td></tr>
+              <tr><td><strong>7. Ongoing Engagement</strong></td><td>Email (Klaviyo) + Push + In-app → Subscription management → Re-test prompts</td><td>Event-driven; events emitted at each stage trigger engagement flows</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Designing the Results Dashboard — Deep Dive</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('sd','data')">Data Layer</div>
+          <div class="tab" onclick="switchTab('sd','api')">API Layer</div>
+          <div class="tab" onclick="switchTab('sd','frontend')">Frontend Layer</div>
+          <div class="tab" onclick="switchTab('sd','scale')">Scaling</div>
+        </div>
+
+        <div id="tab-sd-data" class="tab-content active">
+          <pre><code><span class="cm">// Core data model for a skin report</span>
+<span class="kw">interface</span> <span class="ty">SkinReport</span> {
+  id: <span class="ty">string</span>               <span class="cm">// UUID</span>
+  userId: <span class="ty">string</span>           <span class="cm">// FK to users table</span>
+  kitOrderId: <span class="ty">string</span>      <span class="cm">// FK to Shopify order ID</span>
+  collectedAt: <span class="ty">Date</span>       <span class="cm">// when sample was taken</span>
+  processedAt: <span class="ty">Date</span>       <span class="cm">// when analysis completed</span>
+  status: <span class="str">'processing'</span> | <span class="str">'ready'</span> | <span class="str">'error'</span>
+  biomarkers: <span class="ty">Biomarker</span>[]
+  skinAge: <span class="ty">number</span>          <span class="cm">// epigenetic skin age</span>
+  skinAgeVsChronological: <span class="ty">number</span>  <span class="cm">// delta</span>
+  insights: <span class="ty">Insight</span>[]      <span class="cm">// natural language interpretations</span>
+  recommendedProducts: <span class="ty">ProductRef</span>[]  <span class="cm">// Shopify variant IDs</span>
+  comparisonPercentile: <span class="ty">number</span>  <span class="cm">// vs population</span>
+}
+
+<span class="kw">interface</span> <span class="ty">Biomarker</span> {
+  key: <span class="ty">BiomarkerKey</span>     <span class="cm">// 'hydration' | 'elasticity' | 'microbiome' | etc</span>
+  score: <span class="ty">number</span>         <span class="cm">// 0-100 normalised</span>
+  rawValue: <span class="ty">number</span>      <span class="cm">// raw measurement</span>
+  unit: <span class="ty">string</span>
+  trend: <span class="str">'improving'</span> | <span class="str">'stable'</span> | <span class="str">'declining'</span> | <span class="kw">null</span>
+  percentile: <span class="ty">number</span>    <span class="cm">// vs reference population</span>
+}</code></pre>
+        </div>
+
+        <div id="tab-sd-api" class="tab-content">
+          <pre><code><span class="cm">// BFF endpoint — aggregates everything for the dashboard</span>
+<span class="cm">// GET /api/dashboard/:userId</span>
+
+<span class="kw">async function</span> <span class="fn">getDashboard</span>(userId: <span class="ty">string</span>, session: <span class="ty">Session</span>) {
+  <span class="cm">// Authorisation: users can only see their own data</span>
+  <span class="kw">if</span> (session.userId !== userId) <span class="kw">throw new</span> <span class="fn">ForbiddenError</span>()
+
+  <span class="cm">// Parallel fetch — independent data sources</span>
+  <span class="kw">const</span> [reports, subscription, shopifyOrders] = <span class="kw">await</span> <span class="fn">Promise.allSettled</span>([
+    db.skinReports.<span class="fn">findMany</span>({ where: { userId }, orderBy: { processedAt: <span class="str">'desc'</span> } }),
+    billingService.<span class="fn">getSubscription</span>(userId),
+    shopify.<span class="fn">getOrdersByCustomer</span>(session.shopifyCustomerId),
+  ])
+
+  <span class="kw">const</span> latestReport = reports.status === <span class="str">'fulfilled'</span> ? reports.value[<span class="ty">0</span>] : <span class="kw">null</span>
+
+  <span class="cm">// Only fetch product details if we have recommendations</span>
+  <span class="kw">const</span> recommendedProducts = latestReport?.recommendedProducts.length
+    ? <span class="kw">await</span> shopify.<span class="fn">getProductsByIds</span>(latestReport.recommendedProducts.<span class="fn">map</span>(p => p.variantId))
+    : []
+
+  <span class="kw">return</span> {
+    latestReport: latestReport ? <span class="fn">toReportSummary</span>(latestReport) : <span class="kw">null</span>,
+    reportHistory: reports.status === <span class="str">'fulfilled'</span> ? reports.value.<span class="fn">map</span>(<span class="fn">toReportPreview</span>) : [],
+    isPremium: subscription.status === <span class="str">'fulfilled'</span> &amp;&amp; subscription.value.active,
+    recommendedProducts: <span class="fn">toProductCards</span>(recommendedProducts),
+    kitOrders: shopifyOrders.status === <span class="str">'fulfilled'</span> ? shopifyOrders.value : [],
+  }
+}
+
+<span class="cm">// Separate endpoint for real-time status polling</span>
+<span class="cm">// GET /api/report/:id/status — returns SSE stream</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="ty">Request</span>, { params }: { params: { id: <span class="ty">string</span> } }) {
+  <span class="kw">const</span> stream = <span class="kw">new</span> <span class="fn">ReadableStream</span>({
+    <span class="kw">async</span> <span class="fn">start</span>(controller) {
+      <span class="kw">const</span> <span class="fn">poll</span> = <span class="kw">async</span> () => {
+        <span class="kw">const</span> report = <span class="kw">await</span> db.<span class="fn">getReport</span>(params.id)
+        controller.<span class="fn">enqueue</span>(`data: ${<span class="fn">JSON.stringify</span>({ status: report.status })}\n\n`)
+        <span class="kw">if</span> (report.status !== <span class="str">'ready'</span>) <span class="fn">setTimeout</span>(poll, <span class="ty">5000</span>)
+        <span class="kw">else</span> controller.<span class="fn">close</span>()
+      }
+      <span class="kw">await</span> <span class="fn">poll</span>()
+    }
+  })
+  <span class="kw">return new</span> <span class="fn">Response</span>(stream, { headers: { <span class="str">'Content-Type'</span>: <span class="str">'text/event-stream'</span> } })
+}</code></pre>
+        </div>
+
+        <div id="tab-sd-frontend" class="tab-content">
+          <pre><code><span class="cm">// Route structure for the dashboard</span>
+app/
+  (auth)/                      <span class="cm">// route group — shared auth layout</span>
+    layout.tsx                 <span class="cm">// verifies session, renders nav</span>
+    dashboard/
+      page.tsx                 <span class="cm">// server component — fetches dashboard BFF</span>
+      loading.tsx              <span class="cm">// skeleton shown while page streams</span>
+    results/
+      [reportId]/
+        page.tsx               <span class="cm">// full report view — server component</span>
+        loading.tsx
+        @biomarkers/           <span class="cm">// parallel route — independent loading</span>
+          page.tsx
+        @recommendations/      <span class="cm">// parallel route</span>
+          page.tsx
+    account/
+      page.tsx                 <span class="cm">// subscription management</span>
+  (marketing)/                 <span class="cm">// route group — different layout, no auth</span>
+    page.tsx                   <span class="cm">// landing page</span>
+    science/
+      page.tsx
+    shop/
+      page.tsx                 <span class="cm">// product listing — ISR</span>
+      [handle]/
+        page.tsx               <span class="cm">// individual product — ISR</span></code></pre>
+        </div>
+
+        <div id="tab-sd-scale" class="tab-content">
+          <div class="grid2">
+            <div class="card">
+              <h3>Bottlenecks to anticipate</h3>
+              <ul class="check-list">
+                <li><strong>Report generation:</strong> CPU-heavy ML — always async, never block user request</li>
+                <li><strong>Database reads:</strong> Dashboard is read-heavy — add read replica, index on <code>userId + processedAt</code></li>
+                <li><strong>Shopify API rate limits:</strong> 2 req/sec on Storefront API — cache aggressively, queue heavy fetches</li>
+                <li><strong>Image serving:</strong> Report charts/graphs — generate and cache server-side, serve via CDN</li>
+                <li><strong>Email/notification:</strong> Offload to queue (SQS / Pub-Sub) — never in the request path</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Caching strategy by data type</h3>
+              <ul class="check-list">
+                <li><strong>Product pages:</strong> ISR, 1 hour, CDN cached</li>
+                <li><strong>Skin reports:</strong> No cache — private, personal health data</li>
+                <li><strong>Biomarker population stats:</strong> Redis, 24 hours — used for percentile calculation</li>
+                <li><strong>Shopify product details:</strong> Redis, 1 hour, keyed by variant ID</li>
+                <li><strong>User session:</strong> JWT with short expiry (15min) + refresh token (7 days)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>System Design Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How would you design the status tracking system between sample collection and results delivery?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            I'd model this as an explicit state machine — a finite set of states with valid transitions between them.
+            <ul>
+              <li><strong>States:</strong> <code>kit_ordered → kit_dispatched → kit_in_transit → sample_received → processing → analysis_complete → results_ready → error</code></li>
+              <li><strong>Storage:</strong> A <code>report_events</code> table (append-only log of state transitions) + a <code>reports</code> table with the current state denormalised for fast reads</li>
+              <li><strong>Transitions triggered by:</strong> Shopify webhooks (kit_dispatched), carrier API webhooks (in_transit), Lab LIMS callback (sample_received, processing, complete)</li>
+              <li><strong>Frontend polling:</strong> SSE endpoint polls report status every 5s; switches to push when status is <code>results_ready</code></li>
+              <li><strong>Notifications:</strong> Each state transition emits an event to a queue; notification service consumes and sends email/push as configured</li>
+              <li><strong>Idempotency:</strong> All webhook handlers are idempotent — duplicate deliveries don't cause double state transitions</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How would you handle a scenario where Shopify's API is down — how does this affect the customer experience?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            Defence in depth — the UI should never be completely broken because one upstream service is down.
+            <ul>
+              <li><strong>Product pages:</strong> ISR means Shopify outage doesn't affect the storefront — pages are pre-built and served from CDN</li>
+              <li><strong>Cart:</strong> Show a graceful error on cart mutations. Never lose cart state — cartId in cookie survives the outage</li>
+              <li><strong>Checkout:</strong> Shopify hosts checkout — if they're down, checkout is down. Honest error message + email capture for "notify me when back"</li>
+              <li><strong>Dashboard:</strong> Use <code>Promise.allSettled</code> in BFF — Shopify order history fails silently, rest of dashboard still loads</li>
+              <li><strong>Circuit breaker:</strong> Wrap Shopify calls in a circuit breaker — after 5 consecutive failures, skip the call and return cached data for 60s before retrying</li>
+              <li><strong>Monitoring:</strong> Alert on Shopify API error rate spike so you know before customers do</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">The data science team wants to A/B test two different recommendation algorithms. How do you support this in the frontend?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Experiment assignment:</strong> Assign user to variant server-side (BFF or middleware) using a deterministic hash of userId + experiment ID — stable across sessions</li>
+              <li><strong>Variant in BFF response:</strong> Return <code>variant: 'control' | 'treatment'</code> alongside recommendations so the frontend can render differently if needed</li>
+              <li><strong>Logging:</strong> Every recommendation impression and click-through logged with the variant — send to analytics pipeline (Segment, Amplitude, or custom)</li>
+              <li><strong>Feature flags:</strong> Use a feature flag system (LaunchDarkly, PostHog, or custom) to control experiment rollout %, enable/disable without deploy</li>
+              <li><strong>Separation:</strong> The recommendation API abstraction means the frontend doesn't know or care which algorithm is running — just receives product IDs</li>
+              <li><strong>Clean-up:</strong> Once winner is determined, remove the experiment code in a single PR — no flag debt</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('systemdesign', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: SECURITY & GDPR
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-security">
+      <div class="page-header">
+        <div class="page-tag">Advanced Technical · Critical</div>
+        <div class="page-title">Security, GDPR & Health Data</div>
+        <div class="page-desc">Mitra Bio processes biometric and health-adjacent data in the UK. This is legally sensitive and a massive differentiator in how seriously they take engineering. Expect questions here.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout red">
+          <strong>Why This Is Critical at Mitra Bio</strong>
+          Skin epigenetic data is health-adjacent personal data under GDPR. The ICO (UK regulator) considers this "special category data" under Article 9. A data breach would be existential for a trust-based consumer health brand backed by Illumina and Khosla.
+        </div>
+
+        <h2>GDPR & UK Data Protection — What Engineers Need to Know</h2>
+        <table>
+          <thead><tr><th>Requirement</th><th>What It Means in Practice</th><th>Technical Implementation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Lawful Basis</strong></td><td>You must have a reason to process data (consent, contract, legitimate interest)</td><td>Explicit opt-in at signup; consent stored with timestamp and version</td></tr>
+            <tr><td><strong>Data Minimisation</strong></td><td>Only collect what's necessary for the stated purpose</td><td>Don't log raw biomarker data in application logs; schema only stores required fields</td></tr>
+            <tr><td><strong>Right to Erasure</strong></td><td>Users can request all their data be deleted</td><td>Soft-delete with 30-day grace, then hard delete; cascade through all tables</td></tr>
+            <tr><td><strong>Data Portability</strong></td><td>Users can request their data in machine-readable format</td><td><code>GET /api/user/export</code> → returns ZIP of all data as JSON</td></tr>
+            <tr><td><strong>Breach Notification</strong></td><td>ICO must be notified within 72 hours of a breach</td><td>Incident response runbook; Sentry + PagerDuty alerts</td></tr>
+            <tr><td><strong>Data Residency</strong></td><td>UK/EEA data must stay in UK/EEA post-Brexit</td><td>Verify hosting region (Vercel EU, AWS eu-west-2); review third-party data transfers</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Authentication & Session Security</h2>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('sec','auth')">Auth Patterns</div>
+          <div class="tab" onclick="switchTab('sec','api')">API Security</div>
+          <div class="tab" onclick="switchTab('sec','frontend')">Frontend Security</div>
+          <div class="tab" onclick="switchTab('sec','secrets')">Secrets Management</div>
+        </div>
+
+        <div id="tab-sec-auth" class="tab-content active">
+          <pre><code><span class="cm">// JWT + Refresh Token pattern</span>
+<span class="kw">const</span> AUTH_CONFIG = {
+  accessTokenExpiry: <span class="str">'15m'</span>,   <span class="cm">// short-lived — limits exposure</span>
+  refreshTokenExpiry: <span class="str">'7d'</span>,   <span class="cm">// stored in httpOnly cookie</span>
+  algorithm: <span class="str">'RS256'</span>,          <span class="cm">// asymmetric — public key verification</span>
+}
+
+<span class="cm">// Middleware — runs at edge before every protected request</span>
+<span class="kw">export function</span> <span class="fn">middleware</span>(request: <span class="ty">NextRequest</span>) {
+  <span class="kw">const</span> token = request.cookies.<span class="fn">get</span>(<span class="str">'access_token'</span>)?.value
+
+  <span class="kw">if</span> (!token) {
+    <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">redirect</span>(<span class="kw">new</span> <span class="fn">URL</span>(<span class="str">'/login'</span>, request.url))
+  }
+
+  <span class="kw">try</span> {
+    <span class="cm">// Verify without DB call — stateless at edge</span>
+    <span class="kw">const</span> payload = <span class="fn">verifyJwt</span>(token, process.env.JWT_PUBLIC_KEY!)
+    <span class="kw">const</span> res = <span class="ty">NextResponse</span>.<span class="fn">next</span>()
+    res.headers.<span class="fn">set</span>(<span class="str">'x-user-id'</span>, payload.sub)  <span class="cm">// pass to server components</span>
+    <span class="kw">return</span> res
+  } <span class="kw">catch</span> {
+    <span class="cm">// Token expired — redirect to refresh endpoint</span>
+    <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">redirect</span>(<span class="kw">new</span> <span class="fn">URL</span>(<span class="str">'/api/auth/refresh'</span>, request.url))
+  }
+}
+
+<span class="cm">// Cookie config — never accessible from JS</span>
+<span class="kw">const</span> COOKIE_OPTIONS = {
+  httpOnly: <span class="kw">true</span>,   <span class="cm">// no JS access — blocks XSS token theft</span>
+  secure: <span class="kw">true</span>,     <span class="cm">// HTTPS only</span>
+  sameSite: <span class="str">'strict'</span> <span class="kw">as</span> <span class="kw">const</span>,  <span class="cm">// blocks CSRF</span>
+  path: <span class="str">'/'</span>,
+  maxAge: <span class="ty">60</span> * <span class="ty">60</span> * <span class="ty">24</span> * <span class="ty">7</span>,  <span class="cm">// 7 days</span>
+}</code></pre>
+        </div>
+
+        <div id="tab-sec-api" class="tab-content">
+          <pre><code><span class="cm">// Every API route must do these checks</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="ty">Request</span>, { params }: Params) {
+  <span class="cm">// 1. Authentication — is this a valid session?</span>
+  <span class="kw">const</span> session = <span class="kw">await</span> <span class="fn">getSession</span>(req)
+  <span class="kw">if</span> (!session) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Unauthorized'</span>, { status: <span class="ty">401</span> })
+
+  <span class="cm">// 2. Authorisation — does THIS user own THIS resource?</span>
+  <span class="kw">const</span> report = <span class="kw">await</span> db.<span class="fn">getReport</span>(params.id)
+  <span class="kw">if</span> (report.userId !== session.userId) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Forbidden'</span>, { status: <span class="ty">403</span> })
+
+  <span class="cm">// 3. Input validation — never trust URL params</span>
+  <span class="kw">const</span> parsedId = z.<span class="fn">string</span>().<span class="fn">uuid</span>().<span class="fn">safeParse</span>(params.id)
+  <span class="kw">if</span> (!parsedId.success) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Bad Request'</span>, { status: <span class="ty">400</span> })
+
+  <span class="cm">// 4. Rate limiting — prevent abuse</span>
+  <span class="kw">const</span> limited = <span class="kw">await</span> <span class="fn">rateLimit</span>(session.userId, <span class="str">'report:read'</span>, <span class="ty">100</span>)
+  <span class="kw">if</span> (limited) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Too Many Requests'</span>, { status: <span class="ty">429</span> })
+
+  <span class="cm">// 5. Return minimal data — never expose internal IDs or raw measurements</span>
+  <span class="kw">return</span> <span class="fn">Response</span>.<span class="fn">json</span>(<span class="fn">toPublicReport</span>(report))
+}</code></pre>
+          <div class="callout yellow">
+            <strong>IDOR — The #1 API Bug</strong>
+            Insecure Direct Object Reference — when an API returns data based only on an ID without checking ownership. Always verify <code>resource.userId === session.userId</code>. This is especially critical with health data.
+          </div>
+        </div>
+
+        <div id="tab-sec-frontend" class="tab-content">
+          <div class="grid2">
+            <div class="card">
+              <h3>XSS Prevention</h3>
+              <ul class="check-list">
+                <li>React escapes output by default — never use <code>dangerouslySetInnerHTML</code> with user data</li>
+                <li>Content Security Policy header — blocks inline scripts</li>
+                <li>Sanitise any user-generated content with DOMPurify before rendering</li>
+                <li>Never store tokens in localStorage — httpOnly cookie only</li>
+                <li>Subresource Integrity (SRI) on third-party scripts</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Security Headers</h3>
+              <pre style="margin:0;font-size:11px"><code><span class="cm">// next.config.ts</span>
+headers: [{
+  source: <span class="str">'/(.*)'</span>,
+  headers: [
+    { key: <span class="str">'X-Frame-Options'</span>, value: <span class="str">'DENY'</span> },
+    { key: <span class="str">'X-Content-Type-Options'</span>, value: <span class="str">'nosniff'</span> },
+    { key: <span class="str">'Referrer-Policy'</span>, value: <span class="str">'strict-origin'</span> },
+    { key: <span class="str">'Permissions-Policy'</span>,
+      value: <span class="str">'camera=(), microphone=(), geolocation=()'</span> },
+    { key: <span class="str">'Content-Security-Policy'</span>,
+      value: <span class="str">"default-src 'self'; script-src 'self'"</span> },
+  ]
+}]</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-sec-secrets" class="tab-content">
+          <table>
+            <thead><tr><th>Secret</th><th>Where It Lives</th><th>Never Do</th></tr></thead>
+            <tbody>
+              <tr><td>Shopify Storefront Token</td><td>Server env var only</td><td>Expose in client bundle (even it's "public" — rate limit exposure)</td></tr>
+              <tr><td>Shopify Admin API Token</td><td>Server env var, restricted to BFF</td><td>Use in browser code ever</td></tr>
+              <tr><td>Shopify Webhook Secret</td><td>Server env var</td><td>Log it, commit it, hardcode it</td></tr>
+              <tr><td>JWT Private Key</td><td>AWS Secrets Manager / Vercel env (encrypted)</td><td>Store in .env committed to repo</td></tr>
+              <tr><td>Database Connection String</td><td>Server env var, connection pooler</td><td>Use in client components</td></tr>
+              <tr><td>Stripe/Billing API Key</td><td>Server env var only</td><td>Expose publishable key unnecessarily</td></tr>
+            </tbody>
+          </table>
+          <div class="callout green">
+            <strong>Next.js Env Var Rules</strong>
+            Variables prefixed with <code>NEXT_PUBLIC_</code> are bundled into client JS — they are visible to anyone. Everything else is server-only. Never prefix secrets with <code>NEXT_PUBLIC_</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Security Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">A user reports they can see another user's skin report by changing the ID in the URL. Walk me through how you'd investigate and fix this.</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>This is an IDOR (Insecure Direct Object Reference) — a critical vulnerability.</strong>
+            <ul>
+              <li><strong>Immediate:</strong> Take the endpoint offline or add a temporary block on the affected route until fixed</li>
+              <li><strong>Investigate:</strong> Check logs — how long has this been exploitable? Who accessed what? This is a GDPR breach if user data was accessed.</li>
+              <li><strong>Fix:</strong> Add authorisation check: <code>if (report.userId !== session.userId) return 403</code></li>
+              <li><strong>Audit:</strong> Check every API endpoint that takes an ID parameter — this pattern tends to repeat</li>
+              <li><strong>Prevent recurrence:</strong> Add a middleware wrapper that enforces resource ownership checks. Write integration tests that specifically verify cross-user access returns 403</li>
+              <li><strong>Notify:</strong> If data was accessed, notify affected users and report to ICO within 72 hours (GDPR requirement)</li>
+              <li><strong>Post-mortem:</strong> Blameless — focus on what process let this through (code review, testing gap)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you implement a "right to erasure" (right to be forgotten) request technically?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Trigger:</strong> User submits erasure request via account settings → creates a <code>erasure_requests</code> record with timestamp</li>
+              <li><strong>Immediate actions:</strong> Invalidate all sessions, disable account login, remove from email lists (Klaviyo API)</li>
+              <li><strong>Grace period:</strong> 30-day window (allows reversal, handles in-flight orders)</li>
+              <li><strong>Hard delete after grace:</strong> Async job deletes: user record, all skin reports and biomarker data, all order associations</li>
+              <li><strong>Anonymisation alternative:</strong> Where deletion breaks referential integrity (e.g., billing records needed for tax), anonymise instead — replace PII with <code>[DELETED]</code> placeholder</li>
+              <li><strong>Third parties:</strong> Submit deletion requests to Shopify (customer record), Klaviyo (contact), any analytics tools</li>
+              <li><strong>Confirmation:</strong> Send deletion confirmation email (keep this record for legal evidence)</li>
+              <li><strong>Backups:</strong> Document how long backups retain data — GDPR still applies to backups</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('security', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: REAL-TIME
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-realtime">
+      <div class="page-header">
+        <div class="page-tag">Advanced Technical</div>
+        <div class="page-title">Real-time & Async Patterns</div>
+        <div class="page-desc">From "processing" to "your results are ready" — Mitra Bio needs real-time status updates. Know the right tool for each scenario.</div>
+      </div>
+
+      <div class="section">
+        <h2>Choosing the Right Real-time Approach</h2>
+        <table>
+          <thead><tr><th>Technology</th><th>Direction</th><th>Best For</th><th>Mitra Bio Use Case</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Server-Sent Events (SSE)</strong></td><td>Server → Client only</td><td>Status updates, live feeds, notifications</td><td>Report processing status, "results ready" notification</td></tr>
+            <tr><td><strong>WebSockets</strong></td><td>Bi-directional</td><td>Chat, collaborative editing, live data</td><td>Overkill for Mitra Bio's use case — adds complexity</td></tr>
+            <tr><td><strong>Long Polling</strong></td><td>Client pulls repeatedly</td><td>Simple status check where SSE not available</td><td>Fallback if SSE not supported</td></tr>
+            <tr><td><strong>Push Notifications</strong></td><td>Server → Device</td><td>Background alerts when app not open</td><td>"Your results are ready" when user has closed the tab</td></tr>
+            <tr><td><strong>Webhooks</strong></td><td>Server → Server</td><td>Event-driven integrations</td><td>Shopify order events, lab system callbacks</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout blue">
+          <strong>Recommendation for Mitra Bio</strong>
+          SSE for in-app status updates (user is watching the "processing" screen) + Web Push Notifications for background delivery (user closed the tab). Simple, reliable, no WebSocket infrastructure to manage.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>SSE Implementation — Processing Status Screen</h2>
+        <pre><code><span class="cm">// app/api/report/[id]/stream/route.ts</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="ty">Request</span>, { params }: { params: { id: <span class="ty">string</span> } }) {
+  <span class="kw">const</span> session = <span class="kw">await</span> <span class="fn">getSession</span>(req)
+  <span class="kw">if</span> (!session) <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Unauthorized'</span>, { status: <span class="ty">401</span> })
+
+  <span class="kw">let</span> interval: <span class="ty">ReturnType</span>&lt;<span class="kw">typeof</span> setInterval&gt;
+
+  <span class="kw">const</span> stream = <span class="kw">new</span> <span class="fn">ReadableStream</span>({
+    <span class="kw">async</span> <span class="fn">start</span>(controller) {
+      <span class="kw">const</span> <span class="fn">send</span> = (data: <span class="kw">unknown</span>) =>
+        controller.<span class="fn">enqueue</span>(<span class="kw">new</span> <span class="ty">TextEncoder</span>().<span class="fn">encode</span>(`data: ${<span class="fn">JSON.stringify</span>(data)}\n\n`))
+
+      interval = <span class="fn">setInterval</span>(<span class="kw">async</span> () => {
+        <span class="kw">const</span> report = <span class="kw">await</span> db.<span class="fn">getReport</span>(params.id)
+
+        <span class="cm">// Guard — only owner can stream their report</span>
+        <span class="kw">if</span> (report.userId !== session.userId) { controller.<span class="fn">close</span>(); <span class="kw">return</span> }
+
+        <span class="fn">send</span>({ status: report.status, updatedAt: report.updatedAt })
+
+        <span class="kw">if</span> (report.status === <span class="str">'ready'</span> || report.status === <span class="str">'error'</span>) {
+          <span class="fn">clearInterval</span>(interval)
+          controller.<span class="fn">close</span>()
+        }
+      }, <span class="ty">4000</span>)
+    },
+    <span class="fn">cancel</span>() { <span class="fn">clearInterval</span>(interval) }  <span class="cm">// cleanup on client disconnect</span>
+  })
+
+  <span class="kw">return new</span> <span class="fn">Response</span>(stream, {
+    headers: {
+      <span class="str">'Content-Type'</span>: <span class="str">'text/event-stream'</span>,
+      <span class="str">'Cache-Control'</span>: <span class="str">'no-cache'</span>,
+      <span class="str">'Connection'</span>: <span class="str">'keep-alive'</span>,
+    }
+  })
+}
+
+<span class="cm">// Client — hooks into the stream</span>
+<span class="str">'use client'</span>
+<span class="kw">function</span> <span class="fn">useReportStatus</span>(reportId: <span class="ty">string</span>) {
+  <span class="kw">const</span> [status, setStatus] = <span class="fn">useState</span>&lt;<span class="ty">ReportStatus</span>&gt;(<span class="str">'processing'</span>)
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> es = <span class="kw">new</span> <span class="fn">EventSource</span>(`/api/report/${reportId}/stream`)
+    es.onmessage = (e) => {
+      <span class="kw">const</span> { status } = <span class="fn">JSON.parse</span>(e.data)
+      <span class="fn">setStatus</span>(status)
+      <span class="kw">if</span> (status === <span class="str">'ready'</span>) { es.<span class="fn">close</span>(); router.<span class="fn">push</span>(`/results/${reportId}`) }
+    }
+    <span class="kw">return</span> () => es.<span class="fn">close</span>()  <span class="cm">// cleanup on unmount</span>
+  }, [reportId])
+
+  <span class="kw">return</span> status
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Background Jobs & Queues</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>What goes in a queue</h3>
+            <ul class="check-list">
+              <li>Sending emails (welcome, results ready, re-test reminders)</li>
+              <li>Push notifications to mobile/web</li>
+              <li>Triggering lab LIMS integrations</li>
+              <li>Generating PDF report exports</li>
+              <li>Syncing data to analytics pipeline</li>
+              <li>Anything that can fail and needs retry logic</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Queue options in their stack</h3>
+            <ul class="check-list">
+              <li><strong>BullMQ + Redis</strong> — great for Next.js, runs in Node, persistent</li>
+              <li><strong>Inngest</strong> — serverless-native, built for Vercel/Next.js, durable workflows</li>
+              <li><strong>AWS SQS + Lambda</strong> — if on AWS, decoupled and scalable</li>
+              <li><strong>Trigger.dev</strong> — TypeScript-native background jobs, excellent DX</li>
+              <li>For Mitra Bio's scale: <strong>Inngest or Trigger.dev</strong> — pairs perfectly with Vercel</li>
+            </ul>
+          </div>
+        </div>
+        <pre><code><span class="cm">// Inngest function — triggered when report is ready</span>
+<span class="kw">export const</span> sendResultsNotification = <span class="fn">inngest.createFunction</span>(
+  { id: <span class="str">'send-results-notification'</span>, retries: <span class="ty">3</span> },
+  { event: <span class="str">'report/results.ready'</span> },
+  <span class="kw">async</span> ({ event, step }) => {
+    <span class="kw">const</span> user = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="str">'fetch-user'</span>, () => db.<span class="fn">getUser</span>(event.data.userId))
+
+    <span class="kw">await</span> step.<span class="fn">run</span>(<span class="str">'send-email'</span>, () =>
+      klaviyo.<span class="fn">sendEmail</span>({ to: user.email, template: <span class="str">'results-ready'</span>, data: event.data })
+    )
+
+    <span class="kw">if</span> (user.pushToken) {
+      <span class="kw">await</span> step.<span class="fn">run</span>(<span class="str">'send-push'</span>, () =>
+        webPush.<span class="fn">sendNotification</span>(user.pushToken, { title: <span class="str">'Your skin results are ready!'</span> })
+      )
+    }
+  }
+)</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Real-time Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">Why would you choose SSE over WebSockets for the report status feature?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Directionality:</strong> Status updates are server → client only. WebSockets are bi-directional — that bi-directionality adds complexity with no benefit here.</li>
+              <li><strong>Infrastructure:</strong> SSE works over standard HTTP/2. WebSockets need a persistent TCP connection and specific infrastructure support. Vercel Edge Functions don't support WebSockets natively.</li>
+              <li><strong>Reconnection:</strong> SSE reconnects automatically after disconnect — built into the browser spec. WebSockets need custom reconnection logic.</li>
+              <li><strong>Simplicity:</strong> SSE is just an HTTP endpoint with a special content-type. Easier to test, debug, and monitor.</li>
+              <li><strong>When I'd use WebSockets instead:</strong> If we built a collaborative feature (e.g., two users reviewing a report together in real-time), bi-directionality would justify the complexity.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">The SSE connection keeps getting dropped on mobile. How do you handle this?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>SSE auto-reconnect:</strong> The browser's EventSource API reconnects automatically after drop — it sends a <code>Last-Event-ID</code> header so you can resume from where you left off</li>
+              <li><strong>Server-side IDs:</strong> Send an <code>id:</code> field with each event so the client can recover on reconnect</li>
+              <li><strong>Keep-alive:</strong> Send a comment line every 30s (<code>: keepalive\n\n</code>) to prevent intermediary proxies from closing the connection</li>
+              <li><strong>Background/tab invisible:</strong> When user switches apps on mobile, the connection may freeze. On <code>visibilitychange</code> event, close and reopen the SSE connection</li>
+              <li><strong>Graceful fallback:</strong> If SSE fails 3 times, fall back to polling every 10s — worse UX but reliable</li>
+              <li><strong>Push notification backup:</strong> The real safety net — even if the SSE drops, the push notification fires when results are ready</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('realtime', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: DATABASE
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-database">
+      <div class="page-header">
+        <div class="page-tag">Advanced Technical</div>
+        <div class="page-title">Database & Data Modelling</div>
+        <div class="page-desc">Mitra Bio's core asset is their data — biomarkers across time per user. Getting the schema and query patterns right matters enormously for a data-science-driven product.</div>
+      </div>
+
+      <div class="section">
+        <h2>Schema Design for Mitra Bio</h2>
+        <pre><code><span class="cm">-- Core tables for the platform (PostgreSQL)</span>
+
+<span class="cm">-- Users</span>
+CREATE TABLE users (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email       TEXT UNIQUE NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  deleted_at  TIMESTAMPTZ,                          <span class="cm">-- soft delete for GDPR</span>
+  shopify_customer_id TEXT,
+  subscription_status TEXT DEFAULT 'free'
+);
+
+<span class="cm">-- Skin kits — each physical kit ordered</span>
+CREATE TABLE kits (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID REFERENCES users(id) ON DELETE CASCADE,
+  shopify_order_id TEXT NOT NULL,
+  status          TEXT NOT NULL DEFAULT 'ordered',  <span class="cm">-- state machine</span>
+  dispatched_at   TIMESTAMPTZ,
+  received_at     TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ DEFAULT now()
+);
+
+<span class="cm">-- Skin reports — one per kit, created when analysis completes</span>
+CREATE TABLE skin_reports (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID REFERENCES users(id) ON DELETE CASCADE,
+  kit_id          UUID REFERENCES kits(id),
+  status          TEXT NOT NULL DEFAULT 'processing',
+  skin_age        NUMERIC(5,2),
+  processed_at    TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX idx_skin_reports_user_id ON skin_reports(user_id, processed_at DESC);
+
+<span class="cm">-- Biomarkers — normalised: one row per biomarker per report</span>
+CREATE TABLE biomarkers (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id   UUID REFERENCES skin_reports(id) ON DELETE CASCADE,
+  key         TEXT NOT NULL,   <span class="cm">-- 'hydration', 'elasticity', 'microbiome_diversity'</span>
+  score       NUMERIC(5,2) NOT NULL,   <span class="cm">-- normalised 0-100</span>
+  raw_value   NUMERIC,
+  unit        TEXT,
+  percentile  NUMERIC(5,2)   <span class="cm">-- vs reference population</span>
+);
+CREATE INDEX idx_biomarkers_report_id ON biomarkers(report_id);
+
+<span class="cm">-- Product recommendations — links reports to Shopify products</span>
+CREATE TABLE report_recommendations (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id       UUID REFERENCES skin_reports(id) ON DELETE CASCADE,
+  shopify_variant_id TEXT NOT NULL,
+  reason          TEXT,         <span class="cm">-- why this product was recommended</span>
+  position        INT,          <span class="cm">-- display order</span>
+  clicked_at      TIMESTAMPTZ   <span class="cm">-- track engagement</span>
+);</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Key Query Patterns</h2>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('db','queries')">Common Queries</div>
+          <div class="tab" onclick="switchTab('db','rls')">Row Level Security</div>
+          <div class="tab" onclick="switchTab('db','orm')">ORM Patterns</div>
+          <div class="tab" onclick="switchTab('db','perf')">Performance</div>
+        </div>
+
+        <div id="tab-db-queries" class="tab-content active">
+          <pre><code><span class="cm">-- Get user's full report history with biomarkers (for trend chart)</span>
+SELECT
+  sr.id,
+  sr.processed_at,
+  sr.skin_age,
+  json_agg(json_build_object(
+    'key', b.key,
+    'score', b.score,
+    'percentile', b.percentile
+  ) ORDER BY b.key) AS biomarkers
+FROM skin_reports sr
+JOIN biomarkers b ON b.report_id = sr.id
+WHERE sr.user_id = $1
+  AND sr.status = 'ready'
+  AND sr.deleted_at IS NULL
+GROUP BY sr.id, sr.processed_at, sr.skin_age
+ORDER BY sr.processed_at DESC
+LIMIT 10;
+
+<span class="cm">-- Trend analysis — has a specific biomarker improved?</span>
+SELECT
+  key,
+  score,
+  processed_at,
+  score - LAG(score) OVER (PARTITION BY key ORDER BY processed_at) AS delta
+FROM biomarkers b
+JOIN skin_reports sr ON sr.id = b.report_id
+WHERE sr.user_id = $1
+  AND b.key = 'hydration'
+ORDER BY processed_at;</code></pre>
+        </div>
+
+        <div id="tab-db-rls" class="tab-content">
+          <div class="callout green">
+            <strong>Row Level Security — Database-level Authorisation</strong>
+            If using Supabase (likely for a startup like Mitra Bio), RLS enforces that users can only query their own data — even if your BFF code has a bug.
+          </div>
+          <pre><code><span class="cm">-- Enable RLS on sensitive tables</span>
+ALTER TABLE skin_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE biomarkers ENABLE ROW LEVEL SECURITY;
+
+<span class="cm">-- Policy: users can only read their own reports</span>
+CREATE POLICY "users_own_reports" ON skin_reports
+  FOR ALL USING (user_id = auth.uid());
+
+<span class="cm">-- Biomarkers accessible only via their report (which is already protected)</span>
+CREATE POLICY "biomarkers_via_report" ON biomarkers
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM skin_reports sr
+      WHERE sr.id = biomarkers.report_id
+        AND sr.user_id = auth.uid()
+    )
+  );
+
+<span class="cm">-- Admin service role bypasses RLS — used only in BFF, never in browser</span>
+<span class="cm">-- Never expose service role key client-side</span></code></pre>
+        </div>
+
+        <div id="tab-db-orm" class="tab-content">
+          <pre><code><span class="cm">// Prisma schema — type-safe database access</span>
+model SkinReport {
+  id          String   @id @default(uuid())
+  userId      String
+  kitId       String?
+  status      ReportStatus @default(PROCESSING)
+  skinAge     Decimal?
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kit         Kit?     @relation(fields: [kitId], references: [id])
+  biomarkers  Biomarker[]
+  recommendations ReportRecommendation[]
+
+  @@index([userId, processedAt(sort: Desc)])
+}
+
+<span class="cm">// Type-safe query with Prisma</span>
+<span class="kw">const</span> dashboardData = <span class="kw">await</span> prisma.skinReport.<span class="fn">findMany</span>({
+  where: { userId, status: <span class="str">'READY'</span>, deletedAt: <span class="kw">null</span> },
+  orderBy: { processedAt: <span class="str">'desc'</span> },
+  take: <span class="ty">5</span>,
+  include: {
+    biomarkers: { orderBy: { key: <span class="str">'asc'</span> } },
+    recommendations: { orderBy: { position: <span class="str">'asc'</span> }, take: <span class="ty">6</span> },
+  },
+})</code></pre>
+        </div>
+
+        <div id="tab-db-perf" class="tab-content">
+          <div class="grid2">
+            <div class="card">
+              <h3>Indexes that matter</h3>
+              <ul class="check-list">
+                <li><code>(user_id, processed_at DESC)</code> on skin_reports — dashboard query</li>
+                <li><code>(report_id)</code> on biomarkers — always fetched with report</li>
+                <li><code>(user_id, status)</code> on kits — "active kits" query</li>
+                <li><code>(shopify_order_id)</code> on kits — webhook lookup</li>
+                <li>Partial index on <code>status = 'processing'</code> — small hot set</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>N+1 Prevention</h3>
+              <ul class="check-list">
+                <li>Always use <code>include</code> / <code>JOIN</code> — never fetch biomarkers in a loop</li>
+                <li>Use Prisma's <code>findMany</code> with <code>include</code> not sequential <code>findOne</code></li>
+                <li>GraphQL: use DataLoader pattern for batching</li>
+                <li>Log slow queries in development — <code>prisma.$on('query', ...)</code></li>
+                <li>Connection pooling via PgBouncer or Prisma Accelerate on Vercel</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Database Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">Would you store biomarkers as one column (JSON) or as separate rows? Trade-offs?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>I'd use separate rows (EAV pattern — Entity-Attribute-Value) for biomarkers, not JSON. Here's why:</strong>
+            <ul>
+              <li><strong>Queryability:</strong> With rows I can run <code>WHERE key = 'hydration' AND score > 80</code> efficiently. With JSON, that requires a JSON path expression and can't use a standard B-tree index.</li>
+              <li><strong>Indexing:</strong> I can index on <code>(key, score)</code> for population stats. JSON columns need GIN indexes which are larger and slower.</li>
+              <li><strong>Schema evolution:</strong> Adding a new biomarker type is just inserting new rows — no schema migration needed.</li>
+              <li><strong>Aggregations:</strong> SQL window functions for trend analysis work cleanly on rows</li>
+              <li><strong>When JSON is fine:</strong> For the <code>insights</code> field (natural language text, no querying needed) — JSONB column is perfectly appropriate.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you handle database migrations safely in production with no downtime?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Expand/contract pattern:</strong> Never do a breaking change in one migration. Phase 1: add new column (nullable). Phase 2: deploy code that writes to both. Phase 3: backfill old rows. Phase 4: add NOT NULL constraint. Phase 5: remove old column.</li>
+              <li><strong>Never rename a column in one step</strong> — add new column, migrate data, remove old one over multiple deploys</li>
+              <li><strong>Avoid locking migrations:</strong> <code>ADD COLUMN NOT NULL DEFAULT</code> on large tables locks the table. Use <code>ADD COLUMN DEFAULT NULL</code> then set default separately.</li>
+              <li><strong>Test on production data size:</strong> Migrations that take 2ms on dev can take 4 minutes on 10M rows</li>
+              <li><strong>Tools:</strong> Prisma Migrate with <code>--create-only</code> to review before applying; Atlas for more complex migrations</li>
+              <li><strong>Rollback plan:</strong> Every migration should have a down migration. Test it before deploying up.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('database', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: OBSERVABILITY
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-observability">
+      <div class="page-header">
+        <div class="page-tag">Advanced Technical</div>
+        <div class="page-title">Monitoring & Observability</div>
+        <div class="page-desc">You can't improve what you can't see. A senior engineer owns observability — knowing when things break before users do, and diagnosing why quickly.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>The Three Pillars of Observability</strong>
+          <strong>Logs</strong> — what happened · <strong>Metrics</strong> — how the system is behaving · <strong>Traces</strong> — where time is being spent across services
+        </div>
+
+        <h2>Recommended Stack for Mitra Bio</h2>
+        <table>
+          <thead><tr><th>Concern</th><th>Tool</th><th>What It Catches</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Frontend errors</strong></td><td>Sentry</td><td>JS exceptions, unhandled rejections, React error boundaries</td></tr>
+            <tr><td><strong>Performance monitoring</strong></td><td>Vercel Analytics + Sentry Performance</td><td>Core Web Vitals per page, slow API routes</td></tr>
+            <tr><td><strong>API route tracing</strong></td><td>Sentry Traces / OpenTelemetry</td><td>Slow DB queries, N+1s, slow Shopify calls</td></tr>
+            <tr><td><strong>Uptime monitoring</strong></td><td>Better Uptime / Checkly</td><td>Site down, checkout broken, SSE endpoint failing</td></tr>
+            <tr><td><strong>Product analytics</strong></td><td>PostHog / Amplitude</td><td>Conversion funnels, feature flags, session recordings</td></tr>
+            <tr><td><strong>Log aggregation</strong></td><td>Axiom (Vercel native) / Datadog</td><td>Structured logs, search, alerting on patterns</td></tr>
+            <tr><td><strong>Alerting</strong></td><td>PagerDuty / Opsgenie</td><td>On-call rotation for P1 incidents</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>What to Monitor at Mitra Bio Specifically</h2>
+        <div class="grid2">
+          <div class="card green-border">
+            <h3>Business-Critical Metrics</h3>
+            <ul class="check-list">
+              <li><strong>Purchase funnel:</strong> Product view → add to cart → checkout start → purchase (each step's drop-off)</li>
+              <li><strong>Report availability:</strong> % of reports delivered within SLA (e.g., 14 days)</li>
+              <li><strong>Results page load:</strong> Time from navigation to dashboard rendered</li>
+              <li><strong>Shopify webhook delivery:</strong> Failed / retry rate</li>
+              <li><strong>Subscription churn events:</strong> Cancellation spike = product signal</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Technical Health Metrics</h3>
+            <ul class="check-list">
+              <li><strong>API p99 latency:</strong> Alert if BFF dashboard endpoint exceeds 2s</li>
+              <li><strong>Error rate by endpoint:</strong> Spike in 5xx = active incident</li>
+              <li><strong>DB query time:</strong> Slow query log > 500ms</li>
+              <li><strong>SSE connection drop rate:</strong> Indicates server or network issues</li>
+              <li><strong>Core Web Vitals by page:</strong> LCP, CLS, INP via RUM</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Sentry Implementation</h2>
+        <pre><code><span class="cm">// sentry.server.config.ts</span>
+<span class="kw">import</span> * <span class="kw">as</span> Sentry <span class="kw">from</span> <span class="str">'@sentry/nextjs'</span>
+
+<span class="fn">Sentry.init</span>({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: process.env.NODE_ENV === <span class="str">'production'</span> ? <span class="ty">0.1</span> : <span class="ty">1.0</span>,
+
+  <span class="cm">// Strip PII from events — critical for health data</span>
+  beforeSend(event) {
+    <span class="kw">if</span> (event.user) {
+      <span class="kw">delete</span> event.user.email   <span class="cm">// don't send emails to Sentry (third party)</span>
+      <span class="kw">delete</span> event.user.ip_address
+    }
+    <span class="cm">// Never send biomarker data in error context</span>
+    <span class="kw">if</span> (event.extra?.report) <span class="kw">delete</span> event.extra.report
+    <span class="kw">return</span> event
+  },
+})
+
+<span class="cm">// Instrument a BFF route with custom spans</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="ty">Request</span>) {
+  <span class="kw">return</span> Sentry.<span class="fn">withActiveSpan</span>(Sentry.<span class="fn">startSpan</span>({ name: <span class="str">'dashboard.load'</span> }), <span class="kw">async</span> () => {
+    <span class="kw">const</span> report = <span class="kw">await</span> Sentry.<span class="fn">startSpan</span>({ name: <span class="str">'db.getLatestReport'</span> }, () =>
+      db.<span class="fn">getLatestReport</span>(userId)
+    )
+    <span class="kw">return</span> <span class="fn">Response</span>.<span class="fn">json</span>(<span class="fn">toReportSummary</span>(report))
+  })
+}
+
+<span class="cm">// React Error Boundary — catches render errors gracefully</span>
+<span class="kw">export function</span> <span class="fn">ReportErrorBoundary</span>({ children }: { children: <span class="ty">ReactNode</span> }) {
+  <span class="kw">return</span> (
+    &lt;Sentry.ErrorBoundary fallback={&lt;ReportErrorFallback /&gt;} showDialog&gt;
+      {children}
+    &lt;/Sentry.ErrorBoundary&gt;
+  )
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Observability Interview Questions</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">A customer reports they can't see their results. What do you do to diagnose the issue?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <strong>Systematic investigation — don't guess, trace the path:</strong>
+            <ul>
+              <li><strong>1. Reproduce:</strong> Get the customer's user ID. Try to replicate in a staging environment with their account.</li>
+              <li><strong>2. Check report status:</strong> Query DB — what is <code>skin_reports.status</code> for this user? Is it stuck in 'processing'?</li>
+              <li><strong>3. Check the event log:</strong> Look at the kit's state machine history — did all events fire? Did the lab callback arrive?</li>
+              <li><strong>4. Check BFF logs:</strong> Was the dashboard API returning an error for this user? Axiom/Datadog — filter by user ID.</li>
+              <li><strong>5. Check Sentry:</strong> Any JS errors on the results page for this user's session?</li>
+              <li><strong>6. Frontend DevTools:</strong> If I can pair with the customer, look at Network tab — what is the API returning?</li>
+              <li><strong>7. Fix &amp; prevent:</strong> Once found, add an alert/test so this category of issue is caught before next customer hits it.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">
+            <span class="qa-q-label">Q</span>
+            <span class="qa-q-text">How do you alert on something going wrong with the purchase funnel without having a dedicated analytics team?</span>
+            <span class="qa-q-arrow">▶</span>
+          </div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Webhook failure rate:</strong> Alert in Sentry/Datadog if Shopify webhook handler has error rate > 1% over 5 min</li>
+              <li><strong>Custom business events:</strong> Emit a Sentry custom event on every purchase completion and every checkout abandonment — alert if completion rate drops 20% below 7-day average</li>
+              <li><strong>Checkly synthetic monitoring:</strong> Run a headless browser through the full purchase flow every 5 minutes in production — alert if it fails</li>
+              <li><strong>API error rates:</strong> 5xx rate on <code>/api/cart/*</code> endpoints — alert immediately</li>
+              <li><strong>PostHog funnels:</strong> Visual funnel with week-over-week comparison — surface in a weekly digest to the team</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('observability', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         PAGE: FLASH CARDS
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-flashcards">
+      <div class="page-header">
+        <div class="page-tag">Quick Review</div>
+        <div class="page-title">Quick-Fire Flash Cards</div>
+        <div class="page-desc">Click each card to reveal the answer. Use these in the hour before your interview for fast recall of key concepts.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>How to use</strong>
+          Read the front, think of your answer, then click to reveal. If you hesitate, go back to that section and review it.
+        </div>
+
+        <h2>React & Next.js</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the difference between <code>generateStaticParams</code> and <code>generateMetadata</code>?</div>
+            <div class="fc-back"><strong>generateStaticParams:</strong> Returns a list of params to pre-render dynamic routes at build time (SSG). Run at build time.<br><br><strong>generateMetadata:</strong> Returns SEO metadata (title, description, OG tags) for a page. Runs per request (or is cached). Both are async functions in the App Router.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What does <code>revalidatePath</code> vs <code>revalidateTag</code> do?</div>
+            <div class="fc-back"><strong>revalidatePath('/shop'):</strong> Clears the full route cache for a specific path — every page at that URL rebuilds on next request.<br><br><strong>revalidateTag('products'):</strong> Clears all cached fetch() calls that were tagged with 'products' — more surgical, affects multiple pages at once. Prefer tags for data-driven invalidation.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is <code>startTransition</code> and when do you use it?</div>
+            <div class="fc-back">Marks a state update as non-urgent so React can interrupt it to keep the UI responsive. Use when: navigating between pages, filtering large lists, any update where you don't need an immediate render. The UI stays interactive (urgent updates still process) while the transition completes in the background.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the "waterfall" problem in data fetching and how does Next.js App Router solve it?</div>
+            <div class="fc-back">Waterfall: each fetch waits for the previous one to finish — A fetches, B waits, B fetches, C waits = slow. <br><br>App Router solves it with parallel RSCs in Suspense boundaries — each async Server Component fetches independently at the same time. Total time = slowest fetch, not sum of all fetches.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+
+        <h2>Shopify & Commerce</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the difference between Shopify's Storefront API and Admin API?</div>
+            <div class="fc-back"><strong>Storefront API:</strong> Public-facing, used from frontend/BFF, limited to customer-visible data (products, cart, collections). Authenticated with a Storefront access token (lower privilege).<br><br><strong>Admin API:</strong> Private, full access to store data (orders, customers, inventory, fulfilment). Must only be called server-side. Never expose Admin API token client-side.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">How do you prevent duplicate order processing from Shopify webhooks?</div>
+            <div class="fc-back">Implement <strong>idempotency</strong>: store the webhook event ID in a <code>processed_webhooks</code> table. Before processing, check if the ID already exists. If yes, return 200 (acknowledge) without processing. If no, process and insert the ID. This handles Shopify's at-least-once delivery guarantee safely.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is Shopify Hydrogen and when would you use it?</div>
+            <div class="fc-back">Hydrogen is Shopify's official React-based framework for headless storefronts, built on Remix. It provides components and hooks pre-wired to the Storefront API (Cart, ShopifyProvider, Image, etc.).<br><br>Use it when: building a pure headless storefront with minimal custom backend. Avoid if: you need a non-Remix stack (e.g., Next.js) or heavy custom backend integration — then build your own Storefront API client.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is ISR and when would you NOT use it for a product page?</div>
+            <div class="fc-back"><strong>ISR (Incremental Static Regeneration):</strong> Pages are statically built but revalidated in the background after a set time. Excellent for product pages (content rarely changes).<br><br>Don't use ISR when: content is user-specific (personalised pages), content must be real-time (live inventory), or data is security-sensitive. For Mitra Bio: product catalogue = ISR ✓, skin results dashboard = ISR ✗ (must be dynamic).</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+
+        <h2>Security & Data</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is an IDOR vulnerability and give an example in the context of Mitra Bio?</div>
+            <div class="fc-back"><strong>IDOR (Insecure Direct Object Reference):</strong> When an API lets you access a resource by its ID without checking if you own it.<br><br>Mitra Bio example: <code>GET /api/report/abc123</code> returns report data without verifying that the authenticated user owns report <code>abc123</code>. Any authenticated user could iterate IDs and read other users' skin data. Fix: always check <code>report.userId === session.userId</code>.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">Why use <code>httpOnly</code> cookies for auth tokens instead of <code>localStorage</code>?</div>
+            <div class="fc-back"><code>localStorage</code> is accessible to any JavaScript running on the page — including malicious scripts injected via XSS. If an attacker injects JS, they can steal the token and take over the session.<br><br><code>httpOnly</code> cookies are not accessible from JavaScript at all — the browser sends them automatically with requests but JS cannot read them. This blocks XSS-based token theft entirely.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+
+        <h2>Performance & Architecture</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is a circuit breaker pattern and why would you use it with Shopify's API?</div>
+            <div class="fc-back">A circuit breaker monitors calls to an external service. After N failures in a window, it "opens" — subsequent calls fail fast (without trying) for a timeout period, then "half-open" to test if the service recovered.<br><br>Why with Shopify: if Shopify is slow/down, without a circuit breaker every user request waits for Shopify's timeout (30s) — server exhausted. With breaker, calls fail in ms and return cached data or a graceful error.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">Explain the difference between <code>Promise.all</code> and <code>Promise.allSettled</code> — when do you use each in a BFF?</div>
+            <div class="fc-back"><strong>Promise.all:</strong> Fails fast — if any promise rejects, the whole call rejects. Use when all data is required (e.g., you can't render the page without any of it).<br><br><strong>Promise.allSettled:</strong> Waits for all promises, collects results and rejections. Use in a BFF dashboard where partial data is better than no data — Shopify order history failing shouldn't break the whole dashboard.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the N+1 query problem? How do you detect and fix it?</div>
+            <div class="fc-back"><strong>N+1:</strong> Fetching a list of N items, then making a separate DB query for each — 1 query + N queries = terrible performance.<br><br><strong>Example:</strong> Fetch 10 reports, then loop and fetch biomarkers for each = 11 queries.<br><br><strong>Fix:</strong> Use JOIN / <code>include</code> in Prisma to fetch related data in one query. Detect: enable Prisma query logging and look for repeated queries in loops. Tools: Prisma Studio, pg_stat_statements.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What are the trade-offs between a monorepo and polyrepo for Mitra Bio's codebase?</div>
+            <div class="fc-back"><strong>Monorepo (single repo — all packages):</strong> Atomic commits across packages, shared types between frontend/backend, easier refactoring, single CI. Tooling: Turborepo.<br><br><strong>Polyrepo (separate repos per service):</strong> Independent deploy cycles, team autonomy, clearer ownership.<br><br><strong>For Mitra Bio (small team):</strong> Monorepo wins — shared TypeScript types between BFF and frontend, coordinated deploys, less overhead. Turborepo handles caching to keep CI fast.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+
+        <h2>Behavioural Quick-Recall</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">How do you explain a complex technical decision to a non-technical stakeholder?</div>
+            <div class="fc-back">Lead with the outcome, not the mechanism. "We're switching from X to Y because it means the checkout page will load 3x faster, which directly improves conversion" — not "we're migrating from RSC to CSR to reduce bundle size." Use analogies from their domain. Quantify the impact. Be honest about trade-offs.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What does "senior" mean to you as an engineer beyond technical skill?</div>
+            <div class="fc-back">Leverage: a senior engineer makes the whole team more effective — through mentorship, good PR reviews, clear documentation, and architectural clarity.<br><br>Judgment: knowing when NOT to build something, when to cut scope, when to raise a risk early.<br><br>Communication: translating between business and engineering, pushing back clearly but constructively, aligning on trade-offs before they become problems.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('flashcards', this)">
+        <span>✓</span> Mark section reviewed
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── PAGE NAVIGATION ──
+  function showPage(id, navEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+    document.getElementById('page-' + id).classList.add('active')
+    navEl.classList.add('active')
+  }
+
+  // ── TABS ──
+  function switchTab(group, tab) {
+    const groupEls = document.querySelectorAll(`[id^="tab-${group}-"]`)
+    groupEls.forEach(el => {
+      el.classList.remove('active')
+    })
+    document.getElementById(`tab-${group}-${tab}`).classList.add('active')
+
+    // Update tab button states
+    const tabBtns = document.querySelectorAll('.tab')
+    tabBtns.forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${group}'`)) {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${tab}'`))
+      }
+    })
+  }
+
+  // ── Q&A ACCORDION ──
+  function toggleQA(el) {
+    el.classList.toggle('open')
+  }
+
+  // ── MARK DONE ──
+  const done = new Set()
+
+  function markDone(pageId, btn) {
+    if (done.has(pageId)) return
+    done.add(pageId)
+    btn.classList.add('done')
+    btn.innerHTML = '<span>✓</span> Reviewed!'
+
+    const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`)
+    if (navItem) navItem.classList.add('done')
+
+    updateProgress()
+  }
+
+  function updateProgress() {
+    const total = 15
+    const count = done.size
+    const pct = (count / total) * 100
+    document.getElementById('progressFill').style.width = pct + '%'
+    document.getElementById('progressText').textContent = `${count} of ${total} sections reviewed`
+  }
+</script>
+</body>
+</html>

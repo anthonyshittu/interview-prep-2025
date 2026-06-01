@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E.ON UK — Interview Prep</title>
+  <style>
+    :root {
+      --bg:#0a120a;--surface:#101810;--surface2:#182018;--surface3:#1e281e;
+      --border:#1a2a1a;--accent:#4ade80;--accent2:#86efac;--accent-dim:rgba(74,222,128,0.1);
+      --text:#e4ede4;--text-dim:#7a9a7a;--text-muted:#3d5c3d;
+      --green:#4ade80;--green-dim:rgba(74,222,128,0.12);
+      --blue:#60a5fa;--blue-dim:rgba(96,165,250,0.12);
+      --red:#f87171;--red-dim:rgba(248,113,113,0.12);
+      --purple:#c084fc;--purple-dim:rgba(192,132,252,0.12);
+      --yellow:#fbbf24;--yellow-dim:rgba(251,191,36,0.12);
+      --orange:#fb923c;--orange-dim:rgba(251,146,60,0.12);
+      --radius:10px;--radius-sm:6px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    .app{display:flex;min-height:100vh;}
+    .sidebar{width:270px;min-width:270px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;}
+    .sidebar-header{padding:22px 20px 14px;border-bottom:1px solid var(--border);}
+    .logo{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+    .sidebar-title{font-size:13px;color:var(--text-dim);line-height:1.4;}
+    .progress-bar-wrap{margin-top:12px;background:var(--border);border-radius:99px;height:4px;overflow:hidden;}
+    .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width 0.4s ease;}
+    .progress-text{font-size:11px;color:var(--text-muted);margin-top:5px;}
+    .nav{padding:10px 0;flex:1;}
+    .nav-section-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:12px 20px 5px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:var(--text-dim);cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;user-select:none;}
+    .nav-item:hover{background:var(--surface2);color:var(--text);}
+    .nav-item.active{background:var(--accent-dim);color:var(--accent);border-left-color:var(--accent);}
+    .nav-item .nav-icon{font-size:14px;width:18px;text-align:center;}
+    .nav-item .nav-check{margin-left:auto;font-size:11px;color:var(--green);opacity:0;transition:opacity 0.2s;}
+    .nav-item.done .nav-check{opacity:1;}
+    .main{margin-left:270px;flex:1;padding:38px 48px;max-width:calc(100vw - 270px);}
+    .page{display:none;animation:fadeIn 0.2s ease;}.page.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .page-header{margin-bottom:32px;}
+    .page-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+    .page-title{font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:8px;}
+    .page-desc{font-size:14px;color:var(--text-dim);line-height:1.65;max-width:680px;}
+    h2{font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+    h3{font-size:14px;font-weight:600;color:var(--accent2);margin-bottom:8px;}
+    p{font-size:13.5px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;}
+    .section{margin-bottom:36px;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+    .card.accent-border{border-color:var(--accent);}
+    .card.blue-border{border-color:var(--blue);}
+    .card.orange-border{border-color:var(--orange);}
+    .callout{border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:14px;font-size:13.5px;line-height:1.6;border-left:3px solid;}
+    .callout.green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+    .callout.blue{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+    .callout.gold{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow);}
+    .callout.orange{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+    .callout.red{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+    .callout.purple{background:var(--purple-dim);border-color:var(--purple);color:var(--purple);}
+    .callout strong{display:block;margin-bottom:3px;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+    .qa-item{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;}
+    .qa-q{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;cursor:pointer;background:var(--surface2);transition:background 0.15s;}
+    .qa-q:hover{background:var(--surface3);}
+    .qa-q-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--accent);min-width:18px;margin-top:1px;}
+    .qa-q-text{font-size:13.5px;color:var(--text);line-height:1.5;flex:1;}
+    .qa-q-arrow{color:var(--text-muted);font-size:12px;margin-top:2px;transition:transform 0.2s;}
+    .qa-item.open .qa-q-arrow{transform:rotate(90deg);}
+    .qa-a{display:none;padding:13px 15px 15px 45px;background:var(--surface);border-top:1px solid var(--border);font-size:13.5px;color:var(--text-dim);line-height:1.7;}
+    .qa-item.open .qa-a{display:block;}
+    .qa-a ul{margin:8px 0 8px 18px;}.qa-a li{margin-bottom:6px;}
+    .qa-a strong{color:var(--text);}
+    pre{background:#050d05;border:1px solid var(--border);border-radius:var(--radius-sm);padding:15px;overflow-x:auto;margin:12px 0;font-size:12px;line-height:1.65;}
+    code{font-family:'SF Mono','Fira Code',Cascadia,monospace;color:var(--accent2);font-size:12px;}
+    pre code{color:#c8ddc8;}
+    .kw{color:#c084fc;}.fn{color:#60a5fa;}.str{color:#4ade80;}.cm{color:#2d4a2d;font-style:italic;}.ty{color:#fbbf24;}
+    .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;margin-right:4px;margin-bottom:4px;}
+    .badge.green{background:var(--green-dim);color:var(--green);border:1px solid var(--green);}
+    .badge.blue{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);}
+    .badge.orange{background:var(--orange-dim);color:var(--orange);border:1px solid var(--orange);}
+    .badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple);}
+    .badge.yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow);}
+    .check-list{list-style:none;}
+    .check-list li{padding:7px 0 7px 24px;position:relative;font-size:13.5px;color:var(--text-dim);border-bottom:1px solid var(--border);line-height:1.5;}
+    .check-list li:last-child{border-bottom:none;}
+    .check-list li::before{content:"→";position:absolute;left:0;color:var(--accent);font-size:12px;top:8px;}
+    .tabs{display:flex;gap:4px;margin-bottom:18px;flex-wrap:wrap;}
+    .tab{padding:6px 13px;font-size:12px;font-weight:600;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-dim);transition:all 0.15s;}
+    .tab.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .tab-content{display:none;}.tab-content.active{display:block;}
+    .mark-done-btn{display:inline-flex;align-items:center;gap:8px;margin-top:22px;padding:8px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;transition:all 0.15s;}
+    .mark-done-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+    .mark-done-btn.done{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:18px;}
+    th{background:var(--surface2);color:var(--text-dim);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);}
+    td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top;line-height:1.5;}
+    tr:last-child td{border-bottom:none;}tr:hover td{background:var(--surface2);}
+    .highlight-box{background:linear-gradient(135deg,rgba(74,222,128,0.07),rgba(74,222,128,0.02));border:1px solid rgba(74,222,128,0.2);border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;}
+    .flashcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:border-color 0.2s;margin-bottom:14px;}
+    .flashcard:hover{border-color:var(--accent);}
+    .flashcard .fc-front{font-size:15px;font-weight:600;color:var(--text);}
+    .flashcard .fc-back{display:none;font-size:13px;color:var(--text-dim);line-height:1.7;text-align:left;}
+    .flashcard.flipped .fc-front{display:none;}
+    .flashcard.flipped .fc-back{display:block;}
+    .flashcard .fc-hint{font-size:11px;color:var(--text-muted);margin-top:8px;}
+    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">E.ON UK</div>
+      <div class="sidebar-title">Senior Frontend Developer</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">React Native · TypeScript · 6-month contract</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 of 10 sections reviewed</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section-label">Context</div>
+      <div class="nav-item active" data-page="overview" onclick="showPage('overview',this)"><span class="nav-icon">⚡</span> Company & Role Overview<span class="nav-check">✓</span></div>
+
+      <div class="nav-section-label">Core Technical</div>
+      <div class="nav-item" data-page="reactnative" onclick="showPage('reactnative',this)"><span class="nav-icon">📱</span> React Native Deep Dive<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="react" onclick="showPage('react',this)"><span class="nav-icon">⚛️</span> React.js Patterns<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="typescript" onclick="showPage('typescript',this)"><span class="nav-icon">🔷</span> TypeScript<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="statemanagement" onclick="showPage('statemanagement',this)"><span class="nav-icon">🗃️</span> State Management<span class="nav-check">✓</span></div>
+
+      <div class="nav-section-label">Senior Technical</div>
+      <div class="nav-item" data-page="architecture" onclick="showPage('architecture',this)"><span class="nav-icon">🏗️</span> Architecture & Code Sharing<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="advancedts" onclick="showPage('advancedts',this)"><span class="nav-icon">🔬</span> Advanced TypeScript<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="security" onclick="showPage('security',this)"><span class="nav-icon">🔐</span> Mobile Security<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="a11y" onclick="showPage('a11y',this)"><span class="nav-icon">♿</span> Accessibility<span class="nav-check">✓</span></div>
+
+      <div class="nav-section-label">Quality & Delivery</div>
+      <div class="nav-item" data-page="performance" onclick="showPage('performance',this)"><span class="nav-icon">🚀</span> Performance Optimisation<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="apis" onclick="showPage('apis',this)"><span class="nav-icon">🔌</span> RESTful APIs & Data Flow<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="testing" onclick="showPage('testing',this)"><span class="nav-icon">🧪</span> Testing & Code Quality<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="cicd" onclick="showPage('cicd',this)"><span class="nav-icon">🚢</span> CI/CD & Release Process<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="debugging" onclick="showPage('debugging',this)"><span class="nav-icon">🔍</span> Debugging & Tooling<span class="nav-check">✓</span></div>
+
+      <div class="nav-section-label">Prep</div>
+      <div class="nav-item" data-page="behavioral" onclick="showPage('behavioral',this)"><span class="nav-icon">🗣️</span> Behavioral Questions<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="flashcards" onclick="showPage('flashcards',this)"><span class="nav-icon">🃏</span> Flash Cards<span class="nav-check">✓</span></div>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div class="page-tag">Start Here</div>
+        <div class="page-title">Company & Role Overview</div>
+        <div class="page-desc">E.ON is one of the UK's largest energy providers. The frontend work is almost certainly customer-facing — energy dashboards, smart meter data, billing, account management. Know the domain.</div>
+      </div>
+      <div class="section">
+        <div class="callout green">
+          <strong>Who is E.ON UK?</strong>
+          E.ON UK is a major integrated energy company — electricity generation, energy retail, smart metering, and heat networks. They serve millions of households. Their digital product likely includes a customer app (hence React Native) for energy usage tracking, billing, and smart home management.
+        </div>
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>What you'll likely be building</h3>
+            <ul class="check-list">
+              <li>Customer-facing mobile app (React Native) — energy usage, smart meter data</li>
+              <li>Account management — bills, payments, tariff switching</li>
+              <li>Smart home / EV charging integrations</li>
+              <li>Data visualisation — energy consumption charts</li>
+              <li>Web portal alongside the mobile app (React.js)</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Contract context</h3>
+            <ul class="check-list">
+              <li><strong>6-month contract</strong> — they need someone who ships fast with low ramp time</li>
+              <li>Hybrid — 1 day/week London office; rest remote</li>
+              <li>Extension potential — deliver well and it becomes longer</li>
+              <li>They want a <strong>senior</strong> who can contribute to architecture from day 1</li>
+              <li>Cross-functional — working directly with UX/UI designers and backend devs</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>What "Senior" Means to This Role</h2>
+        <div class="grid3">
+          <div class="card">
+            <div class="badge green">Technical</div>
+            <h3 style="margin-top:10px">Deep React Native</h3>
+            <p>Not just using it — understanding the bridge, navigation, native modules, platform differences, and performance edge cases.</p>
+          </div>
+          <div class="card">
+            <div class="badge blue">Architecture</div>
+            <h3 style="margin-top:10px">Decisions that scale</h3>
+            <p>State management choice, folder structure, API layer design, code sharing between web and native — you have opinions backed by experience.</p>
+          </div>
+          <div class="card">
+            <div class="badge orange">Delivery</div>
+            <h3 style="margin-top:10px">Ships independently</h3>
+            <p>6-month contract — no time to hand-hold. You read a ticket, ask the right questions upfront, and deliver clean code with minimal back-and-forth.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Key Stack — Prepare All of These</h2>
+        <table>
+          <thead><tr><th>Technology</th><th>Likely Use</th><th>Depth Needed</th></tr></thead>
+          <tbody>
+            <tr><td><strong>React Native</strong></td><td>Mobile app for iOS + Android</td><td>Deep — primary platform</td></tr>
+            <tr><td><strong>React.js</strong></td><td>Web portal / dashboard</td><td>Deep — secondary platform</td></tr>
+            <tr><td><strong>TypeScript</strong></td><td>Entire codebase</td><td>Strict, no shortcuts</td></tr>
+            <tr><td><strong>Redux / Recoil</strong></td><td>Global state: user account, energy data</td><td>Solid — know trade-offs</td></tr>
+            <tr><td><strong>React Navigation</strong></td><td>Mobile navigation</td><td>Stack, Tab, Drawer patterns</td></tr>
+            <tr><td><strong>RESTful APIs</strong></td><td>Energy data, billing, account APIs</td><td>Practical — fetch, error handling, caching</td></tr>
+            <tr><td><strong>Git / CI/CD</strong></td><td>PR workflow, automated pipelines</td><td>Standard professional practice</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('overview',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- REACT NATIVE -->
+    <div class="page" id="page-reactnative">
+      <div class="page-header">
+        <div class="page-tag">Core Technical · Priority</div>
+        <div class="page-title">React Native Deep Dive</div>
+        <div class="page-desc">The most differentiating skill in this JD. Expect deep questions on cross-platform differences, navigation, native modules, and mobile-specific performance.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout green">
+          <strong>New Architecture vs Old Architecture</strong>
+          React Native's new architecture (JSI, Fabric, TurboModules) is now the default in RN 0.73+. Know the difference — interviewers at senior level will ask about this.
+        </div>
+
+        <h2>Architecture — Old vs New</h2>
+        <div class="grid2">
+          <div class="card">
+            <div class="badge orange">Old Architecture</div>
+            <h3 style="margin-top:10px">Bridge-based</h3>
+            <ul class="check-list">
+              <li>JS thread ↔ Native thread communicate via an async JSON bridge</li>
+              <li>Bridge is a bottleneck — serialisation overhead on every call</li>
+              <li>Three threads: JS, Native UI, Shadow (layout)</li>
+              <li>Async-only bridge = animations can drop frames when JS thread is busy</li>
+            </ul>
+          </div>
+          <div class="card accent-border">
+            <div class="badge green">New Architecture (default RN 0.73+)</div>
+            <h3 style="margin-top:10px">JSI + Fabric + TurboModules</h3>
+            <ul class="check-list">
+              <li><strong>JSI</strong>: JS can hold direct reference to native objects — no bridge serialisation</li>
+              <li><strong>Fabric</strong>: New rendering system — synchronous layout, supports concurrent React features</li>
+              <li><strong>TurboModules</strong>: Native modules loaded lazily, called synchronously</li>
+              <li>Result: better performance, smaller startup time, Suspense support</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>React Native Core Concepts</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('rn','navigation')">Navigation</div>
+          <div class="tab" onclick="switchTab('rn','platform')">Platform Differences</div>
+          <div class="tab" onclick="switchTab('rn','animations')">Animations</div>
+          <div class="tab" onclick="switchTab('rn','native')">Native Modules</div>
+        </div>
+
+        <div id="tab-rn-navigation" class="tab-content active">
+          <p><strong>React Navigation</strong> is the standard — know Stack, Tab, Drawer navigators and when to use each.</p>
+          <pre><code><span class="cm">// Typical E.ON app navigation structure</span>
+<span class="kw">const</span> Tab = <span class="fn">createBottomTabNavigator</span>()
+<span class="kw">const</span> Stack = <span class="fn">createNativeStackNavigator</span>()
+
+<span class="cm">// Root navigator — authenticated vs unauthenticated</span>
+<span class="kw">function</span> <span class="fn">RootNavigator</span>() {
+  <span class="kw">const</span> { isAuthenticated } = <span class="fn">useAuth</span>()
+  <span class="kw">return</span> isAuthenticated ? &lt;AppNavigator /&gt; : &lt;AuthNavigator /&gt;
+}
+
+<span class="cm">// Main app tabs</span>
+<span class="kw">function</span> <span class="fn">AppNavigator</span>() {
+  <span class="kw">return</span> (
+    &lt;Tab.Navigator screenOptions={{ headerShown: <span class="kw">false</span> }}&gt;
+      &lt;Tab.Screen name=<span class="str">"Home"</span> component={HomeStack} /&gt;
+      &lt;Tab.Screen name=<span class="str">"Usage"</span> component={UsageStack} /&gt;
+      &lt;Tab.Screen name=<span class="str">"Billing"</span> component={BillingStack} /&gt;
+      &lt;Tab.Screen name=<span class="str">"Account"</span> component={AccountStack} /&gt;
+    &lt;/Tab.Navigator&gt;
+  )
+}
+
+<span class="cm">// Deep linking — navigate from push notifications</span>
+<span class="kw">const</span> linking = {
+  prefixes: [<span class="str">'eon://'</span>, <span class="str">'https://app.eon.co.uk'</span>],
+  config: {
+    screens: {
+      Usage: <span class="str">'usage'</span>,
+      Billing: { screens: { BillDetail: <span class="str">'bill/:id'</span> } },
+    }
+  }
+}
+
+<span class="cm">// Type-safe navigation params</span>
+<span class="kw">type</span> <span class="ty">RootStackParams</span> = {
+  BillDetail: { billId: <span class="ty">string</span>; month: <span class="ty">string</span> }
+  UsageChart: { period: <span class="str">'day'</span> | <span class="str">'week'</span> | <span class="str">'month'</span> }
+}
+<span class="kw">const</span> navigation = <span class="fn">useNavigation</span>&lt;<span class="ty">NativeStackNavigationProp</span>&lt;<span class="ty">RootStackParams</span>&gt;&gt;()</code></pre>
+        </div>
+
+        <div id="tab-rn-platform" class="tab-content">
+          <pre><code><span class="cm">// Platform-specific code</span>
+<span class="kw">import</span> { Platform, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>
+
+<span class="cm">// Inline platform check</span>
+<span class="kw">const</span> statusBarHeight = Platform.OS === <span class="str">'ios'</span> ? <span class="ty">44</span> : <span class="ty">24</span>
+
+<span class="cm">// Platform.select — cleaner for multiple values</span>
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  header: {
+    paddingTop: Platform.<span class="fn">select</span>({ ios: <span class="ty">44</span>, android: <span class="ty">24</span>, default: <span class="ty">0</span> }),
+    shadowColor: Platform.<span class="fn">select</span>({ ios: <span class="str">'#000'</span>, android: <span class="kw">undefined</span> }),
+    elevation: Platform.<span class="fn">select</span>({ android: <span class="ty">4</span>, ios: <span class="kw">undefined</span> }),
+  }
+})
+
+<span class="cm">// Platform-specific files — React Native picks automatically</span>
+<span class="cm">// SmartMeterWidget.ios.tsx  → loaded on iOS</span>
+<span class="cm">// SmartMeterWidget.android.tsx → loaded on Android</span>
+<span class="cm">// SmartMeterWidget.tsx → fallback</span>
+
+<span class="cm">// SafeAreaView — handle notches and dynamic island</span>
+<span class="kw">import</span> { SafeAreaProvider, useSafeAreaInsets } <span class="kw">from</span> <span class="str">'react-native-safe-area-context'</span>
+<span class="kw">function</span> <span class="fn">Screen</span>({ children }: Props) {
+  <span class="kw">const</span> insets = <span class="fn">useSafeAreaInsets</span>()
+  <span class="kw">return</span> &lt;View style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}&gt;{children}&lt;/View&gt;
+}
+
+<span class="cm">// Key differences table in code comments:</span>
+<span class="cm">// iOS: shadows via shadowColor/shadowOffset/shadowRadius</span>
+<span class="cm">// Android: elevation property</span>
+<span class="cm">// iOS: fonts use PostScript names</span>
+<span class="cm">// Android: fonts use file names</span></code></pre>
+        </div>
+
+        <div id="tab-rn-animations" class="tab-content">
+          <pre><code><span class="cm">// Reanimated 2 — runs on UI thread, no JS bridge bottleneck</span>
+<span class="kw">import</span> Animated, {
+  useSharedValue, useAnimatedStyle, withSpring, withTiming
+} <span class="kw">from</span> <span class="str">'react-native-reanimated'</span>
+
+<span class="cm">// Energy usage bar animation — fills up to usage percentage</span>
+<span class="kw">function</span> <span class="fn">UsageBar</span>({ percentage }: { percentage: <span class="ty">number</span> }) {
+  <span class="kw">const</span> width = <span class="fn">useSharedValue</span>(<span class="ty">0</span>)
+
+  <span class="fn">useEffect</span>(() => {
+    width.value = <span class="fn">withSpring</span>(percentage, { damping: <span class="ty">15</span>, stiffness: <span class="ty">100</span> })
+  }, [percentage])
+
+  <span class="kw">const</span> animatedStyle = <span class="fn">useAnimatedStyle</span>(() => ({
+    width: `${width.value}%`,
+  }))
+
+  <span class="kw">return</span> (
+    &lt;View style={styles.track}&gt;
+      &lt;Animated.View style={[styles.fill, animatedStyle]} /&gt;
+    &lt;/View&gt;
+  )
+}
+
+<span class="cm">// Gesture-driven — swipe to dismiss a bill notification</span>
+<span class="kw">import</span> { Gesture, GestureDetector } <span class="kw">from</span> <span class="str">'react-native-gesture-handler'</span>
+
+<span class="kw">function</span> <span class="fn">DismissibleAlert</span>({ onDismiss }: Props) {
+  <span class="kw">const</span> translateX = <span class="fn">useSharedValue</span>(<span class="ty">0</span>)
+  <span class="kw">const</span> pan = Gesture.<span class="fn">Pan</span>()
+    .<span class="fn">onUpdate</span>(e => { translateX.value = e.translationX })
+    .<span class="fn">onEnd</span>(e => {
+      <span class="kw">if</span> (e.translationX > <span class="ty">100</span>) { <span class="fn">runOnJS</span>(onDismiss)() }
+      <span class="kw">else</span> { translateX.value = <span class="fn">withSpring</span>(<span class="ty">0</span>) }
+    })
+  <span class="kw">const</span> style = <span class="fn">useAnimatedStyle</span>(() => ({ transform: [{ translateX: translateX.value }] }))
+  <span class="kw">return</span> &lt;GestureDetector gesture={pan}&gt;&lt;Animated.View style={style}&gt;...&lt;/Animated.View&gt;&lt;/GestureDetector&gt;
+}</code></pre>
+        </div>
+
+        <div id="tab-rn-native" class="tab-content">
+          <div class="callout blue">
+            <strong>When You Need Native Modules</strong>
+            React Native doesn't expose every native API. For E.ON: Bluetooth (smart meter pairing), biometric auth (Face ID / fingerprint), push notifications (APNs/FCM), background location (EV charging).
+          </div>
+          <pre><code><span class="cm">// Using a community native module — Biometric authentication</span>
+<span class="kw">import</span> ReactNativeBiometrics <span class="kw">from</span> <span class="str">'react-native-biometrics'</span>
+
+<span class="kw">async function</span> <span class="fn">authenticateUser</span>(): <span class="ty">Promise</span>&lt;<span class="ty">boolean</span>&gt; {
+  <span class="kw">const</span> rnBiometrics = <span class="kw">new</span> <span class="fn">ReactNativeBiometrics</span>()
+  <span class="kw">const</span> { available, biometryType } = <span class="kw">await</span> rnBiometrics.<span class="fn">isSensorAvailable</span>()
+
+  <span class="kw">if</span> (!available) <span class="kw">return</span> <span class="kw">false</span>  <span class="cm">// fall back to PIN</span>
+
+  <span class="kw">const</span> { success } = <span class="kw">await</span> rnBiometrics.<span class="fn">simplePrompt</span>({
+    promptMessage: <span class="str">'Confirm your identity to view account'</span>,
+    cancelButtonText: <span class="str">'Use PIN instead'</span>,
+  })
+  <span class="kw">return</span> success
+}
+
+<span class="cm">// Push notifications — react-native-firebase</span>
+<span class="kw">import</span> messaging <span class="kw">from</span> <span class="str">'@react-native-firebase/messaging'</span>
+
+<span class="kw">async function</span> <span class="fn">setupPushNotifications</span>() {
+  <span class="kw">const</span> authStatus = <span class="kw">await</span> messaging().<span class="fn">requestPermission</span>()
+  <span class="kw">if</span> (authStatus !== messaging.AuthorizationStatus.AUTHORIZED) <span class="kw">return</span>
+
+  <span class="kw">const</span> token = <span class="kw">await</span> messaging().<span class="fn">getToken</span>()
+  <span class="kw">await</span> api.<span class="fn">registerPushToken</span>(token)  <span class="cm">// send to backend</span>
+
+  <span class="cm">// Handle foreground messages</span>
+  messaging().<span class="fn">onMessage</span>(<span class="kw">async</span> message => {
+    <span class="fn">showInAppNotification</span>(message.notification)
+  })
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>React Native Interview Questions</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How does React Native render UI compared to a web browser? Why does this matter for performance?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            React Native doesn't use a WebView or the DOM. Instead it maps React components to actual native views — <code>View</code> → <code>UIView</code> on iOS, <code>android.view.View</code> on Android. This is why RN apps feel native, not webby.
+            <ul>
+              <li><strong>Rendering pipeline:</strong> React runs on the JS thread → Yoga layout engine computes layout → native UI thread renders actual platform views</li>
+              <li><strong>Performance implication:</strong> Anything that crosses the JS↔Native boundary has a cost. Heavy JS computation blocks the JS thread and can freeze animations — move animations to the UI thread with Reanimated.</li>
+              <li><strong>New Architecture:</strong> Fabric removes the async bridge for rendering — layout is computed synchronously, enabling React concurrent features like Suspense and Transitions in RN.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you share code between React Native (mobile) and React (web) in the same codebase?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Business logic is fully shareable:</strong> TypeScript types, API clients, state management (Redux/Recoil), validation, date formatting — no platform dependencies</li>
+              <li><strong>React Native Web:</strong> Compile RN components to web. Works well for simple components, less well for complex native UI. Shopify's Restyle and their React Native Web approach.</li>
+              <li><strong>Platform file extensions:</strong> <code>Button.native.tsx</code> for RN, <code>Button.web.tsx</code> for web, <code>Button.tsx</code> as shared interface. Build tools pick the right one automatically.</li>
+              <li><strong>Monorepo structure:</strong> <code>packages/shared</code> (types, API, state), <code>apps/mobile</code> (RN), <code>apps/web</code> (React). Turborepo manages the dependency graph.</li>
+              <li><strong>At E.ON:</strong> Energy usage data formatting, billing calculations, user account state — all shareable. Charts might need platform-specific implementations (Victory Native vs Recharts).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('reactnative',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- REACT.JS -->
+    <div class="page" id="page-react">
+      <div class="page-header">
+        <div class="page-tag">Core Technical</div>
+        <div class="page-title">React.js Patterns</div>
+        <div class="page-desc">Modern React for the web portal. Hooks, performance patterns, component design, and working with design systems are all fair game.</div>
+      </div>
+      <div class="section">
+        <h2>Hooks — Beyond the Basics</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('react','hooks')">Custom Hooks</div>
+          <div class="tab" onclick="switchTab('react','memo')">useMemo & useCallback</div>
+          <div class="tab" onclick="switchTab('react','patterns')">Component Patterns</div>
+        </div>
+
+        <div id="tab-react-hooks" class="tab-content active">
+          <pre><code><span class="cm">// Custom hook — fetches energy usage for a date range</span>
+<span class="kw">function</span> <span class="fn">useEnergyUsage</span>(period: <span class="str">'day'</span> | <span class="str">'week'</span> | <span class="str">'month'</span>) {
+  <span class="kw">const</span> [data, setData] = <span class="fn">useState</span>&lt;<span class="ty">UsageData</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> [loading, setLoading] = <span class="fn">useState</span>(<span class="kw">true</span>)
+  <span class="kw">const</span> [error, setError] = <span class="fn">useState</span>&lt;<span class="ty">Error</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">let</span> cancelled = <span class="kw">false</span>
+    <span class="fn">setLoading</span>(<span class="kw">true</span>)
+
+    api.<span class="fn">getUsage</span>(period)
+      .<span class="fn">then</span>(d => { <span class="kw">if</span> (!cancelled) { <span class="fn">setData</span>(d); <span class="fn">setLoading</span>(<span class="kw">false</span>) } })
+      .<span class="fn">catch</span>(e => { <span class="kw">if</span> (!cancelled) { <span class="fn">setError</span>(e); <span class="fn">setLoading</span>(<span class="kw">false</span>) } })
+
+    <span class="kw">return</span> () => { cancelled = <span class="kw">true</span> }  <span class="cm">// cleanup — prevent setState on unmounted</span>
+  }, [period])
+
+  <span class="kw">return</span> { data, loading, error }
+}
+
+<span class="cm">// Custom hook — form with validation</span>
+<span class="kw">function</span> <span class="fn">useMeterReading</span>() {
+  <span class="kw">const</span> { register, handleSubmit, formState: { errors } } = <span class="fn">useForm</span>&lt;<span class="ty">MeterReadingForm</span>&gt;({
+    resolver: <span class="fn">zodResolver</span>(<span class="ty">MeterReadingSchema</span>),
+  })
+  <span class="kw">const</span> [submitting, setSubmitting] = <span class="fn">useState</span>(<span class="kw">false</span>)
+
+  <span class="kw">const</span> <span class="fn">submit</span> = <span class="fn">handleSubmit</span>(<span class="kw">async</span> (values) => {
+    <span class="fn">setSubmitting</span>(<span class="kw">true</span>)
+    <span class="kw">try</span> { <span class="kw">await</span> api.<span class="fn">submitMeterReading</span>(values) }
+    <span class="kw">finally</span> { <span class="fn">setSubmitting</span>(<span class="kw">false</span>) }
+  })
+
+  <span class="kw">return</span> { register, submit, errors, submitting }
+}</code></pre>
+        </div>
+
+        <div id="tab-react-memo" class="tab-content">
+          <pre><code><span class="cm">// useMemo — expensive computation (e.g. processing 365 days of usage data)</span>
+<span class="kw">const</span> chartData = <span class="fn">useMemo</span>(() => {
+  <span class="kw">return</span> rawUsageData
+    .<span class="fn">filter</span>(d => d.date >= startDate)
+    .<span class="fn">map</span>(d => ({ x: d.date, y: d.kWh, cost: d.kWh * tariff }))
+    .<span class="fn">sort</span>((a, b) => a.x - b.x)
+}, [rawUsageData, startDate, tariff])
+<span class="cm">// Only recalculates when rawUsageData, startDate, or tariff changes</span>
+
+<span class="cm">// useCallback — stable function reference for child components</span>
+<span class="kw">const</span> handlePeriodChange = <span class="fn">useCallback</span>((period: <span class="ty">Period</span>) => {
+  <span class="fn">setPeriod</span>(period)
+  analytics.<span class="fn">track</span>(<span class="str">'usage_period_changed'</span>, { period })
+}, [])  <span class="cm">// no deps — function never recreated</span>
+
+<span class="cm">// React.memo — prevent re-render when parent updates</span>
+<span class="kw">const</span> <span class="ty">UsageChart</span> = React.<span class="fn">memo</span>(<span class="kw">function</span> <span class="fn">UsageChart</span>({ data, onPeriodChange }: Props) {
+  <span class="kw">return</span> &lt;Chart data={data} onPeriodChange={onPeriodChange} /&gt;
+})
+<span class="cm">// Only re-renders if data or onPeriodChange reference changes</span>
+
+<span class="cm">// When NOT to memo: simple components, components that almost always change,</span>
+<span class="cm">// components without expensive renders — memo itself has a cost</span></code></pre>
+        </div>
+
+        <div id="tab-react-patterns" class="tab-content">
+          <pre><code><span class="cm">// Compound component — usage breakdown widget</span>
+<span class="kw">function</span> <span class="fn">UsageBreakdown</span>({ children }: { children: <span class="ty">ReactNode</span> }) {
+  <span class="kw">return</span> &lt;div className=<span class="str">"usage-breakdown"</span>&gt;{children}&lt;/div&gt;
+}
+<span class="ty">UsageBreakdown</span>.Header = ({ title }: { title: <span class="ty">string</span> }) => &lt;h2&gt;{title}&lt;/h2&gt;
+<span class="ty">UsageBreakdown</span>.Chart = ({ data }: { data: <span class="ty">ChartData</span> }) => &lt;BarChart data={data} /&gt;
+<span class="ty">UsageBreakdown</span>.Footer = ({ total }: { total: <span class="ty">number</span> }) => &lt;p&gt;Total: {total} kWh&lt;/p&gt;
+
+<span class="cm">// Usage:</span>
+&lt;UsageBreakdown&gt;
+  &lt;UsageBreakdown.Header title=<span class="str">"This Month"</span> /&gt;
+  &lt;UsageBreakdown.Chart data={chartData} /&gt;
+  &lt;UsageBreakdown.Footer total={totalKwh} /&gt;
+&lt;/UsageBreakdown&gt;
+
+<span class="cm">// Render Props — for shared behaviour</span>
+<span class="kw">function</span> <span class="fn">DataLoader</span>&lt;T&gt;({ fetch, render }: { fetch: () =&gt; <span class="ty">Promise</span>&lt;T&gt;, render: (data: T) =&gt; <span class="ty">ReactNode</span> }) {
+  <span class="kw">const</span> { data, loading, error } = <span class="fn">useAsync</span>(fetch)
+  <span class="kw">if</span> (loading) <span class="kw">return</span> &lt;Spinner /&gt;
+  <span class="kw">if</span> (error) <span class="kw">return</span> &lt;ErrorView error={error} /&gt;
+  <span class="kw">return</span> &lt;&gt;{data ? <span class="fn">render</span>(data) : <span class="kw">null</span>}&lt;/&gt;
+}</code></pre>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('react',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- TYPESCRIPT -->
+    <div class="page" id="page-typescript">
+      <div class="page-header">
+        <div class="page-tag">Core Technical</div>
+        <div class="page-title">TypeScript</div>
+        <div class="page-desc">Energy data has complex shapes — tariffs, meter readings, billing periods, consumption bands. Strong typing prevents entire classes of bugs.</div>
+      </div>
+      <div class="section">
+        <h2>Domain Modelling for E.ON</h2>
+        <pre><code><span class="cm">// Core domain types — energy platform</span>
+<span class="kw">type</span> <span class="ty">FuelType</span> = <span class="str">'electricity'</span> | <span class="str">'gas'</span> | <span class="str">'dual'</span>
+
+<span class="kw">interface</span> <span class="ty">Tariff</span> {
+  id: <span class="ty">string</span>
+  name: <span class="ty">string</span>
+  fuelType: <span class="ty">FuelType</span>
+  unitRate: <span class="ty">number</span>          <span class="cm">// p/kWh</span>
+  standingCharge: <span class="ty">number</span>    <span class="cm">// p/day</span>
+  exitFee?: <span class="ty">number</span>
+  endDate: <span class="ty">Date</span> | <span class="kw">null</span>      <span class="cm">// null = no fixed end</span>
+}
+
+<span class="kw">interface</span> <span class="ty">MeterReading</span> {
+  id: <span class="ty">string</span>
+  accountId: <span class="ty">string</span>
+  fuelType: <span class="ty">FuelType</span>
+  readingDate: <span class="ty">string</span>       <span class="cm">// ISO 8601</span>
+  value: <span class="ty">number</span>             <span class="cm">// kWh</span>
+  source: <span class="str">'customer'</span> | <span class="str">'smart_meter'</span> | <span class="str">'estimated'</span>
+}
+
+<span class="cm">// Discriminated union — bill status</span>
+<span class="kw">type</span> <span class="ty">Bill</span> =
+  | { status: <span class="str">'pending'</span>; period: <span class="ty">BillingPeriod</span>; estimatedAmount: <span class="ty">number</span> }
+  | { status: <span class="str">'issued'</span>; period: <span class="ty">BillingPeriod</span>; amount: <span class="ty">number</span>; dueDate: <span class="ty">string</span> }
+  | { status: <span class="str">'paid'</span>; period: <span class="ty">BillingPeriod</span>; amount: <span class="ty">number</span>; paidAt: <span class="ty">string</span> }
+  | { status: <span class="str">'overdue'</span>; period: <span class="ty">BillingPeriod</span>; amount: <span class="ty">number</span>; dueDate: <span class="ty">string</span>; daysOverdue: <span class="ty">number</span> }
+
+<span class="cm">// Usage data with generics for different time granularities</span>
+<span class="kw">interface</span> <span class="ty">UsagePoint</span>&lt;T <span class="kw">extends</span> <span class="str">'hourly'</span> | <span class="str">'daily'</span> | <span class="str">'monthly'</span>&gt; {
+  timestamp: <span class="ty">string</span>
+  granularity: T
+  kWh: <span class="ty">number</span>
+  cost: <span class="ty">number</span>
+  isEstimated: <span class="ty">boolean</span>
+}
+
+<span class="cm">// Utility types — common transformations</span>
+<span class="kw">type</span> <span class="ty">BillSummary</span> = <span class="ty">Pick</span>&lt;<span class="ty">Bill</span> &amp; { status: <span class="str">'issued'</span> }, <span class="str">'period'</span> | <span class="str">'amount'</span> | <span class="str">'dueDate'</span>&gt;
+<span class="kw">type</span> <span class="ty">MeterReadingDraft</span> = <span class="ty">Omit</span>&lt;<span class="ty">MeterReading</span>, <span class="str">'id'</span> | <span class="str">'source'</span>&gt;</code></pre>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you type a function that accepts different shapes based on a discriminant — for example, a bill component that renders differently per status?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            Use a discriminated union on the props and let TypeScript narrow in each branch:
+            <ul>
+              <li>Define the union type with a common discriminant field (e.g. <code>status</code>)</li>
+              <li>The component receives the union type — TypeScript knows which fields are available in each case via narrowing</li>
+              <li>Use a switch on the discriminant — in each case branch TypeScript knows the exact shape</li>
+              <li>The exhaustive check pattern: add a <code>default: assertNever(bill)</code> so TypeScript errors if you add a new status and forget to handle it in the component</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('typescript',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- STATE MANAGEMENT -->
+    <div class="page" id="page-statemanagement">
+      <div class="page-header">
+        <div class="page-tag">Core Technical</div>
+        <div class="page-title">State Management</div>
+        <div class="page-desc">Redux, Recoil, or similar — the JD lists all three. Know each, know the trade-offs, and have a clear opinion on which you'd choose for a React Native energy app and why.</div>
+      </div>
+      <div class="section">
+        <h2>Comparison — Redux vs Recoil vs Zustand</h2>
+        <table>
+          <thead><tr><th>Library</th><th>Model</th><th>Best For</th><th>Trade-offs</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Redux Toolkit</strong></td><td>Single centralised store, actions, reducers, selectors</td><td>Large apps with complex state interactions, time-travel debugging</td><td>More boilerplate (even with RTK), steeper learning curve</td></tr>
+            <tr><td><strong>Recoil</strong></td><td>Atoms (units of state) + Selectors (derived state). Graph model.</td><td>Apps with many independent pieces of state, fine-grained subscriptions</td><td>Experimental status, Facebook-backed but not as widely adopted</td></tr>
+            <tr><td><strong>Zustand</strong></td><td>Small centralised stores, minimal boilerplate</td><td>Medium complexity apps — simpler Redux alternative</td><td>Less structure can lead to inconsistency at scale</td></tr>
+            <tr><td><strong>React Query / TanStack</strong></td><td>Server state management — caching, refetching, mutations</td><td>Any app with server data — pairs with any of the above</td><td>Only handles server state, not UI/local state</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout green">
+          <strong>What I'd Recommend for E.ON's React Native App</strong>
+          <strong>Redux Toolkit + TanStack Query.</strong> RTK for global client state (auth, user account, preferences). TanStack Query for all server data (usage, bills, tariff). This is the industry standard pattern for enterprise apps — clear separation, excellent DevTools, battle-tested.
+        </div>
+
+        <h2>Redux Toolkit in Practice</h2>
+        <pre><code><span class="cm">// store/slices/accountSlice.ts</span>
+<span class="kw">import</span> { createSlice, createAsyncThunk, PayloadAction } <span class="kw">from</span> <span class="str">'@reduxjs/toolkit'</span>
+
+<span class="kw">interface</span> <span class="ty">AccountState</span> {
+  profile: <span class="ty">UserProfile</span> | <span class="kw">null</span>
+  tariff: <span class="ty">Tariff</span> | <span class="kw">null</span>
+  status: <span class="str">'idle'</span> | <span class="str">'loading'</span> | <span class="str">'succeeded'</span> | <span class="str">'failed'</span>
+  error: <span class="ty">string</span> | <span class="kw">null</span>
+}
+
+<span class="kw">export const</span> fetchAccount = <span class="fn">createAsyncThunk</span>(
+  <span class="str">'account/fetch'</span>,
+  <span class="kw">async</span> (accountId: <span class="ty">string</span>, { rejectWithValue }) => {
+    <span class="kw">try</span> { <span class="kw">return</span> <span class="kw">await</span> api.<span class="fn">getAccount</span>(accountId) }
+    <span class="kw">catch</span> (err) { <span class="kw">return</span> <span class="fn">rejectWithValue</span>(<span class="str">'Failed to load account'</span>) }
+  }
+)
+
+<span class="kw">const</span> accountSlice = <span class="fn">createSlice</span>({
+  name: <span class="str">'account'</span>,
+  initialState: { profile: <span class="kw">null</span>, tariff: <span class="kw">null</span>, status: <span class="str">'idle'</span>, error: <span class="kw">null</span> } <span class="kw">as</span> <span class="ty">AccountState</span>,
+  reducers: {
+    <span class="fn">updatePreferences</span>(state, action: <span class="ty">PayloadAction</span>&lt;<span class="ty">Partial</span>&lt;<span class="ty">UserPreferences</span>&gt;&gt;) {
+      <span class="kw">if</span> (state.profile) Object.<span class="fn">assign</span>(state.profile.preferences, action.payload)
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .<span class="fn">addCase</span>(fetchAccount.pending, (state) => { state.status = <span class="str">'loading'</span> })
+      .<span class="fn">addCase</span>(fetchAccount.fulfilled, (state, action) => {
+        state.status = <span class="str">'succeeded'</span>
+        state.profile = action.payload.profile
+        state.tariff = action.payload.tariff
+      })
+      .<span class="fn">addCase</span>(fetchAccount.rejected, (state, action) => {
+        state.status = <span class="str">'failed'</span>
+        state.error = action.payload <span class="kw">as</span> <span class="ty">string</span>
+      })
+  }
+})
+
+<span class="cm">// Typed selector</span>
+<span class="kw">export const</span> selectTariff = (state: <span class="ty">RootState</span>) => state.account.tariff</code></pre>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What is the difference between server state and client state, and how do you manage each?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Server state:</strong> Lives on the server, fetched asynchronously. Has caching, staleness, and synchronisation concerns. Examples: energy usage data, bills, tariff details. Manage with <strong>TanStack Query</strong> — it handles caching, background refetch, loading/error states automatically.</li>
+              <li><strong>Client state:</strong> Exists only in the app, doesn't need to sync with a server. Examples: selected date range, active tab, whether a modal is open, user preferences stored locally. Manage with <strong>Redux</strong> (global) or <strong>useState</strong> (local).</li>
+              <li><strong>The mistake to avoid:</strong> Storing server data in Redux and manually managing caching. TanStack Query does this far better — let it own server state. Redux owns only client state.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('statemanagement',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- PERFORMANCE -->
+    <div class="page" id="page-performance">
+      <div class="page-header">
+        <div class="page-tag">Quality & Delivery</div>
+        <div class="page-title">Performance Optimisation</div>
+        <div class="page-desc">The JD mentions "optimize for maximum performance across a wide range of devices." React Native performance on low-end Android devices is the hardest challenge. Know how to diagnose and fix it.</div>
+      </div>
+      <div class="section">
+        <h2>React Native Performance</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('perf','lists')">List Performance</div>
+          <div class="tab" onclick="switchTab('perf','js')">JS Thread</div>
+          <div class="tab" onclick="switchTab('perf','images')">Images & Assets</div>
+          <div class="tab" onclick="switchTab('perf','web')">Web Performance</div>
+        </div>
+
+        <div id="tab-perf-lists" class="tab-content active">
+          <p>Long lists of energy usage entries or billing history are a common performance problem. Never use ScrollView for long lists.</p>
+          <pre><code><span class="cm">// FlatList — virtualised, only renders visible items</span>
+<span class="kw">function</span> <span class="fn">BillingHistory</span>({ bills }: { bills: <span class="ty">Bill</span>[] }) {
+  <span class="kw">const</span> renderItem = <span class="fn">useCallback</span>(({ item }: { item: <span class="ty">Bill</span> }) => (
+    &lt;BillCard bill={item} /&gt;
+  ), [])  <span class="cm">// stable reference — prevents FlatList from re-rendering all items</span>
+
+  <span class="kw">const</span> keyExtractor = <span class="fn">useCallback</span>((item: <span class="ty">Bill</span>) => item.id, [])
+
+  <span class="kw">return</span> (
+    &lt;FlatList
+      data={bills}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      getItemLayout={(_, index) => ({ length: <span class="ty">88</span>, offset: <span class="ty">88</span> * index, index })}
+      <span class="cm">// getItemLayout skips layout measurement — huge perf win for fixed-height items</span>
+      initialNumToRender={<span class="ty">10</span>}          <span class="cm">// only render 10 on mount</span>
+      maxToRenderPerBatch={<span class="ty">5</span>}           <span class="cm">// render 5 items per JS frame</span>
+      windowSize={<span class="ty">5</span>}                    <span class="cm">// render 2.5 screens above/below</span>
+      removeClippedSubviews={<span class="kw">true</span>}      <span class="cm">// Android: remove off-screen views from memory</span>
+    /&gt;
+  )
+}</code></pre>
+        </div>
+
+        <div id="tab-perf-js" class="tab-content">
+          <div class="callout orange">
+            <strong>The JS Thread Golden Rule</strong>
+            Animations must run at 60fps. If your JS thread is busy (heavy computation, large re-renders), animations stutter. Move animations to the UI thread with Reanimated. Move heavy computation off the main thread with web workers or Hermes optimisations.
+          </div>
+          <pre><code><span class="cm">// Profiling — use Flipper or React DevTools Profiler</span>
+<span class="cm">// Enable Hermes engine (default in RN 0.70+) — much faster JS execution</span>
+
+<span class="cm">// Expensive computation — useMemo to avoid recalculation</span>
+<span class="kw">const</span> monthlyAverage = <span class="fn">useMemo</span>(() =>
+  usageData.<span class="fn">reduce</span>((sum, d) => sum + d.kWh, <span class="ty">0</span>) / usageData.length
+, [usageData])
+
+<span class="cm">// Avoid inline function props — creates new reference every render</span>
+<span class="cm">// Bad:</span>
+&lt;Button onPress={() => <span class="fn">handleSubmit</span>(reading)} /&gt;
+<span class="cm">// Good:</span>
+<span class="kw">const</span> handlePress = <span class="fn">useCallback</span>(() => <span class="fn">handleSubmit</span>(reading), [reading])
+&lt;Button onPress={handlePress} /&gt;
+
+<span class="cm">// InteractionManager — defer non-critical work until after animations</span>
+<span class="kw">import</span> { InteractionManager } <span class="kw">from</span> <span class="str">'react-native'</span>
+<span class="fn">useEffect</span>(() => {
+  <span class="kw">const</span> task = InteractionManager.<span class="fn">runAfterInteractions</span>(() => {
+    <span class="fn">loadHistoricalData</span>()  <span class="cm">// runs after screen transition animation completes</span>
+  })
+  <span class="kw">return</span> () => task.<span class="fn">cancel</span>()
+}, [])</code></pre>
+        </div>
+
+        <div id="tab-perf-images" class="tab-content">
+          <pre><code><span class="cm">// Fast Image — better caching than RN's built-in Image</span>
+<span class="kw">import</span> FastImage <span class="kw">from</span> <span class="str">'react-native-fast-image'</span>
+
+<span class="kw">function</span> <span class="fn">TariffIcon</span>({ uri }: { uri: <span class="ty">string</span> }) {
+  <span class="kw">return</span> (
+    &lt;FastImage
+      source={{ uri, priority: FastImage.priority.normal }}
+      resizeMode={FastImage.resizeMode.contain}
+      style={{ width: <span class="ty">48</span>, height: <span class="ty">48</span> }}
+    /&gt;
+  )
+}
+
+<span class="cm">// Preload images before screen is shown</span>
+FastImage.<span class="fn">preload</span>([{ uri: <span class="str">'https://cdn.eon.co.uk/icons/electricity.png'</span> }])
+
+<span class="cm">// Web: Next.js Image / native lazy loading</span>
+<span class="cm">// Always specify width and height to prevent layout shift (CLS)</span>
+&lt;img src=<span class="str">"/usage-chart.svg"</span> width=<span class="ty">400</span> height=<span class="ty">200</span> loading=<span class="str">"lazy"</span> alt=<span class="str">"Energy usage"</span> /&gt;</code></pre>
+        </div>
+
+        <div id="tab-perf-web" class="tab-content">
+          <div class="grid2">
+            <div class="card">
+              <h3>Core Web Vitals (web portal)</h3>
+              <ul class="check-list">
+                <li><strong>LCP &lt; 2.5s</strong> — hero content visible fast. Preload fonts, server-side render above-the-fold</li>
+                <li><strong>CLS &lt; 0.1</strong> — no layout shift. Set image dimensions, use skeleton loaders with fixed size</li>
+                <li><strong>INP &lt; 200ms</strong> — responsive to interaction. Don't block main thread with heavy JS</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Bundle size</h3>
+              <ul class="check-list">
+                <li>Code-split by route — <code>React.lazy()</code> + <code>Suspense</code></li>
+                <li>Lazy load chart library — only loaded on usage page</li>
+                <li>Tree-shake utility libraries — import specific functions</li>
+                <li>Analyse with <code>webpack-bundle-analyzer</code> or Vite's rollup visualiser</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('performance',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- APIs -->
+    <div class="page" id="page-apis">
+      <div class="page-header">
+        <div class="page-tag">Quality & Delivery</div>
+        <div class="page-title">RESTful APIs & Data Flow</div>
+        <div class="page-desc">Energy data from backend APIs — smart meter readings, billing, tariffs. Know how to build a robust, typed, error-handling API layer.</div>
+      </div>
+      <div class="section">
+        <h2>API Layer Architecture</h2>
+        <pre><code><span class="cm">// api/client.ts — base client with auth and error handling</span>
+<span class="kw">class</span> <span class="ty">ApiClient</span> {
+  <span class="kw">private</span> baseURL: <span class="ty">string</span>
+
+  <span class="kw">async</span> <span class="fn">request</span>&lt;T&gt;(path: <span class="ty">string</span>, options?: <span class="ty">RequestInit</span>): <span class="ty">Promise</span>&lt;T&gt; {
+    <span class="kw">const</span> token = <span class="kw">await</span> <span class="fn">getAuthToken</span>()
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(`${this.baseURL}${path}`, {
+      ...options,
+      headers: {
+        <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>,
+        Authorization: `Bearer ${token}`,
+        ...options?.headers,
+      },
+    })
+
+    <span class="kw">if</span> (res.status === <span class="ty">401</span>) { <span class="kw">await</span> <span class="fn">refreshToken</span>(); <span class="kw">return</span> this.<span class="fn">request</span>(path, options) }
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> <span class="ty">ApiError</span>(res.status, <span class="kw">await</span> res.<span class="fn">json</span>())
+    <span class="kw">return</span> res.<span class="fn">json</span>() <span class="kw">as</span> <span class="ty">Promise</span>&lt;T&gt;
+  }
+}
+
+<span class="cm">// api/energy.ts — typed endpoint wrappers</span>
+<span class="kw">export const</span> energyApi = {
+  <span class="fn">getUsage</span>: (period: <span class="ty">Period</span>, granularity: <span class="ty">Granularity</span>) =>
+    client.<span class="fn">request</span>&lt;<span class="ty">UsageResponse</span>&gt;(`/usage?period=${period}&granularity=${granularity}`),
+
+  <span class="fn">submitMeterReading</span>: (reading: <span class="ty">MeterReadingDraft</span>) =>
+    client.<span class="fn">request</span>&lt;<span class="ty">MeterReading</span>&gt;(<span class="str">'/meter-readings'</span>, {
+      method: <span class="str">'POST'</span>, body: <span class="fn">JSON.stringify</span>(reading)
+    }),
+
+  <span class="fn">getBills</span>: (page: <span class="ty">number</span>, limit = <span class="ty">10</span>) =>
+    client.<span class="fn">request</span>&lt;<span class="ty">PaginatedResponse</span>&lt;<span class="ty">Bill</span>&gt;&gt;(`/bills?page=${page}&limit=${limit}`),
+}
+
+<span class="cm">// With TanStack Query — automatic caching + loading states</span>
+<span class="kw">const</span> { data: bills, isLoading } = <span class="fn">useQuery</span>({
+  queryKey: [<span class="str">'bills'</span>, page],
+  queryFn: () => energyApi.<span class="fn">getBills</span>(page),
+  staleTime: <span class="ty">5</span> * <span class="ty">60</span> * <span class="ty">1000</span>,  <span class="cm">// bills don't change — cache for 5 min</span>
+  gcTime: <span class="ty">10</span> * <span class="ty">60</span> * <span class="ty">1000</span>,
+})</code></pre>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you handle token refresh and retry in a React Native app without the user losing their session?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Proactive refresh:</strong> Store token expiry time. Before each request, check if within 60s of expiry — refresh proactively rather than waiting for a 401.</li>
+              <li><strong>Reactive refresh:</strong> Intercept 401 responses. Trigger token refresh. Retry the original request with the new token.</li>
+              <li><strong>Request queuing:</strong> If multiple requests get a 401 simultaneously, don't fire multiple refresh requests — queue them and resolve all after a single refresh. Use a flag and a promise queue.</li>
+              <li><strong>Secure storage:</strong> Store refresh token in <code>react-native-keychain</code> (Keychain on iOS, Keystore on Android) — not AsyncStorage which is plaintext.</li>
+              <li><strong>Final fallback:</strong> If refresh fails, clear tokens and navigate to login — never leave the user in a broken state.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('apis',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- TESTING -->
+    <div class="page" id="page-testing">
+      <div class="page-header">
+        <div class="page-tag">Quality & Delivery</div>
+        <div class="page-title">Testing & Code Quality</div>
+        <div class="page-desc">The JD calls out code reviews and high code quality explicitly. Know what to test, how to test React Native components, and what makes a meaningful code review.</div>
+      </div>
+      <div class="section">
+        <h2>Testing Strategy for React Native</h2>
+        <table>
+          <thead><tr><th>Layer</th><th>Tool</th><th>What to Test</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Unit</strong></td><td>Jest</td><td>Pure functions — tariff calculations, date formatting, energy unit conversions</td></tr>
+            <tr><td><strong>Component</strong></td><td>React Native Testing Library</td><td>User-facing component behaviour — renders correct data, handles press events, shows error states</td></tr>
+            <tr><td><strong>Integration</strong></td><td>RNTL + msw</td><td>Screen-level tests — full flow from API mock to rendered output</td></tr>
+            <tr><td><strong>E2E</strong></td><td>Detox (RN) / Playwright (web)</td><td>Critical journeys — login, submit meter reading, view bill, make payment</td></tr>
+          </tbody>
+        </table>
+
+        <pre><code><span class="cm">// React Native Testing Library — test what the user sees</span>
+<span class="kw">import</span> { render, screen, fireEvent, waitFor } <span class="kw">from</span> <span class="str">'@testing-library/react-native'</span>
+
+<span class="fn">describe</span>(<span class="str">'MeterReadingForm'</span>, () => {
+  <span class="fn">it</span>(<span class="str">'submits a valid reading and shows success'</span>, <span class="kw">async</span> () => {
+    <span class="cm">// Mock the API</span>
+    server.<span class="fn">use</span>(http.<span class="fn">post</span>(<span class="str">'/meter-readings'</span>, () =>
+      HttpResponse.<span class="fn">json</span>({ id: <span class="str">'mr-1'</span>, value: <span class="ty">12345</span> })
+    ))
+
+    <span class="fn">render</span>(&lt;MeterReadingForm /&gt;)
+
+    <span class="cm">// User fills in the reading</span>
+    <span class="fn">fireEvent</span>.<span class="fn">changeText</span>(screen.<span class="fn">getByLabelText</span>(<span class="str">'Electricity reading'</span>), <span class="str">'12345'</span>)
+    <span class="fn">fireEvent</span>.<span class="fn">press</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit reading'</span> }))
+
+    <span class="cm">// Assert success state</span>
+    <span class="kw">await</span> <span class="fn">waitFor</span>(() => {
+      <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Reading submitted successfully'</span>)).<span class="fn">toBeVisible</span>()
+    })
+  })
+
+  <span class="fn">it</span>(<span class="str">'shows validation error for non-numeric input'</span>, () => {
+    <span class="fn">render</span>(&lt;MeterReadingForm /&gt;)
+    <span class="fn">fireEvent</span>.<span class="fn">changeText</span>(screen.<span class="fn">getByLabelText</span>(<span class="str">'Electricity reading'</span>), <span class="str">'abc'</span>)
+    <span class="fn">fireEvent</span>.<span class="fn">press</span>(screen.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit reading'</span> }))
+    <span class="fn">expect</span>(screen.<span class="fn">getByText</span>(<span class="str">'Please enter a valid meter reading'</span>)).<span class="fn">toBeVisible</span>()
+  })
+})</code></pre>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What do you look for in a code review?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            I review in layers — correctness first, then quality:
+            <ul>
+              <li><strong>Correctness:</strong> Does it do what the ticket says? Edge cases handled? Error states?</li>
+              <li><strong>Type safety:</strong> No <code>any</code>, no non-null assertions without reason, proper nullability handling</li>
+              <li><strong>Performance:</strong> Unnecessary re-renders? Missing useCallback/useMemo on expensive operations? FlatList used for long lists?</li>
+              <li><strong>Accessibility:</strong> Are interactive elements labelled? Can they be used with a screen reader?</li>
+              <li><strong>Security:</strong> Sensitive data not logged? Tokens not stored in plaintext?</li>
+              <li><strong>Tests:</strong> Are they testing behaviour, not implementation? Do they cover the failure path?</li>
+              <li><strong>Tone:</strong> I write review comments as questions or suggestions, not commands. "Could this be simplified with useMemo?" not "This is wrong".</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('testing',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- BEHAVIORAL -->
+    <div class="page" id="page-behavioral">
+      <div class="page-header">
+        <div class="page-tag">Prep</div>
+        <div class="page-title">Behavioral Questions</div>
+        <div class="page-desc">Contract role at a large UK enterprise. They need confidence you're senior enough to work autonomously, communicate clearly, and deliver in 6 months.</div>
+      </div>
+      <div class="section">
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Walk me through a complex React Native feature you've built end-to-end.</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            Have a specific, real example ready. Structure it as:
+            <ul>
+              <li><strong>Context:</strong> What app, what problem were you solving for users?</li>
+              <li><strong>Technical decisions:</strong> What architecture did you choose and why? State management, navigation, API integration.</li>
+              <li><strong>Challenges:</strong> What was hard? Platform differences, performance issues, API design mismatch?</li>
+              <li><strong>Result:</strong> What did you ship? Any metrics — performance improvement, user adoption, error reduction?</li>
+              <li><strong>Tip for E.ON:</strong> Pick something with data visualisation, forms, or account management — closest to what they're building.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you approach working with designers to implement UI? When do you push back?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Start from shared understanding:</strong> Review designs before starting implementation — flag anything that's technically problematic early, not after you've built it</li>
+              <li><strong>Ask about intent, not just spec:</strong> "What's the user trying to achieve here?" helps when implementation constraints require a different approach</li>
+              <li><strong>Push back on:</strong> Designs that are impossible on certain devices, animations that would cause performance issues on low-end Android, layouts that break accessibility</li>
+              <li><strong>Offer alternatives:</strong> When pushing back, always come with a "here's what we can do instead" — not just "that won't work"</li>
+              <li><strong>Consistency:</strong> Flag when new designs deviate from the design system without reason — inconsistency has a compound maintenance cost</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">This is a 6-month contract. How do you approach ramp-up and delivery on that timeline?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Week 1: understand, don't build.</strong> Get the app running locally, read the codebase, understand the architecture, identify where my work will live</li>
+              <li><strong>Week 2: ship something small.</strong> A real ticket, reviewed, merged, and deployed. Establishes my workflow and shows I can deliver</li>
+              <li><strong>Ongoing:</strong> Build context fast by asking good questions upfront — not mid-implementation. I'd rather over-clarify before starting than deliver the wrong thing</li>
+              <li><strong>Leave it better than I found it.</strong> Contract ends, but the code stays. I write it as if I'll be maintaining it in 2 years — because someone will be.</li>
+              <li><strong>Extension:</strong> The best way to get extended is to be the engineer they'd miss if I left. That comes from ownership, quality, and communication — not just output.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Questions to ask them</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>"What does the current React Native setup look like — new architecture or old bridge? What's the target minimum OS version?"</li>
+              <li>"Is there a design system in place, or would I be contributing to building one?"</li>
+              <li>"What does the CI/CD pipeline look like — how does a code change get to production on both iOS and Android?"</li>
+              <li>"What's the biggest technical challenge the team is working through right now?"</li>
+              <li>"What does success in this role look like at the 3-month mark?"</li>
+              <li>"Is the extension at 6 months likely, or is this genuinely a fixed-term piece of work?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('behavioral',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- FLASH CARDS -->
+    <div class="page" id="page-flashcards">
+      <div class="page-header">
+        <div class="page-tag">Quick Review</div>
+        <div class="page-title">Flash Cards</div>
+        <div class="page-desc">Click to reveal. Use these in the final hour before your interview.</div>
+      </div>
+      <div class="section">
+        <h2>React Native</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the difference between <code>ScrollView</code> and <code>FlatList</code>? When do you use each?</div>
+            <div class="fc-back"><strong>ScrollView:</strong> Renders all children at once. Fine for short, fixed-size content (a form, a profile page). Terrible for long lists — it mounts and measures every item regardless of visibility, causing memory and performance problems.<br><br><strong>FlatList:</strong> Virtualised — only renders items currently visible plus a small buffer. Use for any list of variable or unknown length. Rule of thumb: if it could have more than 20 items, use FlatList.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is <code>useSharedValue</code> in Reanimated and why is it different from <code>useState</code>?</div>
+            <div class="fc-back"><code>useSharedValue</code> creates a value that lives on the UI thread, not the JS thread. Animations driven by shared values run at 60fps even when the JS thread is busy (processing data, re-rendering). <code>useState</code> causes a React re-render on every change — every frame of an animation would trigger a re-render and a bridge crossing. Shared values update on the UI thread without touching React.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">How does deep linking work in React Native and why does it matter for push notifications?</div>
+            <div class="fc-back">Deep links are URLs that open a specific screen in the app — e.g. <code>eon://bill/abc123</code>. React Navigation's linking config maps URL patterns to screen names and params. Push notifications include a deep link URL in the payload — when tapped, the app opens and navigates directly to the relevant screen (e.g., a specific bill or alert). This is essential for good notification UX — not just opening the app home screen.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is <code>getItemLayout</code> in FlatList and why does it improve performance?</div>
+            <div class="fc-back">Tells FlatList the exact height and offset of each item without measuring it. By default, FlatList measures item height as items come into view — expensive on initial render. With <code>getItemLayout</code>, FlatList knows the layout upfront so it can: scroll to any index instantly, pre-calculate which items are in the viewport, and skip layout measurement entirely. Only use it when items have a fixed, known height.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+
+        <h2>React & TypeScript</h2>
+        <div class="grid2">
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">When does <code>useCallback</code> actually help performance vs just adding noise?</div>
+            <div class="fc-back">Only helps when: (1) The function is passed as a prop to a <code>React.memo</code> wrapped child — stable reference prevents unnecessary re-renders. (2) The function is a dependency in another hook's dependency array — stable reference prevents the hook from re-running.<br><br>Does NOT help when: The child doesn't use React.memo (it'll re-render anyway). The function is only used inside the component itself. Don't wrap everything in useCallback — the memoisation itself has a cost.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the difference between Redux Toolkit's <code>createSlice</code> and <code>createAsyncThunk</code>?</div>
+            <div class="fc-back"><strong>createSlice:</strong> Defines a slice of Redux state — the initial state, the reducer functions (synchronous state updates), and generates action creators automatically. It's for synchronous state changes.<br><br><strong>createAsyncThunk:</strong> Handles async operations (API calls). Automatically dispatches pending/fulfilled/rejected actions. You handle these in your slice's <code>extraReducers</code>. The pattern: thunk does the async work, slice updates state based on the result.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">What is the <code>staleTime</code> option in TanStack Query and how does it affect data fetching?</div>
+            <div class="fc-back"><code>staleTime</code> defines how long fetched data is considered fresh. While fresh, TanStack Query serves from cache and does NOT refetch on component mount or window focus. After <code>staleTime</code> expires, data is stale — the next mount or focus triggers a background refetch while still showing the stale data.<br><br>Default is 0 (always stale — refetch on every mount). For energy bills (rarely change): set high (5 min). For live usage data: set low or 0. Getting this right reduces unnecessary API calls significantly.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="fc-front">How do you securely store authentication tokens in React Native?</div>
+            <div class="fc-back">Use <strong>react-native-keychain</strong> — it stores secrets in the iOS Keychain and Android Keystore, both hardware-backed secure enclaves. <strong>Never use AsyncStorage</strong> for tokens — it's plaintext, accessible to any app on a rooted device, and may be backed up to cloud storage.<br><br>For access tokens (short-lived): can store in memory only (lost on app restart, user re-auths). For refresh tokens (long-lived): must use Keychain/Keystore. Add biometric protection for extra security on Keychain access.</div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('flashcards',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+
+    <!-- ARCHITECTURE -->
+    <div class="page" id="page-architecture">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Architecture & Code Sharing</div>
+        <div class="page-desc">A senior engineer owns architectural decisions — folder structure, monorepo strategy, design systems, and how web and mobile share code without coupling them. Have strong opinions.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout green">
+          <strong>Why This Matters at E.ON</strong>
+          E.ON almost certainly has both a mobile app (React Native) and a web portal (React.js) sharing the same backend. A senior engineer decides how much code is shared, how the design system is structured, and what the team's conventions are.
+        </div>
+
+        <h2>Monorepo Architecture</h2>
+        <pre><code><span class="cm"># Turborepo monorepo — E.ON digital platform</span>
+eon-digital/
+  apps/
+    mobile/              <span class="cm"># React Native iOS + Android</span>
+      src/
+        screens/         <span class="cm"># feature folders: Home, Usage, Billing, Account</span>
+        navigation/      <span class="cm"># root navigator, type-safe params</span>
+        components/      <span class="cm"># mobile-specific components</span>
+  web/                 <span class="cm"># React.js web portal</span>
+      src/
+        pages/
+        components/
+  packages/
+    shared/              <span class="cm"># 100% shared — no platform deps</span>
+      src/
+        api/             <span class="cm"># typed API client, all endpoints</span>
+        store/           <span class="cm"># Redux store, slices, selectors</span>
+        hooks/           <span class="cm"># useEnergyUsage, useBilling, useAccount</span>
+        types/           <span class="cm"># all domain TypeScript types</span>
+        utils/           <span class="cm"># formatKwh, formatCurrency, dateBetween</span>
+        validation/      <span class="cm"># Zod schemas shared between web and mobile</span>
+    ui/                  <span class="cm"># design system — abstract components</span>
+      src/
+        Button/
+          Button.native.tsx    <span class="cm"># TouchableOpacity based</span>
+          Button.web.tsx       <span class="cm"># &lt;button&gt; based</span>
+          Button.types.ts      <span class="cm"># shared prop types</span>
+        Text/
+        Icon/
+        theme.ts             <span class="cm"># shared colours, spacing, typography</span></code></pre>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>What's always shareable</h3>
+            <ul class="check-list">
+              <li>TypeScript domain types — Bill, Tariff, MeterReading</li>
+              <li>API client layer — same endpoints, same auth logic</li>
+              <li>Redux store — slices, selectors, thunks</li>
+              <li>Business logic hooks — useEnergyUsage, useBilling</li>
+              <li>Validation schemas (Zod) — form rules are the same on both platforms</li>
+              <li>Utility functions — formatKwh, currency formatting, date helpers</li>
+              <li>Constants — API base URLs, error codes, analytics event names</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>What's platform-specific</h3>
+            <ul class="check-list">
+              <li>UI components — <code>View</code> vs <code>div</code>, <code>Text</code> vs <code>p</code></li>
+              <li>Navigation — React Navigation (mobile) vs React Router (web)</li>
+              <li>Storage — AsyncStorage/Keychain vs localStorage/cookies</li>
+              <li>Animations — Reanimated (mobile) vs Framer Motion / CSS (web)</li>
+              <li>Push notifications — FCM/APNs vs Web Push</li>
+              <li>Device APIs — camera, biometrics, NFC (smart meter scanning)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Design System for Cross-Platform</h2>
+        <pre><code><span class="cm">// packages/ui/theme.ts — single source of truth for design tokens</span>
+<span class="kw">export const</span> theme = {
+  colours: {
+    primary: <span class="str">'#006B3C'</span>,      <span class="cm">// E.ON green</span>
+    primaryLight: <span class="str">'#4CAF7D'</span>,
+    danger: <span class="str">'#DC2626'</span>,
+    warning: <span class="str">'#D97706'</span>,
+    success: <span class="str">'#16A34A'</span>,
+    background: { light: <span class="str">'#FFFFFF'</span>, dark: <span class="str">'#0F1F0F'</span> },
+    text: { primary: <span class="str">'#111827'</span>, secondary: <span class="str">'#6B7280'</span>, inverse: <span class="str">'#FFFFFF'</span> },
+  },
+  spacing: { xs: <span class="ty">4</span>, sm: <span class="ty">8</span>, md: <span class="ty">16</span>, lg: <span class="ty">24</span>, xl: <span class="ty">32</span>, xxl: <span class="ty">48</span> },
+  typography: {
+    sizes: { xs: <span class="ty">11</span>, sm: <span class="ty">13</span>, md: <span class="ty">15</span>, lg: <span class="ty">18</span>, xl: <span class="ty">22</span>, xxl: <span class="ty">28</span> },
+    weights: { regular: <span class="str">'400'</span>, medium: <span class="str">'500'</span>, semibold: <span class="str">'600'</span>, bold: <span class="str">'700'</span> },
+  },
+  radii: { sm: <span class="ty">4</span>, md: <span class="ty">8</span>, lg: <span class="ty">16</span>, full: <span class="ty">9999</span> },
+} <span class="kw">as const</span>
+
+<span class="kw">export type</span> <span class="ty">Theme</span> = <span class="kw">typeof</span> theme
+
+<span class="cm">// Platform-specific Button — same API, different implementation</span>
+<span class="cm">// Button.types.ts</span>
+<span class="kw">export interface</span> <span class="ty">ButtonProps</span> {
+  label: <span class="ty">string</span>
+  onPress: () => <span class="kw">void</span>
+  variant?: <span class="str">'primary'</span> | <span class="str">'secondary'</span> | <span class="str">'ghost'</span>
+  loading?: <span class="ty">boolean</span>
+  disabled?: <span class="ty">boolean</span>
+  testID?: <span class="ty">string</span>
+}
+
+<span class="cm">// Button.native.tsx — TouchableOpacity</span>
+<span class="kw">export function</span> <span class="fn">Button</span>({ label, onPress, loading, disabled, testID }: <span class="ty">ButtonProps</span>) {
+  <span class="kw">return</span> (
+    &lt;TouchableOpacity onPress={onPress} disabled={disabled || loading} testID={testID}
+      accessibilityRole=<span class="str">"button"</span> accessibilityLabel={label}&gt;
+      {loading ? &lt;ActivityIndicator color=<span class="str">"#fff"</span> /&gt; : &lt;Text&gt;{label}&lt;/Text&gt;}
+    &lt;/TouchableOpacity&gt;
+  )
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Architecture Interview Questions</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you architect a feature — say, smart meter energy usage dashboard — from design to production?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <strong>Full senior answer — walk through each layer:</strong>
+            <ul>
+              <li><strong>1. Requirements clarity:</strong> What granularity? Hourly/daily/monthly. What devices? Which API? What's the loading state and empty state?</li>
+              <li><strong>2. Types first:</strong> Define <code>UsagePoint</code>, <code>UsagePeriod</code>, API response shape in <code>packages/shared/types</code></li>
+              <li><strong>3. API layer:</strong> Add typed endpoint to the shared API client. Write the Zod schema to validate the response.</li>
+              <li><strong>4. Data hook:</strong> <code>useEnergyUsage(period)</code> in shared package — TanStack Query, typed, handles loading/error/refetch</li>
+              <li><strong>5. Chart component:</strong> Platform-specific — Victory Native on mobile, Recharts on web. Shared data-transform utility to format API data into chart series.</li>
+              <li><strong>6. Screen/Page:</strong> Compose the hook + chart + period selector + error boundary. Feature-flag the new screen for staged rollout.</li>
+              <li><strong>7. Tests:</strong> Unit test the data-transform utility. RNTL test for the component with mocked hook. E2E test for the golden path.</li>
+              <li><strong>8. Performance:</strong> Is the chart lazy-loaded? useMemo on data transforms? Tested on low-end Android?</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">You join and find no monorepo — web and mobile are separate repos duplicating types and API logic. How do you fix this without breaking delivery?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Assess before acting.</strong> Understand how diverged they are — same types, same API client? Or different patterns entirely?</li>
+              <li><strong>Don't do a big-bang migration.</strong> That's months of work with no user value and a high breakage risk on a 6-month contract.</li>
+              <li><strong>Start with a shared package for new code.</strong> Create a <code>shared</code> npm package (or monorepo workspace). New types and utilities go there from day 1.</li>
+              <li><strong>Migrate opportunistically.</strong> When touching existing code, extract the type/utility to the shared package. Don't touch code you're not already working in.</li>
+              <li><strong>Align the team first.</strong> Share the approach and get buy-in before changing the repo structure. Architectural changes affect everyone.</li>
+              <li><strong>Measure:</strong> Track how many imports come from the shared package over time — shows momentum without blocking delivery.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('architecture',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- ADVANCED TYPESCRIPT -->
+    <div class="page" id="page-advancedts">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Advanced TypeScript</div>
+        <div class="page-desc">Senior-level TypeScript goes beyond interfaces and generics. Know conditional types, mapped types, template literals, and how to write types that make incorrect usage impossible to compile.</div>
+      </div>
+
+      <div class="section">
+        <h2>Conditional Types</h2>
+        <pre><code><span class="cm">// Conditional types — type depends on another type</span>
+<span class="kw">type</span> <span class="ty">NonNullable</span>&lt;T&gt; = T <span class="kw">extends</span> <span class="kw">null</span> | <span class="kw">undefined</span> ? <span class="kw">never</span> : T
+
+<span class="cm">// Extract items from a union that match a condition</span>
+<span class="kw">type</span> <span class="ty">PaidBills</span> = <span class="ty">Extract</span>&lt;<span class="ty">Bill</span>, { status: <span class="str">'paid'</span> }&gt;
+<span class="kw">type</span> <span class="ty">UnpaidBills</span> = <span class="ty">Exclude</span>&lt;<span class="ty">Bill</span>, { status: <span class="str">'paid'</span> }&gt;
+
+<span class="cm">// Infer — extract type from inside another type</span>
+<span class="kw">type</span> <span class="ty">UnwrapPromise</span>&lt;T&gt; = T <span class="kw">extends</span> <span class="ty">Promise</span>&lt;<span class="kw">infer</span> U&gt; ? U : T
+<span class="kw">type</span> <span class="ty">ApiResult</span> = <span class="ty">UnwrapPromise</span>&lt;<span class="ty">ReturnType</span>&lt;<span class="kw">typeof</span> energyApi.getUsage&gt;&gt;
+<span class="cm">// ^ gets the resolved value type of an async function without calling it</span>
+
+<span class="cm">// Deep readonly — prevent mutation at any level</span>
+<span class="kw">type</span> <span class="ty">DeepReadonly</span>&lt;T&gt; = T <span class="kw">extends</span> (<span class="kw">infer</span> U)[]
+  ? <span class="ty">ReadonlyArray</span>&lt;<span class="ty">DeepReadonly</span>&lt;U&gt;&gt;
+  : T <span class="kw">extends</span> <span class="ty">object</span>
+  ? { <span class="kw">readonly</span> [K <span class="kw">in</span> <span class="kw">keyof</span> T]: <span class="ty">DeepReadonly</span>&lt;T[K]&gt; }
+  : T
+
+<span class="kw">type</span> <span class="ty">ImmutableUsageData</span> = <span class="ty">DeepReadonly</span>&lt;<span class="ty">UsagePoint</span>&lt;<span class="str">'daily'</span>&gt;[]&gt;</code></pre>
+
+        <h2>Mapped Types & Template Literal Types</h2>
+        <pre><code><span class="cm">// Mapped types — transform every key in a type</span>
+<span class="kw">type</span> <span class="ty">Optional</span>&lt;T&gt; = { [K <span class="kw">in</span> <span class="kw">keyof</span> T]?: T[K] }
+<span class="kw">type</span> <span class="ty">Nullable</span>&lt;T&gt; = { [K <span class="kw">in</span> <span class="kw">keyof</span> T]: T[K] | <span class="kw">null</span> }
+
+<span class="cm">// Key remapping — prefix all keys</span>
+<span class="kw">type</span> <span class="ty">Prefixed</span>&lt;T, P <span class="kw">extends</span> <span class="ty">string</span>&gt; = {
+  [K <span class="kw">in</span> <span class="kw">keyof</span> T <span class="kw">as</span> `${P}${<span class="ty">Capitalize</span>&lt;<span class="ty">string</span> &amp; K&gt;}`]: T[K]
+}
+<span class="kw">type</span> <span class="ty">PrefixedBill</span> = <span class="ty">Prefixed</span>&lt;{ amount: <span class="ty">number</span>; dueDate: <span class="ty">string</span> }, <span class="str">'bill'</span>&gt;
+<span class="cm">// → { billAmount: number; billDueDate: string }</span>
+
+<span class="cm">// Template literal types — for event names, action types, routes</span>
+<span class="kw">type</span> <span class="ty">FuelType</span> = <span class="str">'electricity'</span> | <span class="str">'gas'</span>
+<span class="kw">type</span> <span class="ty">ReadingAction</span> = <span class="str">'submit'</span> | <span class="str">'estimate'</span> | <span class="str">'validate'</span>
+<span class="kw">type</span> <span class="ty">MeterEvent</span> = `${<span class="ty">FuelType</span>}:${<span class="ty">ReadingAction</span>}`
+<span class="cm">// → 'electricity:submit' | 'electricity:estimate' | 'electricity:validate'</span>
+<span class="cm">//   | 'gas:submit' | 'gas:estimate' | 'gas:validate'</span>
+
+<span class="cm">// Route params — type-safe routing</span>
+<span class="kw">type</span> <span class="ty">Route</span> = <span class="str">'/usage'</span> | <span class="str">'/billing'</span> | <span class="str">'/account'</span>
+<span class="kw">type</span> <span class="ty">ApiRoute</span> = `/api${<span class="ty">Route</span>}`  <span class="cm">// → '/api/usage' | '/api/billing' | '/api/account'</span></code></pre>
+
+        <h2>Advanced Patterns for a Senior</h2>
+        <pre><code><span class="cm">// Builder pattern with type inference — fluent API query builder</span>
+<span class="kw">class</span> <span class="ty">UsageQuery</span>&lt;T <span class="kw">extends</span> <span class="ty">Partial</span>&lt;<span class="ty">UsageQueryParams</span>&gt; = {}&gt; {
+  <span class="kw">constructor</span>(<span class="kw">private</span> params: T = {} <span class="kw">as</span> T) {}
+
+  <span class="fn">period</span>&lt;P <span class="kw">extends</span> <span class="ty">Period</span>&gt;(p: P) {
+    <span class="kw">return</span> <span class="kw">new</span> <span class="ty">UsageQuery</span>&lt;T & { period: P }&gt;({ ...this.params, period: p })
+  }
+  <span class="fn">granularity</span>&lt;G <span class="kw">extends</span> <span class="ty">Granularity</span>&gt;(g: G) {
+    <span class="kw">return</span> <span class="kw">new</span> <span class="ty">UsageQuery</span>&lt;T & { granularity: G }&gt;({ ...this.params, granularity: g })
+  }
+  <span class="cm">// build() only available when both period AND granularity are set</span>
+  <span class="fn">build</span>(<span class="kw">this</span>: <span class="ty">UsageQuery</span>&lt;T & { period: <span class="ty">Period</span>; granularity: <span class="ty">Granularity</span> }&gt;) {
+    <span class="kw">return</span> this.params
+  }
+}
+
+<span class="kw">const</span> query = <span class="kw">new</span> <span class="ty">UsageQuery</span>()
+  .<span class="fn">period</span>(<span class="str">'month'</span>)
+  .<span class="fn">granularity</span>(<span class="str">'daily'</span>)
+  .<span class="fn">build</span>()  <span class="cm">// ✓ compiles</span>
+
+<span class="cm">// new UsageQuery().build() → ✗ TypeScript error — required params missing</span>
+
+<span class="cm">// Exhaustive switch — fails to compile if a union case is unhandled</span>
+<span class="kw">function</span> <span class="fn">assertNever</span>(x: <span class="kw">never</span>): <span class="kw">never</span> {
+  <span class="kw">throw new</span> <span class="fn">Error</span>(`Unhandled case: ${x}`)
+}
+
+<span class="kw">function</span> <span class="fn">getBillColour</span>(bill: <span class="ty">Bill</span>): <span class="ty">string</span> {
+  <span class="kw">switch</span> (bill.status) {
+    <span class="kw">case</span> <span class="str">'pending'</span>: <span class="kw">return</span> <span class="str">'grey'</span>
+    <span class="kw">case</span> <span class="str">'issued'</span>:  <span class="kw">return</span> <span class="str">'blue'</span>
+    <span class="kw">case</span> <span class="str">'paid'</span>:    <span class="kw">return</span> <span class="str">'green'</span>
+    <span class="kw">case</span> <span class="str">'overdue'</span>: <span class="kw">return</span> <span class="str">'red'</span>
+    <span class="kw">default</span>: <span class="kw">return</span> <span class="fn">assertNever</span>(bill)  <span class="cm">// add new status → compile error here</span>
+  }
+}</code></pre>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What is the <code>never</code> type and what are its practical uses?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <code>never</code> represents a value that can never exist — a type with no inhabitants.
+            <ul>
+              <li><strong>Exhaustive checks:</strong> A function parameter typed as <code>never</code> must never be called. Use in the <code>default</code> of a switch — if TypeScript allows the call, you're missing a case.</li>
+              <li><strong>Unreachable code:</strong> A function that always throws returns <code>never</code> — TypeScript knows subsequent code is unreachable.</li>
+              <li><strong>Conditional filtering:</strong> <code>T extends U ? T : never</code> filters a union to only matching members — the <code>never</code> branches are collapsed out of the union.</li>
+              <li><strong>Infinite loops:</strong> A function with an infinite loop also returns <code>never</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('advancedts',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="page" id="page-security">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Mobile Security</div>
+        <div class="page-desc">E.ON's app handles financial data, payment details, and energy account access. Mobile security is not optional — a senior engineer is expected to know the OWASP Mobile Top 10 and apply them.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout red">
+          <strong>Why This Matters</strong>
+          A compromise of the E.ON app exposes billing info, home address, direct debits, and potentially smart home access. Security is a non-negotiable senior responsibility.
+        </div>
+
+        <h2>OWASP Mobile Top 10 — Applied to E.ON</h2>
+        <table>
+          <thead><tr><th>Risk</th><th>What It Means</th><th>E.ON Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>M1: Improper Credential Usage</strong></td><td>Hardcoded API keys, weak tokens, credentials in source</td><td>No secrets in JS bundle. Env vars at build time. Tokens in Keychain only.</td></tr>
+            <tr><td><strong>M2: Inadequate Supply Chain</strong></td><td>Malicious or vulnerable npm packages</td><td>Renovate for deps, <code>npm audit</code> in CI, lock file committed, vet native modules</td></tr>
+            <tr><td><strong>M3: Insecure Auth</strong></td><td>Weak auth, no biometrics, long-lived tokens</td><td>Short-lived JWTs (15min), refresh token in Keychain, biometric lock on app resume</td></tr>
+            <tr><td><strong>M4: Insufficient Input Validation</strong></td><td>Client-side only validation, injection attacks</td><td>Zod on all forms + API responses. Server always validates too. Never trust client input.</td></tr>
+            <tr><td><strong>M5: Insecure Communication</strong></td><td>HTTP, weak TLS, no cert pinning</td><td>HTTPS only. Certificate pinning for financial APIs. HSTS header.</td></tr>
+            <tr><td><strong>M6: Inadequate Privacy Controls</strong></td><td>PII in logs, analytics over-collection</td><td>Strip sensitive fields before logging. GDPR-compliant analytics. No account numbers in Sentry.</td></tr>
+            <tr><td><strong>M9: Insecure Data Storage</strong></td><td>Sensitive data in AsyncStorage, logs, backups</td><td>Keychain/Keystore for tokens. Exclude sensitive files from iOS backups. No PII in AsyncStorage.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Secure Implementation Patterns</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('sec','storage')">Secure Storage</div>
+          <div class="tab" onclick="switchTab('sec','pinning')">Certificate Pinning</div>
+          <div class="tab" onclick="switchTab('sec','jailbreak')">Jailbreak Detection</div>
+        </div>
+
+        <div id="tab-sec-storage" class="tab-content active">
+          <pre><code><span class="cm">// react-native-keychain — hardware-backed secure storage</span>
+<span class="kw">import</span> * <span class="kw">as</span> Keychain <span class="kw">from</span> <span class="str">'react-native-keychain'</span>
+
+<span class="kw">export const</span> tokenStorage = {
+  <span class="kw">async</span> <span class="fn">save</span>(accessToken: <span class="ty">string</span>, refreshToken: <span class="ty">string</span>) {
+    <span class="kw">await</span> Keychain.<span class="fn">setGenericPassword</span>(<span class="str">'eon_tokens'</span>, <span class="fn">JSON.stringify</span>({ accessToken, refreshToken }), {
+      accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+      <span class="cm">// WHEN_UNLOCKED_THIS_DEVICE_ONLY — not backed up to iCloud</span>
+    })
+  },
+
+  <span class="kw">async</span> <span class="fn">get</span>() {
+    <span class="kw">const</span> credentials = <span class="kw">await</span> Keychain.<span class="fn">getGenericPassword</span>()
+    <span class="kw">if</span> (!credentials) <span class="kw">return null</span>
+    <span class="kw">return</span> <span class="fn">JSON.parse</span>(credentials.password) <span class="kw">as</span> { accessToken: <span class="ty">string</span>; refreshToken: <span class="ty">string</span> }
+  },
+
+  <span class="kw">async</span> <span class="fn">clear</span>() {
+    <span class="kw">await</span> Keychain.<span class="fn">resetGenericPassword</span>()
+  }
+}
+
+<span class="cm">// What NOT to store in AsyncStorage:</span>
+<span class="cm">// ✗ auth tokens  ✗ account numbers  ✗ payment details  ✗ passwords</span>
+<span class="cm">// ✓ user preferences  ✓ app settings  ✓ non-sensitive cached data</span></code></pre>
+        </div>
+
+        <div id="tab-sec-pinning" class="tab-content">
+          <div class="callout orange">
+            <strong>When to Use Certificate Pinning</strong>
+            Pinning prevents man-in-the-middle attacks even if a CA is compromised. Essential for financial APIs (payment endpoints). Adds operational overhead — pinned certs must be updated before they expire.
+          </div>
+          <pre><code><span class="cm">// react-native-ssl-pinning</span>
+<span class="kw">import</span> { fetch } <span class="kw">from</span> <span class="str">'react-native-ssl-pinning'</span>
+
+<span class="kw">const</span> securePaymentFetch = (url: <span class="ty">string</span>, options: <span class="ty">RequestInit</span>) =>
+  <span class="fn">fetch</span>(url, {
+    ...options,
+    sslPinning: {
+      certs: [<span class="str">'eon_payment_cert'</span>],  <span class="cm">// certificate bundled in app assets</span>
+    },
+    timeoutInterval: <span class="ty">10000</span>,
+  })
+
+<span class="cm">// Include backup pins — prevents outage if primary cert expires</span>
+<span class="cm">// Rotate: ship new cert in app update before old one expires</span>
+<span class="cm">// Never pin the leaf cert — pin the intermediate or root CA</span></code></pre>
+        </div>
+
+        <div id="tab-sec-jailbreak" class="tab-content">
+          <pre><code><span class="cm">// react-native-device-info / jail monkey — detect compromised devices</span>
+<span class="kw">import</span> JailMonkey <span class="kw">from</span> <span class="str">'jail-monkey'</span>
+
+<span class="kw">async function</span> <span class="fn">checkDeviceIntegrity</span>() {
+  <span class="kw">if</span> (JailMonkey.<span class="fn">isJailBroken</span>()) {
+    <span class="cm">// Device is rooted/jailbroken — can't trust Keychain</span>
+    <span class="cm">// Options: warn user, restrict features, or block entirely</span>
+    <span class="fn">showAlert</span>(<span class="str">'Your device appears to be modified. Some features may be unavailable.'</span>)
+    <span class="cm">// For financial features: block payment flows on compromised devices</span>
+  }
+
+  <span class="kw">if</span> (JailMonkey.<span class="fn">canMockLocation</span>()) {
+    <span class="cm">// Relevant if EV charging features use location</span>
+    console.<span class="fn">warn</span>(<span class="str">'Mock location detected'</span>)
+  }
+}
+
+<span class="cm">// Note: jailbreak detection can be bypassed by sophisticated attackers</span>
+<span class="cm">// It's a deterrent, not a guarantee — combine with server-side fraud detection</span></code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">A user reports they can see another user's account data in the app. What do you do?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Treat as P1 immediately.</strong> Account data exposure is a GDPR breach with a 72-hour reporting window to the ICO.</li>
+              <li><strong>Reproduce and scope first.</strong> Can you reproduce it? Is it one user, a cohort, or everyone? Is it client-side (stale cache) or server-side (IDOR in the API)?</li>
+              <li><strong>Client-side check first:</strong> Is Apollo/TanStack Query caching a previous user's data after logout? Did you clear the cache on sign-out?</li>
+              <li><strong>API-level check:</strong> Is the backend returning the correct account for the authenticated token? This is the more serious case — IDOR.</li>
+              <li><strong>Immediate mitigation:</strong> If API-level — take the endpoint offline or add an emergency auth check. If cache — force a full cache clear on login.</li>
+              <li><strong>Notify:</strong> Legal, security team, and if data was exposed — affected users and ICO within 72 hours.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('security',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- ACCESSIBILITY -->
+    <div class="page" id="page-a11y">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Accessibility</div>
+        <div class="page-desc">Energy is an essential service — the app must be usable by everyone, including users with visual, motor, and cognitive disabilities. Senior engineers champion this, not just implement it when asked.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout green">
+          <strong>Why E.ON Specifically</strong>
+          Ofgem (the UK energy regulator) requires energy suppliers to ensure their digital services are accessible. This isn't optional — it's a regulatory compliance issue as much as a UX one.
+        </div>
+
+        <h2>React Native Accessibility APIs</h2>
+        <pre><code><span class="cm">// Core accessibility props — every interactive element needs these</span>
+&lt;TouchableOpacity
+  onPress={<span class="fn">handleSubmitReading</span>}
+  accessible={<span class="kw">true</span>}
+  accessibilityRole=<span class="str">"button"</span>          <span class="cm">// tells VoiceOver/TalkBack what this is</span>
+  accessibilityLabel=<span class="str">"Submit meter reading"</span>   <span class="cm">// read aloud by screen reader</span>
+  accessibilityHint=<span class="str">"Submits your current electricity meter reading"</span>
+  accessibilityState={{ disabled: isSubmitting, busy: isSubmitting }}
+&gt;
+  {isSubmitting ? &lt;ActivityIndicator /&gt; : &lt;Text&gt;Submit&lt;/Text&gt;}
+&lt;/TouchableOpacity&gt;
+
+<span class="cm">// Announce dynamic changes — e.g. when usage data loads</span>
+<span class="kw">import</span> { AccessibilityInfo } <span class="kw">from</span> <span class="str">'react-native'</span>
+
+<span class="fn">useEffect</span>(() => {
+  <span class="kw">if</span> (usageData) {
+    AccessibilityInfo.<span class="fn">announceForAccessibility</span>(
+      `Your usage for this month is ${usageData.totalKwh} kilowatt hours, costing £${usageData.totalCost}`
+    )
+  }
+}, [usageData])
+
+<span class="cm">// Group related elements — chart with label</span>
+&lt;View
+  accessible={<span class="kw">true</span>}
+  accessibilityLabel=<span class="str">"Monthly energy usage chart"</span>
+  accessibilityHint=<span class="str">"Shows your daily electricity usage for the past month"</span>
+&gt;
+  &lt;UsageChart data={data} /&gt;  <span class="cm">// screen reader treats this as one element</span>
+&lt;/View&gt;
+
+<span class="cm">// Focus management — move focus after navigation</span>
+<span class="kw">const</span> headingRef = <span class="fn">useRef</span>(<span class="kw">null</span>)
+<span class="fn">useEffect</span>(() => {
+  <span class="kw">if</span> (headingRef.current) {
+    AccessibilityInfo.<span class="fn">setAccessibilityFocus</span>(<span class="fn">findNodeHandle</span>(headingRef.current)!)
+  }
+}, [])</code></pre>
+
+        <h2>Common A11y Roles in React Native</h2>
+        <table>
+          <thead><tr><th>Role</th><th>Use For</th><th>Screen Reader Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td><code>button</code></td><td>Any pressable action</td><td>Announces "button" after label. Double-tap to activate.</td></tr>
+            <tr><td><code>link</code></td><td>Navigation to another screen/URL</td><td>Announces "link". Different gesture on some readers.</td></tr>
+            <tr><td><code>header</code></td><td>Screen/section headings</td><td>Users can navigate by heading — very helpful for orientation</td></tr>
+            <tr><td><code>image</code></td><td>Images (decorative or informative)</td><td>Reads accessibilityLabel. Use <code>accessibilityElementsHidden</code> for decorative images.</td></tr>
+            <tr><td><code>tab</code></td><td>Tab bar items</td><td>Announces "tab, X of Y" with selected state</td></tr>
+            <tr><td><code>switch</code></td><td>Toggle controls</td><td>Announces on/off state — use with <code>accessibilityState.checked</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2>Colour, Contrast & Motion</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Colour contrast</h3>
+            <ul class="check-list">
+              <li>Normal text: minimum 4.5:1 contrast ratio (WCAG AA)</li>
+              <li>Large text (18pt+ or 14pt bold): minimum 3:1</li>
+              <li>UI components and graphical objects: minimum 3:1</li>
+              <li>Don't use colour alone to convey meaning — e.g. green/red for bill status must also have text or icon</li>
+              <li>Test with Colour Contrast Analyser or Figma A11y plugin</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Motion & Dynamic Type</h3>
+            <ul class="check-list">
+              <li>Respect <code>AccessibilityInfo.isReduceMotionEnabled()</code> — disable animations when enabled</li>
+              <li>iOS Dynamic Type — use <code>allowFontScaling</code> and test at largest font size</li>
+              <li>Android font scaling — use <code>maxFontSizeMultiplier</code> to cap scale on elements that break at large sizes</li>
+              <li>Test all screens with font size at 200% — layouts must not break</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you make an energy usage chart accessible to a blind user?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            Charts are inherently visual — screen readers can't interpret a rendered SVG or canvas meaningfully. Solutions:
+            <ul>
+              <li><strong>Accessible description:</strong> Wrap the chart in a View with a comprehensive <code>accessibilityLabel</code> — "Bar chart showing daily electricity usage for May 2024. Highest usage was 15 kWh on May 14th. Average usage was 9.2 kWh per day."</li>
+              <li><strong>Data table alternative:</strong> Add a "View as table" toggle — same data in a FlatList of rows, fully accessible</li>
+              <li><strong>Key insights in text:</strong> Always render the headline numbers as text below the chart — "You used 285 kWh this month, 12% less than last month." Screen readers get this for free.</li>
+              <li><strong>Hide chart from AT:</strong> Set <code>accessibilityElementsHidden={true}</code> on the chart container — the data is in the description and table, not the visual.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('a11y',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- CI/CD -->
+    <div class="page" id="page-cicd">
+      <div class="page-header">
+        <div class="page-tag">Quality & Delivery</div>
+        <div class="page-title">CI/CD & Release Process</div>
+        <div class="page-desc">Mobile CI/CD is significantly harder than web — app store reviews, code signing, OTA updates, multiple environments. A senior engineer understands the full release pipeline.</div>
+      </div>
+
+      <div class="section">
+        <h2>The Mobile Release Challenge vs Web</h2>
+        <div class="grid2">
+          <div class="card">
+            <div class="badge orange">Web</div>
+            <h3 style="margin-top:10px">Ship anytime</h3>
+            <ul class="check-list">
+              <li>Deploy in seconds — no gatekeeper</li>
+              <li>Instant rollback — revert the deploy</li>
+              <li>All users on latest version immediately</li>
+              <li>Feature flags for instant on/off</li>
+            </ul>
+          </div>
+          <div class="card accent-border">
+            <div class="badge green">Mobile</div>
+            <h3 style="margin-top:10px">App store gating</h3>
+            <ul class="check-list">
+              <li>iOS App Store review: 24–72 hours</li>
+              <li>Users on old versions for months — must maintain backwards compatibility</li>
+              <li>Code signing — provisioning profiles, certificates</li>
+              <li>OTA updates (CodePush / EAS Update) — JS-only changes without store review</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Mobile CI/CD Pipeline</h2>
+        <pre><code><span class="cm"># GitHub Actions — mobile CI pipeline</span>
+name: Mobile CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'yarn' }
+      - run: yarn install --frozen-lockfile
+      - run: yarn typecheck          <span class="cm"># tsc --noEmit</span>
+      - run: yarn lint               <span class="cm"># ESLint</span>
+      - run: yarn test --coverage    <span class="cm"># Jest</span>
+
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with: { java-version: '17', distribution: 'temurin' }
+      - run: cd android && ./gradlew bundleRelease  <span class="cm"># AAB for Play Store</span>
+      - uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: android/app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+
+  build-ios:
+    needs: test
+    runs-on: macos-latest            <span class="cm"># must be macOS for Xcode</span>
+    steps:
+      - uses: apple-actions/import-codesign-certs@v2
+        with: { p12-file-base64: ${{ secrets.IOS_CERTS_P12 }} }
+      - run: xcodebuild -workspace ios/EON.xcworkspace -scheme EON archive
+
+  ota-update:
+    <span class="cm"># JS-only changes → OTA via EAS Update (no store review)</span>
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    steps:
+      - run: npx eas update --branch production --message "${{ github.event.head_commit.message }}"</code></pre>
+
+        <h2>Environments & Feature Flags</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Environment Strategy</h3>
+            <ul class="check-list">
+              <li><strong>development</strong> — local dev, mock APIs or dev backend</li>
+              <li><strong>staging</strong> — full backend integration, TestFlight / internal track</li>
+              <li><strong>production</strong> — App Store / Play Store, real users</li>
+              <li>Separate app IDs per environment on iOS — can install all three simultaneously</li>
+              <li>Environment-specific bundle IDs, API URLs, and analytics keys</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Feature Flags on Mobile</h3>
+            <ul class="check-list">
+              <li>Use <strong>LaunchDarkly</strong> or <strong>PostHog</strong> feature flags — toggle features without a release</li>
+              <li>Ship features dark — code deployed, flag off, no users see it</li>
+              <li>Gradual rollout — 5% → 20% → 50% → 100%</li>
+              <li>Kill switch — turn off a broken feature without an app store release</li>
+              <li>Essential for a consumer app at E.ON's scale — can't push a hotfix to 1M users instantly</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">A critical bug is in production affecting all users on iOS. What are your options?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Option 1 — Feature flag kill switch (fastest):</strong> If the broken feature is behind a flag, turn it off. Zero delay, no release needed. This is why you ship with flags.</li>
+              <li><strong>Option 2 — OTA update with EAS Update / CodePush:</strong> If the fix is JS-only (no native code changes), push an OTA update. Users get it on next app launch without going through the App Store. Takes minutes.</li>
+              <li><strong>Option 3 — Expedited App Store Review:</strong> Apple has an expedited review process for critical bugs. Submit with justification — they can review within hours instead of days. Not guaranteed.</li>
+              <li><strong>Option 4 — Force update gate:</strong> If the bug makes the app unusable, show a forced update screen (your current version has a critical issue, please update). Requires a new build to already be in the store.</li>
+              <li><strong>Prevention:</strong> The reason you have staged rollouts, monitoring, and feature flags — to catch and contain before it reaches all users.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('cicd',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+    <!-- DEBUGGING -->
+    <div class="page" id="page-debugging">
+      <div class="page-header">
+        <div class="page-tag">Quality & Delivery</div>
+        <div class="page-title">Debugging & Tooling</div>
+        <div class="page-desc">A senior frontend developer spends a significant amount of time diagnosing issues — in development, in staging, and in production. Know your toolbox inside out.</div>
+      </div>
+
+      <div class="section">
+        <h2>React Native Debugging Toolkit</h2>
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Flipper</h3>
+            <ul class="check-list">
+              <li>Desktop debugger for React Native — built-in with RN</li>
+              <li>Network inspector — view all API requests/responses</li>
+              <li>React DevTools — component tree, props, state</li>
+              <li>Redux DevTools plugin — time-travel debugging</li>
+              <li>Crash Reporter plugin — view native crashes</li>
+              <li>Layout Inspector — view native view hierarchy</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>React DevTools Profiler</h3>
+            <ul class="check-list">
+              <li>Records which components rendered and why</li>
+              <li>Flame graph — see render time per component</li>
+              <li>"Why did this render?" — shows which prop/state changed</li>
+              <li>Use to find unnecessary re-renders before adding memo</li>
+              <li>Available in Chrome DevTools and standalone app</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Production Error Tracking — Sentry for RN</h2>
+        <pre><code><span class="cm">// sentry setup — captures native crashes AND JS errors</span>
+<span class="kw">import</span> * <span class="kw">as</span> Sentry <span class="kw">from</span> <span class="str">'@sentry/react-native'</span>
+
+<span class="fn">Sentry.init</span>({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.APP_ENV,          <span class="cm">// 'staging' | 'production'</span>
+  tracesSampleRate: <span class="ty">0.1</span>,                   <span class="cm">// 10% of sessions traced</span>
+  enableNative: <span class="kw">true</span>,                       <span class="cm">// capture native crashes</span>
+  attachStacktrace: <span class="kw">true</span>,
+
+  beforeSend(event) {
+    <span class="cm">// Strip PII before sending to Sentry (third party)</span>
+    <span class="kw">if</span> (event.user) { <span class="kw">delete</span> event.user.email; <span class="kw">delete</span> event.user.ip_address }
+    <span class="cm">// Remove account numbers, meter IDs from breadcrumbs</span>
+    event.breadcrumbs?.values?.forEach(b => {
+      <span class="kw">if</span> (b.data?.accountNumber) b.data.accountNumber = <span class="str">'[REDACTED]'</span>
+    })
+    <span class="kw">return</span> event
+  }
+})
+
+<span class="cm">// Source maps — so Sentry shows real TypeScript line numbers not minified JS</span>
+<span class="cm"># In CI: npx sentry-cli react-native upload-dsym</span>
+
+<span class="cm">// Add context to errors — helps debug account-specific issues</span>
+Sentry.<span class="fn">setUser</span>({ id: user.id })  <span class="cm">// ID only — no PII</span>
+Sentry.<span class="fn">setTag</span>(<span class="str">'app_version'</span>, appVersion)
+Sentry.<span class="fn">setTag</span>(<span class="str">'platform'</span>, Platform.OS)
+
+<span class="cm">// Wrap screen with error boundary</span>
+<span class="kw">export function</span> <span class="fn">UsageScreen</span>() {
+  <span class="kw">return</span> (
+    &lt;Sentry.ErrorBoundary fallback={&lt;ErrorFallback /&gt;}&gt;
+      &lt;UsageContent /&gt;
+    &lt;/Sentry.ErrorBoundary&gt;
+  )
+}</code></pre>
+
+        <h2>Diagnosing Common React Native Issues</h2>
+        <table>
+          <thead><tr><th>Symptom</th><th>Likely Cause</th><th>Diagnosis Tool</th></tr></thead>
+          <tbody>
+            <tr><td>App janks / drops frames during scroll</td><td>Heavy rendering in JS thread, missing FlatList optimisations</td><td>React DevTools Profiler, Flipper Perf Monitor</td></tr>
+            <tr><td>Memory grows over time, app crashes</td><td>Memory leak — event listener not removed, closure holding ref, image not recycled</td><td>Xcode Instruments (Leaks), Android Studio Memory Profiler</td></tr>
+            <tr><td>Network request not firing</td><td>Wrong URL, missing auth header, blocked by CORS (dev only)</td><td>Flipper Network Inspector</td></tr>
+            <tr><td>State not updating as expected</td><td>Stale closure, missing dependency in useEffect, selector not memoized</td><td>Redux DevTools (Flipper plugin), React DevTools</td></tr>
+            <tr><td>App crashes on iOS only</td><td>Native module issue, iOS-specific API, bitcode/architecture problem</td><td>Xcode crash logs, Sentry native crash report</td></tr>
+            <tr><td>Slow startup time</td><td>Too many synchronous operations on launch, large JS bundle</td><td>Hermes bytecode, lazy loading, Metro bundle analyser</td></tr>
+          </tbody>
+        </table>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you track down a memory leak in a React Native app?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Confirm it's a leak:</strong> Use Flipper's Hermes Debugger memory profiler or Xcode Instruments. Take heap snapshots at T=0, T=5min, T=15min. If heap grows without stabilising, you have a leak.</li>
+              <li><strong>Common culprits in React Native:</strong>
+                <ul>
+                  <li>Event listeners added in <code>useEffect</code> not removed in the cleanup function</li>
+                  <li>Interval/timeout set but never cleared (missing <code>clearInterval</code> in cleanup)</li>
+                  <li>Subscriptions (Redux store, EventEmitter) not unsubscribed on component unmount</li>
+                  <li>Large images cached without a size limit (FastImage cache, or raw <code>require()</code> of large local images)</li>
+                  <li>Closures holding references to large data — e.g. a callback capturing the full usage dataset</li>
+                </ul>
+              </li>
+              <li><strong>Fix pattern:</strong> Every <code>useEffect</code> that adds something should remove it in the return cleanup. Every subscription should have a corresponding unsubscribe.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('debugging',this)"><span>✓</span> Mark reviewed</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function showPage(id, navEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+    document.getElementById('page-' + id).classList.add('active')
+    navEl.classList.add('active')
+  }
+  function switchTab(group, tab) {
+    document.querySelectorAll(`[id^="tab-${group}-"]`).forEach(el => el.classList.remove('active'))
+    document.getElementById(`tab-${group}-${tab}`).classList.add('active')
+    document.querySelectorAll('.tab').forEach(btn => {
+      if (btn.getAttribute('onclick')?.includes(`'${group}'`))
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${tab}'`))
+    })
+  }
+  function toggleQA(el) { el.classList.toggle('open') }
+  const done = new Set()
+  function markDone(pageId, btn) {
+    if (done.has(pageId)) return
+    done.add(pageId)
+    btn.classList.add('done')
+    btn.innerHTML = '<span>✓</span> Reviewed!'
+    const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`)
+    if (navItem) navItem.classList.add('done')
+    const total = 16
+    const pct = (done.size / total) * 100
+    document.getElementById('progressFill').style.width = pct + '%'
+    document.getElementById('progressText').textContent = `${done.size} of ${total} sections reviewed`
+  }
+</script>
+</body>
+</html>
