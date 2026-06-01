@@ -140,7 +140,12 @@
       <div class="nav-item" data-page="cicd" onclick="showPage('cicd',this)"><span class="nav-icon">🚢</span> CI/CD & Release Process<span class="nav-check">✓</span></div>
       <div class="nav-item" data-page="debugging" onclick="showPage('debugging',this)"><span class="nav-icon">🔍</span> Debugging & Tooling<span class="nav-check">✓</span></div>
 
+      <div class="nav-section-label">Senior Technical</div>
+      <div class="nav-item" data-page="styling" onclick="showPage('styling',this)"><span class="nav-icon">🎨</span> Styling & Flexbox<span class="nav-check">✓</span></div>
+      <div class="nav-item" data-page="seniorcurveball" onclick="showPage('seniorcurveball',this)"><span class="nav-icon">🎯</span> Senior Curveball Questions<span class="nav-check">✓</span></div>
+
       <div class="nav-section-label">Prep</div>
+      <div class="nav-item" data-page="competency" onclick="showPage('competency',this)"><span class="nav-icon">💼</span> Competency Questions<span class="nav-check">✓</span></div>
       <div class="nav-item" data-page="behavioral" onclick="showPage('behavioral',this)"><span class="nav-icon">🗣️</span> Behavioral Questions<span class="nav-check">✓</span></div>
       <div class="nav-item" data-page="flashcards" onclick="showPage('flashcards',this)"><span class="nav-icon">🃏</span> Flash Cards<span class="nav-check">✓</span></div>
     </nav>
@@ -1815,6 +1820,710 @@ Sentry.<span class="fn">setTag</span>(<span class="str">'platform'</span>, Platf
       <button class="mark-done-btn" onclick="markDone('debugging',this)"><span>✓</span> Mark reviewed</button>
     </div>
 
+    <!-- STYLING & FLEXBOX -->
+    <div class="page" id="page-styling">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Styling & Flexbox in React Native</div>
+        <div class="page-desc">RN uses a subset of CSS — but the mental model is different. No cascade, no percentages on most properties, Flexbox is column-direction by default, and StyleSheet.create is more than a convention.</div>
+      </div>
+
+      <div class="section">
+        <h2>Flexbox — RN vs Web Key Differences</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Property</th><th>Web default</th><th>React Native default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>flexDirection</td><td>row</td><td><strong>column</strong></td><td>Everything stacks vertically by default</td></tr>
+            <tr><td>alignContent</td><td>stretch</td><td>flex-start</td><td>Affects multi-line flex containers</td></tr>
+            <tr><td>flexShrink</td><td>1</td><td><strong>0</strong></td><td>Children don't shrink unless told to</td></tr>
+            <tr><td>position</td><td>static</td><td><strong>relative</strong></td><td>No static; absolute is relative to nearest parent</td></tr>
+            <tr><td>Units</td><td>px, %, rem…</td><td><strong>dp only</strong> (unitless numbers)</td><td>% works on width/height, not padding/margin</td></tr>
+            <tr><td>overflow</td><td>visible</td><td><strong>hidden</strong> on Android</td><td>Gotcha — iOS shows overflow, Android clips it</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="section">
+        <h2>StyleSheet.create vs plain objects</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'st-stylesheet')">StyleSheet.create</button>
+            <button class="tab-btn" onclick="switchTab(this,'st-inline')">Inline objects</button>
+            <button class="tab-btn" onclick="switchTab(this,'st-dynamic')">Dynamic styles</button>
+          </div>
+          <div class="tab-content active" id="st-stylesheet">
+<pre><code>import { StyleSheet, View, Text } from 'react-native';
+
+// StyleSheet.create validates props in DEV mode and sends
+// IDs over the bridge instead of full objects — smaller payload.
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#0a120a',
+    padding: 16,
+  },
+  card: {
+    backgroundColor: '#141414',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    // Shadow — iOS only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    // Elevation — Android only
+    elevation: 4,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#e4ede4',
+  },
+});
+
+export function EnergyCard() {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;View style={styles.card}&gt;
+        &lt;Text style={styles.title}&gt;Smart Meter Reading&lt;/Text&gt;
+      &lt;/View&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+          </div>
+          <div class="tab-content" id="st-inline">
+<pre><code>// Inline objects are re-created on every render — avoid for
+// anything used more than once. Fine for truly one-off styles.
+function Badge({ colour }: { colour: string }) {
+  return (
+    &lt;View
+      style={{
+        backgroundColor: colour,
+        borderRadius: 99,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+      }}
+    &gt;
+      &lt;Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}&gt;
+        Active
+      &lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+// Better — memoize with useMemo if colour comes from props
+import { useMemo } from 'react';
+function BadgeMemo({ colour }: { colour: string }) {
+  const style = useMemo(() => ({
+    backgroundColor: colour,
+    borderRadius: 99 as const,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  }), [colour]);
+
+  return &lt;View style={style}&gt;...&lt;/View&gt;;
+}</code></pre>
+          </div>
+          <div class="tab-content" id="st-dynamic">
+<pre><code>// Pattern: static base + dynamic override merged with array syntax
+const styles = StyleSheet.create({
+  btn: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  btnPrimary: { backgroundColor: '#4ade80' },
+  btnDisabled: { backgroundColor: '#3d5c3d', opacity: 0.6 },
+  btnText: { fontSize: 15, fontWeight: '700', color: '#0a120a' },
+  btnTextDisabled: { color: '#7a9a7a' },
+});
+
+function Button({ label, disabled, variant = 'primary' }: ButtonProps) {
+  return (
+    &lt;Pressable
+      style={[
+        styles.btn,
+        variant === 'primary' ? styles.btnPrimary : null,
+        disabled ? styles.btnDisabled : null,
+      ]}
+      disabled={disabled}
+    &gt;
+      &lt;Text style={[styles.btnText, disabled && styles.btnTextDisabled]}&gt;
+        {label}
+      &lt;/Text&gt;
+    &lt;/Pressable&gt;
+  );
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Flexbox Layout Patterns</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'fl-basics')">Core Patterns</button>
+            <button class="tab-btn" onclick="switchTab(this,'fl-responsive')">Responsive</button>
+            <button class="tab-btn" onclick="switchTab(this,'fl-absolute')">Absolute Positioning</button>
+          </div>
+          <div class="tab-content active" id="fl-basics">
+<pre><code>// Space-between header row
+const headerStyle = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+});
+
+// Centered full-screen loading state
+const centered = StyleSheet.create({
+  fill: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+// Scrollable list with sticky footer button
+// flex: 1 on ScrollView parent, fixed height button below
+const layout = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: '#0a120a' },
+  scroll: { flex: 1 },
+  footer: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#1a2a1a',
+  },
+});</code></pre>
+          </div>
+          <div class="tab-content" id="fl-responsive">
+<pre><code>import { Dimensions, useWindowDimensions } from 'react-native';
+
+// Static — doesn't react to rotation
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.45;
+
+// Reactive — use this in components (re-renders on rotate)
+function EnergyGrid() {
+  const { width } = useWindowDimensions();
+  const cols = width > 600 ? 3 : 2;
+  const cardWidth = (width - 16 * (cols + 1)) / cols;
+
+  return (
+    &lt;View style={styles.grid}&gt;
+      {readings.map(r =&gt; (
+        &lt;View key={r.id} style={{ width: cardWidth, margin: 8 }}&gt;
+          &lt;ReadingCard reading={r} /&gt;
+        &lt;/View&gt;
+      ))}
+    &lt;/View&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',        // ← key for grid layouts
+    justifyContent: 'flex-start',
+    padding: 8,
+  },
+});</code></pre>
+          </div>
+          <div class="tab-content" id="fl-absolute">
+<pre><code>// Absolute overlay — positioned relative to nearest parent
+const styles = StyleSheet.create({
+  container: { position: 'relative' },   // flex + position: 'relative'
+  overlay: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // FAB button pinned to bottom-right
+  fab: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#4ade80',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+});
+
+// ⚠️ Gotcha: on Android, absolute children can be clipped by
+// parent overflow:hidden. Wrap in a full-screen View at root level
+// for modal-style overlays, or use the Modal component.</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Theming & Design Tokens</h2>
+        <div class="code-block"><pre><code>// tokens.ts — single source of truth
+export const tokens = {
+  colour: {
+    bg: '#0a120a',
+    surface: '#141414',
+    accent: '#4ade80',
+    textPrimary: '#e4ede4',
+    textSecondary: '#7a9a7a',
+    error: '#f87171',
+    warning: '#fbbf24',
+  },
+  spacing: {
+    xs: 4, sm: 8, md: 16, lg: 24, xl: 32, xxl: 48,
+  },
+  radius: {
+    sm: 6, md: 10, lg: 14, full: 99,
+  },
+  typography: {
+    h1: { fontSize: 28, fontWeight: '800' as const, lineHeight: 34 },
+    h2: { fontSize: 20, fontWeight: '700' as const, lineHeight: 26 },
+    body: { fontSize: 14, fontWeight: '400' as const, lineHeight: 22 },
+    label: { fontSize: 12, fontWeight: '600' as const, lineHeight: 16 },
+  },
+} as const;
+
+// Usage — no magic numbers anywhere in the component tree
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: tokens.colour.surface,
+    borderRadius: tokens.radius.lg,
+    padding: tokens.spacing.md,
+    marginBottom: tokens.spacing.sm,
+  },
+});</code></pre></div>
+      </div>
+
+      <div class="section">
+        <h2>Platform-Specific Styling</h2>
+        <div class="code-block"><pre><code>import { Platform, StyleSheet } from 'react-native';
+
+const styles = StyleSheet.create({
+  input: {
+    fontSize: 16,
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.md,
+    // Platform-specific shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    // SF Pro on iOS, Roboto on Android automatically
+    // but you can override:
+    fontFamily: Platform.select({
+      ios: 'System',
+      android: 'Roboto',
+      default: 'System',
+    }),
+  },
+});
+
+// Platform-specific file extensions
+// Button.ios.tsx  — picked up automatically on iOS
+// Button.android.tsx — picked up automatically on Android
+// Button.tsx — fallback for both / web</code></pre></div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Why is flexDirection column by default in React Native but row on web?</span><span>+</span></div>
+          <div class="qa-a"><p>Mobile UIs are primarily vertical scroll lists — stacking children top-to-bottom is almost always what you want. Changing the default to column eliminates the most common manual override. On web, inline content flows horizontally, so row makes more sense. You still use row frequently in RN for header bars, button rows, and icon-label combos — it's just not the default.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>What does StyleSheet.create actually do at runtime?</span><span>+</span></div>
+          <div class="qa-a"><p>In DEV mode it validates style properties and values, giving you errors for unknown CSS-style properties. In both modes it registers styles and returns numeric IDs — these IDs are sent over the bridge (or via JSI on New Architecture) instead of the full style objects, reducing serialisation overhead. It also allows native code to cache and reuse style objects. For New Architecture with Fabric, styles are processed entirely on the JS side via C++ bindings, but the create pattern still serves as a useful validation and organisation tool.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How do you handle safe area insets on iPhone notch / Dynamic Island?</span><span>+</span></div>
+          <div class="qa-a">
+<pre><code>import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function Screen() {
+  const insets = useSafeAreaInsets();
+  return (
+    &lt;View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}&gt;
+      ...
+    &lt;/View&gt;
+  );
+}
+
+// Or declaratively:
+import { SafeAreaView } from 'react-native-safe-area-context';
+function Screen() {
+  return &lt;SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}&gt;...&lt;/SafeAreaView&gt;;
+}
+// Wrap the whole app in &lt;SafeAreaProvider&gt; in App.tsx</code></pre>
+<p>Never hardcode top/bottom padding — the Dynamic Island and Android gesture bar change the values. The <code>edges</code> prop lets you apply insets selectively (e.g., skip bottom inset inside a tab bar that handles it already).</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How do you build a responsive layout without media queries?</span><span>+</span></div>
+          <div class="qa-a"><p>Use <code>useWindowDimensions()</code> to get live width/height that updates on rotation. Derive column counts, card widths, and font scales from those numbers. For font scaling respect the user's system font size setting via <code>Text allowFontScaling</code> (on by default) or set a max via <code>maxFontSizeMultiplier</code>. For tablets, break at a width threshold (commonly 768dp). Avoid <code>Dimensions.get</code> at module level as it won't react to orientation changes.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How does the shadow API differ between iOS and Android?</span><span>+</span></div>
+          <div class="qa-a"><p>iOS supports the full <code>shadow*</code> property set (shadowColor, shadowOffset, shadowOpacity, shadowRadius). Android uses a single <code>elevation</code> integer — it derives its own shadow from the theme's shadow colour (always dark). You can't control the shadow colour on Android without using a third-party library or a custom native view. Use <code>Platform.select</code> to write both in the same StyleSheet object.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>When would you use Animated.Value vs react-native-reanimated?</span><span>+</span></div>
+          <div class="qa-a"><p>Use Animated API for simple, one-shot animations where you need to stay dependency-light (loading spinners, fade-ins). Use Reanimated 2/3 for anything gesture-driven, complex, or performance-critical — it runs animations entirely on the UI thread via worklets, eliminating bridge round-trips. Reanimated is the standard for swipe-to-dismiss, parallax scrolling, and shared element transitions. At senior level, the expected answer is: Reanimated for anything the user interacts with directly.</p></div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('styling', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- SENIOR CURVEBALL QUESTIONS -->
+    <div class="page" id="page-seniorcurveball">
+      <div class="page-header">
+        <div class="page-tag">Senior Technical</div>
+        <div class="page-title">Senior Curveball Questions</div>
+        <div class="page-desc">Questions that separate mid-level from senior. These test depth, judgment under pressure, and how you handle ambiguity — not just syntax recall.</div>
+      </div>
+
+      <div class="section">
+        <h2>React Native Depth</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>The app's JS bundle takes 4 seconds to parse on a mid-range Android. What do you do?</span><span>+</span></div>
+          <div class="qa-a"><p><strong>Diagnose first:</strong> use <code>react-native-bundle-visualizer</code> or <code>metro-bundle-analyzer</code> to find what's large. Common culprits: moment.js, lodash (import all), large image assets bundled as requires.</p><p><strong>Fix options in order of impact:</strong> (1) Enable Hermes — it pre-compiles JS to bytecode at build time, eliminating parse time entirely at runtime. This is the single biggest win. (2) Code split with inline requires / lazy imports — React Navigation does this for screens. (3) Remove large deps (replace moment with date-fns tree-shaken, lodash with individual packages). (4) Enable RAM bundles for older RN apps that can't yet use Hermes. (5) Defer non-critical initialisation behind InteractionManager.runAfterInteractions.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Your React Native app works perfectly on iOS but crashes on a Samsung Galaxy A12. How do you debug it?</span><span>+</span></div>
+          <div class="qa-a"><p><strong>Step 1:</strong> Reproduce with Flipper or <code>adb logcat</code> — Android-specific crashes often surface in the native log with a stack trace that doesn't appear in the Metro console. <strong>Step 2:</strong> Check for overflow:hidden clipping, elevation issues, or gradient/Animated APIs that behave differently on low-end GPUs. <strong>Step 3:</strong> Look at the A12 spec — 3–4GB RAM, older Exynos GPU. Suspect: OOMKilled (too many large images in FlatList), a missing <code>enableSoftwareKeyboardHandling</code>, or a native module that assumes a newer Android API level. <strong>Step 4:</strong> Test on Android emulator set to "Low RAM device" in AVD settings. <strong>Step 5:</strong> Sentry + Crashlytics — check if this device/OS combo is in the crash report's top entries.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Explain the React Native rendering pipeline end-to-end under the New Architecture.</span><span>+</span></div>
+          <div class="qa-a"><p>Under New Architecture (Fabric + TurboModules + JSI): (1) React runs a reconciliation pass on the JS thread, producing a React Element tree. (2) The Fabric renderer (replaces the old UIManager) generates a Shadow Node tree on the JS thread via JSI — no bridge serialisation. (3) Yoga (the layout engine) runs on the C++ Shadow tree to calculate layout (positions, sizes). (4) A committed tree is sent to the native UI thread, which creates or mutates native views. Key improvements vs Old Architecture: synchronous layout queries (no async round-trip), concurrent rendering support (React 18 features work properly), and direct C++ function calls instead of JSON-over-bridge for all native calls.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How would you implement offline support for energy meter readings?</span><span>+</span></div>
+          <div class="qa-a">
+<pre><code>// Strategy: read-through cache + optimistic writes + sync queue
+// 1. On fetch: load from SQLite/MMKV first, show immediately,
+//    then fetch from API and update if changed
+// 2. On mutation (manual reading submission): write to local queue,
+//    attempt API, if offline keep in queue
+
+import NetInfo from '@react-native-community/netinfo';
+import { MMKV } from 'react-native-mmkv';
+
+const storage = new MMKV();
+const QUEUE_KEY = 'offline_queue';
+
+async function submitReading(reading: MeterReading) {
+  const { isConnected } = await NetInfo.fetch();
+  if (isConnected) {
+    return api.postReading(reading);
+  }
+  // Queue for later
+  const queue = JSON.parse(storage.getString(QUEUE_KEY) ?? '[]');
+  queue.push({ type: 'SUBMIT_READING', payload: reading, timestamp: Date.now() });
+  storage.set(QUEUE_KEY, JSON.stringify(queue));
+  // Show optimistic success to user
+}
+
+// On app foreground / connectivity restore:
+async function drainQueue() {
+  const queue = JSON.parse(storage.getString(QUEUE_KEY) ?? '[]');
+  for (const item of queue) {
+    await api.postReading(item.payload); // retry with exponential backoff
+  }
+  storage.delete(QUEUE_KEY);
+}</code></pre>
+<p>For energy data specifically: meter readings are append-only and idempotent by reading timestamp — safe to retry. Flag queued items in the UI with a "pending sync" indicator.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Architecture & Design Decisions</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>When would you NOT use Redux at a senior level?</span><span>+</span></div>
+          <div class="qa-a"><p>Redux is justified for: complex cross-cutting state, time-travel debugging needs, large teams where state traceability matters. You would <em>not</em> use Redux when: all state is server-derived (use TanStack Query instead — it handles caching, revalidation, optimistic updates out of the box), the app is small enough that Context + useReducer suffices, or the team is small and the boilerplate overhead costs more than the benefits. The senior answer: "I reach for TanStack Query for server state and Context/Zustand for lightweight UI state. Redux earns its keep when I need cross-feature state with complex update logic or when I have explicit replay/undo requirements."</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How do you handle breaking API changes from the backend team without breaking the mobile app for users who haven't updated?</span><span>+</span></div>
+          <div class="qa-a"><p><strong>Short answer:</strong> API versioning + a BFF layer + feature flags. <strong>In practice:</strong> (1) Never remove a field — deprecate and keep it populated. (2) If you must break, version the endpoint (<code>/api/v2/readings</code>) and keep v1 alive until your minimum supported app version is past the breaking change. (3) Use a BFF (Backend For Frontend) to normalise API responses — the mobile app talks to the BFF, which handles v1→v2 translation. (4) Use feature flags (LaunchDarkly / Firebase Remote Config) to gate new API calls behind a flag — you can roll forward and back without a new app release. (5) For OTA updates (Expo EAS Update), you can push JS fixes to ~95% of users within 24 hours for non-breaking regressions.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>You're asked to reduce the app's bundle size by 30%. Walk me through your process.</span><span>+</span></div>
+          <div class="qa-a"><p><strong>1. Measure first</strong> — run <code>npx react-native-bundle-visualizer</code> to get a treemap of what's in the bundle. <strong>2. Low-hanging fruit</strong>: switch full lodash/moment imports to tree-shaken alternatives (lodash-es, date-fns). One import of moment adds ~67KB minified. <strong>3. Image audit</strong> — large PNGs bundled with require() inflate JS bundle. Move to dynamic requires or remote URLs. Use WebP format (30-40% smaller than PNG). <strong>4. Code splitting</strong> — React Navigation lazy-loads screens by default. Ensure large screens not in the initial tab are lazy. <strong>5. Hermes</strong> — if not already on, enables bytecode which removes the raw JS from the bundle. <strong>6. Remove unused libraries</strong> — check <code>package.json</code> for deps that aren't referenced. <strong>7. Inline requires</strong> for heavy imports used only occasionally (charts, PDF generators).</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How would you build a design system that works across React Native and React web?</span><span>+</span></div>
+          <div class="qa-a"><p>Use a monorepo (Turborepo/Nx). Create a <code>packages/tokens</code> package: colours, spacing, typography, radii — plain JS/TS, no framework dependency. Create <code>packages/hooks</code>: shared logic hooks that work in both environments (useDebounce, useWindowSize, business logic). Keep UI components platform-specific: <code>packages/ui-native</code> and <code>packages/ui-web</code> — they import from tokens but render platform-appropriate primitives (View/Text vs div/p). The key insight: <em>share logic, not markup</em>. Attempting to share a single component tree between RN and web via react-native-web works for simple cases but becomes a maintenance burden for complex interactive components with platform-specific behaviour.</p></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>TypeScript & Tooling</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How do you type a navigation stack so params are checked at compile time?</span><span>+</span></div>
+          <div class="qa-a">
+<pre><code>// 1. Define the param map
+type RootStackParams = {
+  Home: undefined;
+  MeterDetail: { meterId: string; displayName: string };
+  BillHistory: { accountId: string; year?: number };
+  Settings: undefined;
+};
+
+// 2. Type the navigator and screens
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+type MeterDetailProps = NativeStackScreenProps&lt;RootStackParams, 'MeterDetail'&gt;;
+
+function MeterDetailScreen({ route, navigation }: MeterDetailProps) {
+  const { meterId, displayName } = route.params; // fully typed ✓
+
+  return (
+    &lt;Button
+      onPress={() =&gt; navigation.navigate('BillHistory', { accountId: meterId })}
+      // TS error if you pass wrong params ✓
+    /&gt;
+  );
+}
+
+// 3. Type useNavigation anywhere in the tree
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type Nav = NativeStackNavigationProp&lt;RootStackParams&gt;;
+function SomeDeepComponent() {
+  const nav = useNavigation&lt;Nav&gt;();
+  nav.navigate('MeterDetail', { meterId: '123', displayName: 'Gas Meter' });
+}</code></pre>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>What's the difference between unknown and any, and when does it matter for an energy app?</span><span>+</span></div>
+          <div class="qa-a"><p><code>any</code> disables type checking entirely — you can call methods on it, pass it anywhere, and TS won't complain. <code>unknown</code> is the type-safe alternative: you must narrow it before you can use it. In an energy app, API responses from meter APIs should be typed as <code>unknown</code> at the boundary, then parsed through a validation schema (Zod) before use. Using <code>any</code> for API data means a backend contract change silently breaks your UI — the tariff object that used to have <code>unit_rate_inc_vat</code> now has <code>unitRateIncVat</code> and you find out at runtime when the bill calculation returns NaN.</p></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Production & Incident Handling</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>The Sentry crash rate spikes to 8% on the morning of a smart meter billing run. Walk me through your response.</span><span>+</span></div>
+          <div class="qa-a"><p><strong>Immediate (0–5 min):</strong> Open Sentry, filter by the spike time window, group by issue. Identify top crash — look at the stack trace, affected device/OS distribution, and breadcrumbs leading to it. <strong>5–15 min:</strong> If it's a JS error, check if an OTA (EAS Update) was deployed overnight — roll it back immediately if so. If it's a native crash, check if a backend API changed its response shape. <strong>15–30 min:</strong> Communicate status to stakeholders (PM, backend lead). If crash rate is sustained >5%, consider a forced update prompt or disabling the affected feature via remote config. <strong>Root cause:</strong> Billing run likely returns a different data shape for accounts with smart meters vs SMETS1. Probably a null/undefined access on a field that exists on some accounts but not all. Fix: add optional chaining + Zod validation at the API layer. Deploy OTA fix. <strong>Post-incident:</strong> Write a 5-minute blameless RCA. Add a test case for the null path. Add a Sentry alert for crash rate >2%.</p></div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>How would you implement a feature flag system in a React Native app without a third-party service?</span><span>+</span></div>
+          <div class="qa-a">
+<pre><code>// Firebase Remote Config (free, built for mobile)
+import remoteConfig from '@react-native-firebase/remote-config';
+
+const DEFAULTS = {
+  new_billing_ui: false,
+  smart_meter_dashboard: false,
+  max_historical_months: 12,
+};
+
+async function initFlags() {
+  await remoteConfig().setDefaults(DEFAULTS);
+  await remoteConfig().setConfigSettings({ minimumFetchIntervalMillis: 300_000 }); // 5 min
+  await remoteConfig().fetchAndActivate();
+}
+
+function useFlag(key: keyof typeof DEFAULTS): boolean {
+  return remoteConfig().getBoolean(key);
+}
+
+// Usage in component
+function BillingScreen() {
+  const newUI = useFlag('new_billing_ui');
+  return newUI ? &lt;NewBillingUI /&gt; : &lt;LegacyBillingUI /&gt;;
+}
+
+// Rollout strategy: 0% → 10% → 25% → 50% → 100%
+// Rollback: set flag to false in console — OTA effective within 5 min</code></pre>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('seniorcurveball', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- COMPETENCY QUESTIONS -->
+    <div class="page" id="page-competency">
+      <div class="page-header">
+        <div class="page-tag">Prep</div>
+        <div class="page-title">Competency Questions</div>
+        <div class="page-desc">UK enterprise interviews — especially contract roles — frequently use structured competency frameworks (STAR format). E.ON will want evidence of seniority, delivery, and stakeholder management. Prepare specific stories, not generic answers.</div>
+      </div>
+
+      <div class="section">
+        <h2>STAR Format Reminder</h2>
+        <div class="card" style="border-left:3px solid var(--accent)">
+          <div class="grid2">
+            <div><h3>S — Situation</h3><p>Set the scene. Company size, team, what was happening.</p></div>
+            <div><h3>T — Task</h3><p>What was YOUR specific responsibility? (Not "we")</p></div>
+            <div><h3>A — Action</h3><p>What did YOU do, step by step? Be specific, use "I".</p></div>
+            <div><h3>R — Result</h3><p>Quantify where possible. What changed? What was learned?</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Delivery & Technical Leadership</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a time you delivered a complex feature under a tight deadline.</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Prioritisation, scope management, communication under pressure, ability to make trade-offs without compromising quality.</p>
+            <p><strong>Strong answer signals:</strong> You broke the work into shippable slices. You communicated blockers early. You made a deliberate call to defer something non-critical. The feature shipped with a plan to follow up — not a mess of tech debt.</p>
+            <p><strong>Red flags to avoid:</strong> "We worked weekends." "I just pushed through." "I cut testing to hit the date." — all signal poor planning or wrong values.</p>
+            <p><strong>Frame your answer around:</strong> How you assessed what was truly MVP vs nice-to-have, how you kept stakeholders informed, and the concrete outcome.</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Describe a time you had to make a significant technical decision with incomplete information.</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Senior judgment — can you act decisively without perfect data? Do you know how to de-risk your bets?</p>
+            <p><strong>Strong answer signals:</strong> You defined the reversibility of the decision (reversible = move fast, irreversible = slow down). You identified the key unknowns and ran a spike or proof of concept. You documented your reasoning so future-you (or a new joiner) could understand why.</p>
+            <p><strong>Good topics:</strong> Choosing between two state management approaches mid-project, selecting a third-party SDK with limited reviews, deciding whether to migrate to New Architecture before a major release.</p>
+            <p><strong>Key phrase to use:</strong> "I treated it as a two-way door decision" (reversible) or "I recognised this was hard to undo, so I spent X days de-risking it before committing."</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Give an example of a time you improved the development process for your team.</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Proactive ownership, systems thinking, whether you leave a team better than you found it — crucial for a 6-month contract.</p>
+            <p><strong>Strong answer signals:</strong> You spotted a recurring pain point (slow CI, no shared types, inconsistent code review, missing error monitoring), proposed a solution, built buy-in, implemented it, and measured the improvement.</p>
+            <p><strong>Example angles:</strong> Setting up Sentry + source maps for a team that was debugging from user reports. Adding Zod schemas at API boundaries to catch contract drift. Writing a PR template that reduced review time. Adding Storybook/component docs that reduced design-dev misalignment.</p>
+            <p><strong>Quantify:</strong> "PR review cycles dropped from 3 rounds to 1.5 on average" or "We went from 2 production bugs per sprint to 0 for the following quarter."</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a time you had to refactor a large piece of legacy code. How did you approach it?</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Patience, risk management, ability to balance delivery with improvement — not just rewriting things for fun.</p>
+            <p><strong>Strong answer signals:</strong> You didn't rewrite everything at once. You used the strangler fig pattern — wrap the old thing, replace piece by piece, keep tests green throughout. You had a clear exit criterion before starting.</p>
+            <p><strong>Key phrases:</strong> "Characterisation tests first — I wrote tests against the existing behaviour before touching anything, so I had a safety net." "I defined what 'done' looked like before writing a line."</p>
+            <p><strong>What to avoid:</strong> "I convinced the team to do a full rewrite" — this is almost always a red flag in an enterprise context.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Collaboration & Communication</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a time you disagreed with a colleague or manager about a technical approach. How did you handle it?</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Psychological safety, professionalism, whether you push back constructively or just comply/explode.</p>
+            <p><strong>Strong answer signals:</strong> You made your case with evidence (benchmarks, industry precedent, failure scenarios). You listened to their reasoning. You reached a decision together — or deferred to their call with clear documentation of your concern. You didn't relitigate after the decision was made.</p>
+            <p><strong>Framework:</strong> "Disagree and commit" — once a decision is made, you execute it fully, but you might add "I'd like to revisit this in 4 weeks to see if my concern materialised."</p>
+            <p><strong>Topics that work well:</strong> Choice of library, migration timing, test coverage standards, TypeScript strictness level.</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Describe a time you had to communicate a technical problem to a non-technical stakeholder.</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Communication skills, empathy, ability to translate technical risk into business impact — especially important at a large utility like E.ON where product and business stakeholders are non-technical.</p>
+            <p><strong>Structure your answer:</strong> What was the technical issue? What was the business impact? How did you frame it without jargon? What decision did you enable them to make?</p>
+            <p><strong>Example frame:</strong> "I stopped talking about 'memory leaks' and started talking about 'the app crashing for 1 in 12 users trying to view their bill — and here's the customer complaint trend to show it.' That framing got the sprint priority changed in 10 minutes."</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a time you mentored or helped a junior developer grow.</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Leadership potential, patience, investment in team health. Even as a contractor, demonstrating this shows you'll be a force multiplier.</p>
+            <p><strong>Strong answer signals:</strong> You didn't just give them the answer — you asked questions to help them figure it out. You gave specific, actionable code review feedback rather than vague comments. You made time for 1:1s or pairing sessions.</p>
+            <p><strong>Specific examples work better than general ones:</strong> "I noticed their PRs always had the same issue — no error handling at API boundaries. Instead of flagging it each time, I paired with them for an hour and we wrote the pattern together. Their next 5 PRs had it right."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Problem Solving & Resilience</h2>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a significant bug you found in production. What happened and what did you do?</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Ownership, composure under pressure, structured debugging, blameless post-mortem mindset.</p>
+            <p><strong>Structure:</strong> How you detected it (Sentry / user report / monitoring). How you triaged and scoped impact. What immediate mitigation you applied (feature flag off / rollback / hotfix). Root cause investigation. Permanent fix. What you changed to prevent recurrence.</p>
+            <p><strong>Key signal:</strong> "I didn't point fingers — I focused on the system failure, not the person. We updated the runbook and added a regression test."</p>
+            <p><strong>Quantify impact:</strong> "It affected ~200 users for 47 minutes. We issued a proactive in-app notification and logged the incident."</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Tell me about a project that didn't go as planned. What did you learn?</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Self-awareness, growth mindset, honesty. This is not a trick question — everyone has failures. The quality of your reflection matters more than the nature of the failure.</p>
+            <p><strong>Strong answer structure:</strong> What was planned → what went wrong → what you did about it → what you'd do differently → what you actually changed in your approach since.</p>
+            <p><strong>Authenticity beats perfection:</strong> "I underestimated the complexity of the migration and committed to a deadline without a spike. I missed the date by two weeks. Since then I always insist on a spike before estimating any migration work."</p>
+            <p><strong>Avoid:</strong> Blaming the team, the PM, the product — own your part in it.</p>
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)"><span>Why are you interested in this contract specifically, and what will you bring in the first 30 days?</span><span>+</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Motivation fit, self-awareness, planning ability. For a 6-month contract the ramp-up time matters — they want someone who hits the ground running.</p>
+            <p><strong>Interest:</strong> Mention something specific — the React Native + web stack (genuine breadth), the domain (energy data / smart meters is genuinely interesting engineering), the scale (millions of customers means production engineering matters).</p>
+            <p><strong>First 30 days answer (the 30-60-90 framework):</strong></p>
+            <p><strong>Days 1–30:</strong> Listen and learn — understand the codebase, the CI/CD pipeline, the team's conventions. Ship small PRs to build context. Ask "why" before suggesting "what if". Map the biggest pain points the team mentions in passing.</p>
+            <p><strong>Days 30–60:</strong> Deliver a meaningful feature end-to-end. Contribute to architectural discussions with evidence, not opinion.</p>
+            <p><strong>Days 60–90+:</strong> Identify one systemic improvement (tooling, testing, documentation) and propose it. Start unblocking others, not just delivering my own work.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Competency Quick Answers — Card Format</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Adaptability</h3>
+            <p>Prepare a story where requirements changed mid-sprint. Focus on how quickly you re-oriented, what you communicated, and what shipped.</p>
+          </div>
+          <div class="card">
+            <h3>Initiative</h3>
+            <p>A time you saw a problem no one asked you to fix, and fixed it anyway. Specifically: improved build times, caught a security issue in review, wrote missing docs.</p>
+          </div>
+          <div class="card">
+            <h3>Attention to Detail</h3>
+            <p>A time a small detail caught in review or testing prevented a large production issue. Pixel-perfect UI, an edge case in billing logic, a missing null check.</p>
+          </div>
+          <div class="card">
+            <h3>Working Under Pressure</h3>
+            <p>A production incident or on-call event. Calm, methodical, communicated frequently. Resolved it. Prevented recurrence.</p>
+          </div>
+          <div class="card">
+            <h3>Continuous Learning</h3>
+            <p>Describe how you stay current: RFC reading, changelog following, personal projects, conference talks. Have a specific recent example (e.g., New Architecture migration, RSC patterns).</p>
+          </div>
+          <div class="card">
+            <h3>Stakeholder Management</h3>
+            <p>A time you pushed back on scope or timeline with data. "I explained that adding this feature to the current sprint would mean dropping X or shipping with no tests — we chose to move it."</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('competency', this)">Mark as Done ✓</button>
+    </div>
+
   </main>
 </div>
 
@@ -1842,7 +2551,7 @@ Sentry.<span class="fn">setTag</span>(<span class="str">'platform'</span>, Platf
     btn.innerHTML = '<span>✓</span> Reviewed!'
     const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`)
     if (navItem) navItem.classList.add('done')
-    const total = 16
+    const total = 19
     const pct = (done.size / total) * 100
     document.getElementById('progressFill').style.width = pct + '%'
     document.getElementById('progressText').textContent = `${done.size} of ${total} sections reviewed`
