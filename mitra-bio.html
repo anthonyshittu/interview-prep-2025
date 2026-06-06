@@ -611,6 +611,24 @@
         <span class="nav-check">✓</span>
       </div>
 
+      <div class="nav-section-label">Data Team Round</div>
+      <div class="nav-item" data-page="dataflow" onclick="showPage('dataflow',this)">
+        <span class="nav-icon">🔀</span> Data Flow & Visualisation
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="apicollaboration" onclick="showPage('apicollaboration',this)">
+        <span class="nav-icon">🤝</span> Cross-Functional & API Design
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="ecompersonalisation" onclick="showPage('ecompersonalisation',this)">
+        <span class="nav-icon">🛍️</span> E-Commerce & Personalisation Data
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="datateambehavioral" onclick="showPage('datateambehavioral',this)">
+        <span class="nav-icon">💬</span> Data Team Behavioral
+        <span class="nav-check">✓</span>
+      </div>
+
       <div class="nav-section-label">Prep</div>
       <div class="nav-item" data-page="behavioral" onclick="showPage('behavioral',this)">
         <span class="nav-icon">🗣️</span> Behavioral & Product Thinking
@@ -3194,6 +3212,775 @@ model SkinReport {
       </button>
     </div>
 
+    <!-- DATA FLOW & VISUALISATION -->
+    <div class="page" id="page-dataflow">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round · Priority</div>
+        <div class="page-title">Data Flow & Visualisation</div>
+        <div class="page-desc">The data team cares deeply about how data moves from their pipelines into customer-facing UI. They'll probe how you consume, transform, and render data — and how you communicate about it with non-frontend engineers.</div>
+      </div>
+
+      <div class="section">
+        <h2>How Data Flows Through the Stack at Mitra Bio</h2>
+        <div class="code-block"><pre><code>
+  ┌─────────────────────────────────────────────────────────────┐
+  │  Data Sources                                               │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
+  │  │ Lab / Kit    │  │  Epigenetic  │  │  Shopify Orders  │  │
+  │  │ Results API  │  │  Biomarker   │  │  & Subscriptions │  │
+  │  └──────┬───────┘  │  Pipeline    │  └────────┬─────────┘  │
+  │         │          └──────┬───────┘           │            │
+  └─────────┼─────────────────┼───────────────────┼────────────┘
+            │                 │                   │
+            ▼                 ▼                   ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │  BFF Layer  (Next.js Route Handlers / tRPC)                 │
+  │  • Aggregates + normalises responses                        │
+  │  • Strips PII before forwarding to client                   │
+  │  • Applies caching (unstable_cache / Redis)                 │
+  └────────────────────────┬────────────────────────────────────┘
+                           │
+            ┌──────────────┼──────────────┐
+            ▼              ▼              ▼
+   ┌──────────────┐ ┌─────────────┐ ┌──────────────┐
+   │  RSC Pages   │ │  Client     │ │  Streaming   │
+   │  (static     │ │  Components │ │  Suspense    │
+   │   snapshots) │ │  (charts,   │ │  boundaries  │
+   └──────────────┘ │  real-time) │ └──────────────┘
+                    └─────────────┘
+        </code></pre></div>
+      </div>
+
+      <div class="section">
+        <h2>BFF as a Data Normalisation Layer</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'df-bff')">BFF Aggregation</button>
+            <button class="tab-btn" onclick="switchTab(this,'df-transform')">Data Transformation</button>
+            <button class="tab-btn" onclick="switchTab(this,'df-cache')">Caching Strategy</button>
+          </div>
+          <div class="tab-content active" id="df-bff">
+<pre><code>// Route handler acting as BFF — aggregates skin report + biomarkers
+// into a single normalised shape the UI can render directly.
+// The data team owns the upstream APIs; we own this contract.
+
+export async function GET(req: Request, { params }: { params: { userId: string } }) {
+  const [reportResult, biomarkersResult, subscriptionResult] = await Promise.allSettled([
+    fetchSkinReport(params.userId),
+    fetchBiomarkers(params.userId),
+    fetchShopifySubscription(params.userId),
+  ]);
+
+  // Never expose raw upstream errors — normalise to a safe shape
+  return Response.json({
+    report: reportResult.status === 'fulfilled' ? normaliseSkinReport(reportResult.value) : null,
+    biomarkers: biomarkersResult.status === 'fulfilled' ? normaliseBiomarkers(biomarkersResult.value) : [],
+    subscription: subscriptionResult.status === 'fulfilled' ? subscriptionResult.value : null,
+    meta: {
+      reportAvailable: reportResult.status === 'fulfilled',
+      biomarkersAvailable: biomarkersResult.status === 'fulfilled',
+    },
+  });
+}</code></pre>
+          </div>
+          <div class="tab-content" id="df-transform">
+<pre><code>// Data team returns snake_case scientific notation.
+// We normalise to camelCase UI-friendly shapes at the BFF boundary.
+// This decouples the frontend from upstream schema changes.
+
+type RawBiomarker = {
+  biomarker_id: string;
+  measured_value: number;
+  reference_range_min: number;
+  reference_range_max: number;
+  methylation_score: number; // 0–1
+  collected_at: string; // ISO string
+};
+
+type Biomarker = {
+  id: string;
+  value: number;
+  range: { min: number; max: number };
+  methylationScore: number;
+  collectedAt: Date;
+  status: 'optimal' | 'low' | 'high';
+};
+
+function normaliseBiomarker(raw: RawBiomarker): Biomarker {
+  const { reference_range_min: min, reference_range_max: max, measured_value: value } = raw;
+  return {
+    id: raw.biomarker_id,
+    value,
+    range: { min, max },
+    methylationScore: raw.methylation_score,
+    collectedAt: new Date(raw.collected_at),
+    status: value < min ? 'low' : value > max ? 'high' : 'optimal',
+  };
+}</code></pre>
+          </div>
+          <div class="tab-content" id="df-cache">
+<pre><code>import { unstable_cache } from 'next/cache';
+
+// Biomarker results don't change until the next kit is processed.
+// Cache aggressively — revalidate when the data team triggers a webhook.
+
+const getCachedBiomarkers = unstable_cache(
+  async (userId: string) => fetchBiomarkers(userId),
+  ['biomarkers'],
+  {
+    revalidate: 3600, // 1 hour fallback
+    tags: ['biomarkers'], // revalidate via: revalidateTag('biomarkers')
+  }
+);
+
+// Webhook from data pipeline → POST /api/webhooks/biomarkers-updated
+// → revalidateTag('biomarkers') — forces fresh fetch for all users
+export async function POST(req: Request) {
+  const { userId } = await req.json();
+  await revalidateTag(`biomarkers-${userId}`);
+  return new Response('OK');
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Data Visualisation in React</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'dv-recharts')">Recharts Pattern</button>
+            <button class="tab-btn" onclick="switchTab(this,'dv-d3')">D3 + React</button>
+            <button class="tab-btn" onclick="switchTab(this,'dv-accessible')">Accessible Charts</button>
+          </div>
+          <div class="tab-content active" id="dv-recharts">
+<pre><code>'use client';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
+
+type Props = { biomarker: Biomarker; history: BiomarkerPoint[] };
+
+export function BiomarkerTrendChart({ biomarker, history }: Props) {
+  const data = history.map(p => ({
+    date: p.collectedAt.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }),
+    value: p.value,
+  }));
+
+  return (
+    &lt;ResponsiveContainer width="100%" height={240}&gt;
+      &lt;LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}&gt;
+        &lt;XAxis dataKey="date" tick={{ fontSize: 12 }} /&gt;
+        &lt;YAxis domain={[biomarker.range.min * 0.8, biomarker.range.max * 1.2]} /&gt;
+        &lt;Tooltip
+          formatter={(value: number) => [value.toFixed(2), 'Score']}
+          contentStyle={{ background: '#1a1a1a', border: '1px solid #333' }}
+        /&gt;
+        {/* Optimal range band */}
+        &lt;ReferenceLine y={biomarker.range.max} stroke="#f59e0b" strokeDasharray="4 2" label="Max" /&gt;
+        &lt;ReferenceLine y={biomarker.range.min} stroke="#f59e0b" strokeDasharray="4 2" label="Min" /&gt;
+        &lt;Line type="monotone" dataKey="value" stroke="#c9a96e" strokeWidth={2} dot={{ r: 4 }} /&gt;
+      &lt;/LineChart&gt;
+    &lt;/ResponsiveContainer&gt;
+  );
+}</code></pre>
+          </div>
+          <div class="tab-content" id="dv-d3">
+<pre><code>'use client';
+import { useEffect, useRef } from 'react';
+import * as d3 from 'd3';
+
+// Use D3 for layout/math only — let React own the DOM.
+// This avoids the d3-vs-React DOM ownership conflict.
+export function MethylationHeatmap({ data }: { data: MethylationMatrix }) {
+  const svgRef = useRef&lt;SVGSVGElement&gt;(null);
+
+  useEffect(() => {
+    if (!svgRef.current) return;
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove(); // clear on re-render
+
+    const colorScale = d3.scaleSequential()
+      .domain([0, 1])
+      .interpolator(d3.interpolateYlOrBr);
+
+    // D3 handles math; we write SVG elements manually or via D3 selection
+    svg.selectAll('rect')
+      .data(data.cells)
+      .join('rect')
+      .attr('x', d => d.col * 20)
+      .attr('y', d => d.row * 20)
+      .attr('width', 18)
+      .attr('height', 18)
+      .attr('fill', d => colorScale(d.methylation))
+      .attr('rx', 2);
+  }, [data]);
+
+  return &lt;svg ref={svgRef} width={data.cols * 20} height={data.rows * 20} /&gt;;
+}</code></pre>
+          </div>
+          <div class="tab-content" id="dv-accessible">
+<pre><code>// Charts must be accessible — data team will care about this.
+// Screen readers can't interpret SVG paths without extra work.
+
+export function AccessibleBiomarkerChart({ biomarker, history }: Props) {
+  return (
+    &lt;figure role="figure" aria-labelledby="chart-title" aria-describedby="chart-summary"&gt;
+      &lt;figcaption&gt;
+        &lt;h3 id="chart-title"&gt;{biomarker.name} — 6 month trend&lt;/h3&gt;
+        &lt;p id="chart-summary" className="sr-only"&gt;
+          {biomarker.name} started at {history[0].value.toFixed(2)} and is currently{' '}
+          {history.at(-1)!.value.toFixed(2)}, which is {biomarker.status}.
+        &lt;/p&gt;
+      &lt;/figcaption&gt;
+      &lt;BiomarkerTrendChart biomarker={biomarker} history={history} /&gt;
+      {/* Data table as accessible fallback */}
+      &lt;details&gt;
+        &lt;summary&gt;View data as table&lt;/summary&gt;
+        &lt;table&gt;
+          &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Date&lt;/th&gt;&lt;th&gt;Value&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+          &lt;tbody&gt;
+            {history.map(p =&gt; (
+              &lt;tr key={p.collectedAt.toISOString()}&gt;
+                &lt;td&gt;{p.collectedAt.toLocaleDateString()}&lt;/td&gt;
+                &lt;td&gt;{p.value.toFixed(2)}&lt;/td&gt;
+                &lt;td&gt;{p.status}&lt;/td&gt;
+              &lt;/tr&gt;
+            ))}
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      &lt;/details&gt;
+    &lt;/figure&gt;
+  );
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you decide what data transformation to do in the BFF vs the frontend component?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>The BFF should handle anything that: (1) touches raw upstream schemas that might change, (2) requires secrets or server-only context, (3) needs to be cached at the server layer, or (4) aggregates multiple services. The frontend component should only handle presentation logic — formatting a date for display, picking a colour based on status, deciding which variant of a component to render. If a transformation runs in multiple components, it belongs in the BFF or a shared utility. The goal is components that receive data already shaped for their needs — no <code>raw.data[0].biomarker_results.v2.score</code> in JSX.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">The data team changes an upstream API field name. How do you handle it with minimal blast radius?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>This is why the BFF normalisation layer exists. The change only needs to be made in one place — the transformation function at the BFF boundary. The frontend never saw the raw field name. Use a Zod schema to parse the upstream response: <code>z.object({ methylation_score: z.number() })</code> — the parse will throw immediately if the field is missing or renamed, giving you a clear error in logs rather than a silent NaN in the UI. Add the new field name to the Zod schema, update the mapping function, deploy. No frontend changes needed.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Which charting library would you choose for epigenetic biomarker dashboards and why?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>For most of the dashboard — trend lines, bar charts, range indicators — <strong>Recharts</strong>: it's React-first, declarative, composable, and handles responsive containers well. For anything requiring custom layout algorithms or complex statistical visualisations (heatmaps, scatter plots with brush selection, parallel coordinates for multi-biomarker views) — <strong>D3 for math/layout only, React for DOM</strong>. This avoids the D3 vs React DOM ownership fight. Never let D3 call <code>selection.append()</code> inside a React component — use D3's scales and paths, then write the JSX yourself. For a skincare/wellness product, I'd also prioritise aesthetics and animation quality — Recharts with custom SVG shapes and Framer Motion for transitions can look premium without heavy custom code.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you handle streaming data from a biomarker processing pipeline in real time?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+<pre><code>// Server-Sent Events via Next.js Route Handler — data team pushes
+// processing status as it flows through the pipeline.
+
+// app/api/kit/[kitId]/stream/route.ts
+export async function GET(req: Request, { params }: { params: { kitId: string } }) {
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (event: string, data: unknown) => {
+        controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+      };
+
+      // Subscribe to data pipeline updates
+      const unsubscribe = await subscribeToPipelineEvents(params.kitId, (update) => {
+        send('pipeline-update', update);
+        if (update.stage === 'complete') {
+          controller.close();
+          unsubscribe();
+        }
+      });
+
+      req.signal.addEventListener('abort', () => { unsubscribe(); controller.close(); });
+    },
+  });
+  return new Response(stream, { headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' } });
+}
+
+// Client component
+'use client';
+export function KitProcessingStatus({ kitId }: { kitId: string }) {
+  const [stage, setStage] = useState('');
+  useEffect(() => {
+    const es = new EventSource(`/api/kit/${kitId}/stream`);
+    es.addEventListener('pipeline-update', (e) => setStage(JSON.parse(e.data).stage));
+    return () => es.close();
+  }, [kitId]);
+  return &lt;ProgressIndicator stage={stage} /&gt;;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('dataflow', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- CROSS-FUNCTIONAL & API DESIGN -->
+    <div class="page" id="page-apicollaboration">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round · Priority</div>
+        <div class="page-title">Cross-Functional Collaboration & API Design</div>
+        <div class="page-desc">The data team at Mitra Bio owns the science pipeline. You own the frontend. This round is about how well you collaborate across that boundary — defining contracts, speaking each other's language, and shipping without stepping on each other.</div>
+      </div>
+
+      <div class="section">
+        <h2>API Contract First — the Right Mindset</h2>
+        <div class="card" style="border-left: 3px solid var(--accent)">
+          <p>The data team thinks in terms of <strong>schemas, pipelines, and datasets</strong>. You think in terms of <strong>components, routes, and user interactions</strong>. A strong full-stack engineer in this position acts as the translator — turning data team outputs into API contracts that serve both sides, and flagging frontend requirements early so the data team can design their schema to suit.</p>
+          <p style="margin-top:10px"><strong>What the data team wants to know:</strong> Can you read their schemas? Can you tell them what shape you need? Will you raise requirements early or come back later with "actually we need a new field"?</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Designing API Contracts Together</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'api-openapi')">OpenAPI / Schema First</button>
+            <button class="tab-btn" onclick="switchTab(this,'api-zod')">Shared Zod Schemas</button>
+            <button class="tab-btn" onclick="switchTab(this,'api-versioning')">Versioning Strategy</button>
+          </div>
+          <div class="tab-content active" id="api-openapi">
+<pre><code># openapi.yaml — agreed contract between data team and frontend
+# Both sides code against this. Changes require both parties to sign off.
+
+paths:
+  /users/{userId}/biomarkers:
+    get:
+      summary: Get user biomarker results
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: since
+          in: query
+          schema: { type: string, format: date }
+          description: Return only results after this date
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [biomarkers, generatedAt]
+                properties:
+                  biomarkers:
+                    type: array
+                    items: { $ref: '#/components/schemas/Biomarker' }
+                  generatedAt:
+                    type: string
+                    format: date-time
+        '404':
+          description: User not found or no results yet
+
+components:
+  schemas:
+    Biomarker:
+      type: object
+      required: [id, name, value, referenceRange, collectedAt]
+      properties:
+        id: { type: string }
+        name: { type: string, example: "ELOVL2 Methylation Score" }
+        value: { type: number, minimum: 0, maximum: 1 }
+        referenceRange:
+          type: object
+          required: [min, max]
+          properties:
+            min: { type: number }
+            max: { type: number }
+        collectedAt: { type: string, format: date-time }</code></pre>
+          </div>
+          <div class="tab-content" id="api-zod">
+<pre><code>// packages/schemas/biomarker.ts — shared between frontend and BFF
+// Data team generates JSON Schema from their Python Pydantic models;
+// we mirror it in Zod. Single source of truth, validated at runtime.
+
+import { z } from 'zod';
+
+export const BiomarkerSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  value: z.number().min(0).max(1),
+  referenceRange: z.object({
+    min: z.number(),
+    max: z.number(),
+  }),
+  collectedAt: z.string().datetime(),
+});
+
+export const BiomarkersResponseSchema = z.object({
+  biomarkers: z.array(BiomarkerSchema),
+  generatedAt: z.string().datetime(),
+});
+
+export type Biomarker = z.infer&lt;typeof BiomarkerSchema&gt;;
+export type BiomarkersResponse = z.infer&lt;typeof BiomarkersResponseSchema&gt;;
+
+// At the BFF boundary — parse immediately, fail loudly
+async function fetchBiomarkers(userId: string): Promise&lt;BiomarkersResponse&gt; {
+  const res = await fetch(`${DATA_API}/users/${userId}/biomarkers`);
+  const raw = await res.json();
+  return BiomarkersResponseSchema.parse(raw); // throws ZodError if schema drifts
+}</code></pre>
+          </div>
+          <div class="tab-content" id="api-versioning">
+<pre><code>// API versioning strategy for a fast-moving data team:
+// 1. Additive changes (new optional fields) — no version bump needed.
+//    Zod's .passthrough() or optional fields handle gracefully.
+// 2. Breaking changes (rename, type change, remove) — bump the version.
+
+// Strategy: date-based versioning in the header (Stripe's approach)
+// GET /api/biomarkers with header: Mitra-API-Version: 2025-06-01
+
+// BFF sets the version it was built against — insulated from upstream
+const res = await fetch(`${DATA_API}/biomarkers/${userId}`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Mitra-API-Version': '2025-06-01', // pinned — explicit intent
+  },
+});
+
+// When data team releases a new version:
+// 1. They maintain old + new in parallel for N weeks
+// 2. We update the BFF, test, deploy
+// 3. They deprecate old version
+// Frontend never sees the version change — BFF absorbs it</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Speaking the Data Team's Language</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>When they say "pipeline"</h3>
+            <p>They mean a sequence of data processing steps — raw kit → quality check → feature extraction → model scoring → result. Know where your API call sits in this pipeline so you can set correct user expectations (e.g., "results available 48 hours after kit receipt").</p>
+          </div>
+          <div class="card">
+            <h3>When they say "schema"</h3>
+            <p>They mean the data structure contract. Show you think about schemas too — "I'd represent that as a Zod schema on the frontend side so any drift is caught at runtime rather than silently breaking the UI."</p>
+          </div>
+          <div class="card">
+            <h3>When they say "model output"</h3>
+            <p>They mean the result of an ML/statistical model — a score, a classification, a probability. Ask: "Is this deterministic for the same input, or can it change as the model is retrained?" — this determines your caching strategy.</p>
+          </div>
+          <div class="card">
+            <h3>When they say "feature"</h3>
+            <p>In data science this means an input variable to a model (e.g. age, diet score, methylation level) — not a product feature. Knowing this distinction signals you've worked with data scientists before.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you collaborate with a data team that works in Python / notebooks when you work in TypeScript?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>The key is agreeing on the contract at the boundary — the API response shape — and then each side can work in their preferred language. I'd push for a shared schema document (OpenAPI or JSON Schema) that the data team generates from their Pydantic models and we validate against with Zod. From there: regular sync meetings when their pipeline is changing, a Slack channel for breaking-change notices, and a staging environment where I can test against their latest output before it hits production. The biggest anti-pattern is informal "it should look like this" agreements in Slack — those rot immediately.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">A data scientist hands you a Jupyter notebook with the analysis. What do you do with it?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>I treat it as a specification, not code I'll deploy. The notebook tells me: (1) what input data is needed (I'll request those fields in the API contract), (2) what the output shape looks like (I'll turn that into a Zod schema), (3) what the business logic is (e.g. "score above 0.7 = optimal") — I replicate the classification logic in the BFF layer for display purposes, not the model itself. I'd also ask: "Is there an API endpoint that runs this model, or is the notebook the final artefact?" — in a startup this can go either way and the answer shapes the whole architecture.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you raise a requirement with the data team — e.g. you need a new field in the API response?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>I write it up as a concrete RFC-style request: what field I need, what type, what it drives in the UI, and what the cost of not having it is ("without this we either make a second API call per biomarker or can't show the trend indicator at all"). I give them the full context so they can push back with alternatives I haven't considered ("that field doesn't exist on every biomarker — here's a better structure"). I raise it as early as possible — the worst time to ask for a new field is the day before launch. I'd rather ask in the design phase and hear "not possible" than ask in the implementation phase and have to ship a degraded experience.</p></div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('apicollaboration', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- E-COMMERCE & PERSONALISATION DATA -->
+    <div class="page" id="page-ecompersonalisation">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round</div>
+        <div class="page-title">E-Commerce & Personalisation Data</div>
+        <div class="page-desc">Mitra Bio's product is personalised skincare driven by epigenetic data. The data team's models inform what products are recommended. Know how personalisation data flows from science to purchase — and what privacy constraints govern all of it.</div>
+      </div>
+
+      <div class="section">
+        <h2>Personalisation Architecture</h2>
+        <div class="code-block"><pre><code>
+  User DNA / Epigenetic Kit
+          │
+          ▼
+  Data Pipeline  ──→  Skin Profile Score (0–1 per biomarker)
+          │
+          ▼
+  Recommendation Engine  ──→  Ranked product IDs
+          │
+          ▼
+  BFF Layer  ──→  Merges product IDs with Shopify catalogue data
+          │             (price, inventory, imagery)
+          ▼
+  /dashboard  ──→  Personalised product shelf
+        </code></pre></div>
+        <div class="code-block"><pre><code>// BFF merges personalisation scores with Shopify product data
+async function getPersonalisedShelf(userId: string) {
+  const [recommendations, shopifyProducts] = await Promise.all([
+    fetchRecommendations(userId),      // data team's API → ranked product IDs + scores
+    fetchShopifyProducts(),            // Shopify Storefront API → full product catalogue
+  ]);
+
+  // Join on product ID — never expose scores directly to the client
+  return recommendations.map(rec => {
+    const product = shopifyProducts.find(p => p.handle === rec.productHandle);
+    if (!product) return null;
+    return {
+      ...product,
+      personalisation: {
+        rank: rec.rank,
+        reasonCode: rec.reasonCode, // e.g. 'low_elovl2' → maps to UI copy
+        // Score intentionally omitted — don't show raw science to users
+      },
+    };
+  }).filter(Boolean);
+}</code></pre></div>
+      </div>
+
+      <div class="section">
+        <h2>Data Privacy in Personalisation</h2>
+        <div class="grid2">
+          <div class="card" style="border-left:3px solid var(--red)">
+            <h3>Never Expose Raw Scores</h3>
+            <p>A methylation score of 0.23 on ELOVL2 is meaningless and potentially alarming to a user. Always translate to qualitative language ("Your skin's moisture retention is lower than optimal") — and only show what the user consented to see.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--red)">
+            <h3>Genetic Data = Special Category</h3>
+            <p>Under GDPR Article 9, genetic data is special category data. It requires explicit consent (not just soft opt-in), a lawful basis (typically explicit consent or vital interests), and a DPA / privacy notice that specifically covers it.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--yellow)">
+            <h3>Data Minimisation in the BFF</h3>
+            <p>The BFF should strip any field the UI doesn't need before sending to the client. If the recommendation API returns raw feature values, strip them — the browser never needs to see them. Less data in the client = smaller attack surface.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--yellow)">
+            <h3>Right to Erasure</h3>
+            <p>A user can request deletion of their genetic data. This must cascade: Shopify customer record, biomarker DB, recommendation model inputs, any cached results. As the frontend engineer you own the UI for this flow — and you need to know the full data map to build it correctly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Personalisation Patterns on the Frontend</h2>
+        <div class="tabs">
+          <div class="tab-btns">
+            <button class="tab-btn active" onclick="switchTab(this,'ep-loading')">Loading States</button>
+            <button class="tab-btn" onclick="switchTab(this,'ep-fallback')">Fallback Strategy</button>
+            <button class="tab-btn" onclick="switchTab(this,'ep-consent')">Consent Gate</button>
+          </div>
+          <div class="tab-content active" id="ep-loading">
+<pre><code>// Personalisation results take time — never block the page.
+// Show a skeleton shelf, load recommendations in the background.
+
+export default async function DashboardPage({ params }: { params: { userId: string } }) {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Your Skin Dashboard&lt;/h1&gt;
+      {/* Static content renders immediately */}
+      &lt;CurrentRoutineSection /&gt;
+      {/* Personalised shelf streams in */}
+      &lt;Suspense fallback={&lt;ProductShelfSkeleton count={4} /&gt;}&gt;
+        &lt;PersonalisedShelf userId={params.userId} /&gt;
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  );
+}
+
+// PersonalisedShelf is an async Server Component — awaits the BFF
+async function PersonalisedShelf({ userId }: { userId: string }) {
+  const products = await getPersonalisedShelf(userId);
+  if (!products.length) return &lt;GenericShelf /&gt;; // fallback
+  return &lt;ProductGrid products={products} /&gt;;
+}</code></pre>
+          </div>
+          <div class="tab-content" id="ep-fallback">
+<pre><code>// Always have a non-personalised fallback.
+// If the recommendation engine is down, show bestsellers.
+// If the user hasn't done a kit yet, show an onboarding CTA.
+
+type ShelfState =
+  | { type: 'personalised'; products: PersonalisedProduct[] }
+  | { type: 'generic'; products: ShopifyProduct[]; reason: 'no-kit' | 'engine-error' }
+  | { type: 'empty' };
+
+async function getShelfState(userId: string): Promise&lt;ShelfState&gt; {
+  const kitStatus = await getKitStatus(userId);
+  if (!kitStatus.completed) {
+    return { type: 'generic', products: await getBestsellers(), reason: 'no-kit' };
+  }
+  try {
+    const products = await getPersonalisedShelf(userId);
+    return products.length
+      ? { type: 'personalised', products }
+      : { type: 'generic', products: await getBestsellers(), reason: 'engine-error' };
+  } catch {
+    return { type: 'generic', products: await getBestsellers(), reason: 'engine-error' };
+  }
+}</code></pre>
+          </div>
+          <div class="tab-content" id="ep-consent">
+<pre><code>// Consent must be captured before any genetic processing.
+// The UI enforces this — never render personalised content
+// without a verified consent record.
+
+async function PersonalisedShelf({ userId }: { userId: string }) {
+  const consent = await getConsentRecord(userId);
+
+  if (!consent.geneticDataProcessing) {
+    return (
+      &lt;ConsentGate
+        title="Unlock your personalised skincare"
+        description="To show recommendations based on your kit results, we need your consent to process your epigenetic data."
+        consentKey="geneticDataProcessing"
+        userId={userId}
+      /&gt;
+    );
+  }
+
+  const products = await getPersonalisedShelf(userId);
+  return &lt;ProductGrid products={products} /&gt;;
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you connect the data team's recommendation scores to what a user actually sees on the page?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>The BFF is the join layer. The data team exposes an API that returns ranked product handles with reason codes. The BFF calls that API in parallel with the Shopify Storefront API, joins on product handle, strips any raw score values, maps reason codes to user-facing copy ("Based on your ELOVL2 results, your skin needs extra moisture support"), and returns a clean product list to the frontend. The frontend component knows nothing about methylation scores — it receives products with a <code>personalisation.reasonLabel</code> field and renders it. This separation means the data team can retrain their model and change scores without touching any UI code.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you A/B test two different personalisation algorithms without the data team deploying new code each time?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>The recommendation API should accept an optional <code>modelVersion</code> or <code>experimentId</code> parameter. The BFF reads a feature flag (LaunchDarkly / Statsig) that maps the current user to an experiment bucket and forwards the appropriate parameter to the data API. Neither the frontend nor the data pipeline changes when you run a new experiment — only the flag configuration does. Metrics (click-through on personalised products, conversion) are tracked via analytics events attached to products that carry their experiment bucket as a property. The data team analyses the results in their own tools. This keeps concerns cleanly separated.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How does GDPR specifically affect how you build the personalisation data flow?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p><strong>Lawful basis:</strong> genetic data requires explicit consent (Article 9) — the consent UI must be unambiguous, granular (separate consent for processing vs marketing), and revocable. <strong>Data minimisation:</strong> the BFF must not send raw genetic scores to the client — only derived, human-readable outputs. <strong>Storage limitation:</strong> results must not be cached indefinitely — the BFF cache TTL must respect data retention policies. <strong>Right to erasure:</strong> a deletion request must cascade through Shopify, the biomarker database, any BFF caches, and a signal to the data team to remove the user from model training data. <strong>Data portability:</strong> users can request a copy of their data — the export endpoint must be built and tested. These aren't afterthoughts — they shape the API contract design from day one.</p></div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('ecompersonalisation', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- DATA TEAM BEHAVIORAL -->
+    <div class="page" id="page-datateambehavioral">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round · Prep</div>
+        <div class="page-title">Data Team Behavioral Questions</div>
+        <div class="page-desc">A 45-minute data team interview is half technical, half collaboration. They want to know: can you work with us? Do you respect the science? Will you build the right abstractions so we don't have to explain our models to every frontend engineer?</div>
+      </div>
+
+      <div class="section">
+        <h2>What the Data Team is Really Assessing</h2>
+        <div class="card" style="border-left: 3px solid var(--accent)">
+          <div class="grid2">
+            <div>
+              <h3>Can you speak our language?</h3>
+              <p>Show you understand pipelines, schemas, model outputs, and data contracts. You don't need to be a data scientist — you need to be a credible translation layer.</p>
+            </div>
+            <div>
+              <h3>Will you block us?</h3>
+              <p>Data teams are often blocked by frontend teams that don't know what they need until too late. Show you think about requirements early, write clear API specs, and communicate proactively.</p>
+            </div>
+            <div>
+              <h3>Do you respect data quality?</h3>
+              <p>Will you blindly render whatever the API returns, or will you validate, handle nulls gracefully, and flag anomalies? Show you treat data as a first-class concern.</p>
+            </div>
+            <div>
+              <h3>Can we trust your abstractions?</h3>
+              <p>Will the BFF you build be maintainable when the data team changes their schema? Show you write defensive, schema-validated, well-documented API boundaries.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Anticipated Questions & How to Answer</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Tell me about a time you worked with a data or science team. How did you bridge the gap?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Real cross-functional experience, communication skills, ability to operate at the data/frontend boundary without needing constant hand-holding.</p>
+            <p><strong>Structure your answer around:</strong></p>
+            <ul>
+              <li>The context — what the data team owned, what you owned</li>
+              <li>The collaboration mechanism — how you agreed on contracts (schema docs, OpenAPI, Slack, regular syncs)</li>
+              <li>A specific moment of friction and how you resolved it (e.g. a breaking schema change, an unclear field definition)</li>
+              <li>The outcome — what shipped, what improved in the process</li>
+            </ul>
+            <p><strong>If you haven't worked directly with a data team:</strong> Frame adjacent experience — working with a backend team on API design, consuming complex third-party APIs (Shopify GraphQL), building data-heavy dashboards, or handling data quality issues (nulls, stale data, mismatched types) in production.</p>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you handle it when the data you receive from the backend is messy, inconsistent, or missing?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Whether you build defensively and treat data quality as a real concern — not just an edge case.</p>
+            <p><strong>Strong answer:</strong> "I validate at the boundary first — Zod schemas on every API response, so I know immediately when something doesn't match the contract rather than getting a silent NaN three components deep. For missing optional fields I define explicit fallback behaviour in the transformation function, not in the component. For truly unexpected shapes I log the anomaly (sanitised — no PII) and show a graceful degraded state rather than crashing. I'd also flag the discrepancy to the data team with a specific example — not a complaint, but a 'heads up, this response broke our schema, here's the raw payload' so they can fix it at the source."</p>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you make sure the data team's work is represented accurately in the UI — not dumbed down or misrepresented?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><strong>What they're assessing:</strong> Scientific integrity — will you turn their carefully derived scores into clickbait copy that misleads users?</p>
+            <p><strong>Strong answer:</strong> "I'd involve the data team in the copy review for any screen that surfaces their model outputs. The UI copy for 'your ELOVL2 score is optimal' is not just a marketing decision — it's a scientific claim, and the data team should sign off on it. For borderline cases (e.g. a score that's 0.01 below 'optimal') I'd present the range and thresholds to the data team and ask them how they want us to communicate ambiguity. I'd also build in confidence indicators where the model supports them — 'Based on a single kit' vs 'Based on 3 kits over 12 months' changes the weight a user should put on the result."</p>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">We're planning to add a new biomarker to the dashboard. How would you approach this as a full-stack engineer?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><strong>Strong answer structure:</strong></p>
+            <ul>
+              <li><strong>Discovery:</strong> "What does the biomarker measure? What's the range? What does a high/low score mean in plain English? Is it ready for production or still experimental?"</li>
+              <li><strong>API contract:</strong> "I'd update the Zod schema and ask the data team to add it to the existing endpoint as an optional field — so the frontend can handle it gracefully on both old and new API versions."</li>
+              <li><strong>UI design:</strong> "I'd work with design to determine how it fits the existing card pattern — does it get its own card, appear in a comparison view, or augment an existing biomarker?"</li>
+              <li><strong>Copy review:</strong> "All UI copy describing the biomarker gets reviewed by the data team before shipping."</li>
+              <li><strong>Feature flag:</strong> "Ship behind a flag — enables the data team to validate the end-to-end experience on their own accounts before we roll out to users."</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What does good data visualisation mean to you in a health/wellness context?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Good health data visualisation is honest, interpretable, and non-alarming where appropriate. It means: (1) <strong>Context over raw numbers</strong> — a score of 0.62 is meaningless without a reference range and the user's history. (2) <strong>Trend over snapshot</strong> — one data point is noise; three kits over a year tells a story. (3) <strong>Appropriate precision</strong> — don't show 5 decimal places when the measurement noise is ±0.05. (4) <strong>Accessibility</strong> — colour alone can't convey status (red/amber/green is useless for 8% of men). Always add a text label or shape encoding. (5) <strong>Scientific integrity</strong> — don't cherry-pick the chart range to make a trend look more dramatic than it is. In a health context, misleading visualisation erodes trust and can cause real anxiety.</p>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Questions to ask the data team</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li>"What does the pipeline look like from raw kit to API-ready result? Where are the latency and failure points?"</li>
+              <li>"How do you currently communicate schema changes to the frontend? Is there a process, or is it ad-hoc?"</li>
+              <li>"When a model is retrained, do the historical scores for existing users change? How does that affect caching?"</li>
+              <li>"Are there biomarkers that aren't available for all users — e.g. some assays don't apply to certain demographics? How should the frontend handle those?"</li>
+              <li>"What's the biggest frustration you've had working with a previous frontend engineer?"</li>
+              <li>"What would a 10/10 collaboration between data and frontend look like to you?"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Key Phrases to Land Well</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>"I validate at the boundary"</h3>
+            <p>Signals defensive engineering and data quality awareness. The BFF parses and validates every upstream response — bugs are caught at the edge, not surfaced to users.</p>
+          </div>
+          <div class="card">
+            <h3>"I'd want the data team to sign off on the copy"</h3>
+            <p>Signals scientific integrity and respect for their domain expertise. You're building a window into their science — they should own the words that describe it.</p>
+          </div>
+          <div class="card">
+            <h3>"Schema-first, contract-driven"</h3>
+            <p>Signals you think about collaboration structures, not just code. You build the API contract before either side writes implementation code.</p>
+          </div>
+          <div class="card">
+            <h3>"I raise requirements early"</h3>
+            <p>Signals you won't block the data team with late-breaking "actually we need a new field." You think about data needs during design, not implementation.</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('datateambehavioral', this)">Mark as Done ✓</button>
+    </div>
+
   </main>
 </div>
 
@@ -3244,7 +4031,7 @@ model SkinReport {
   }
 
   function updateProgress() {
-    const total = 15
+    const total = 19
     const count = done.size
     const pct = (count / total) * 100
     document.getElementById('progressFill').style.width = pct + '%'
