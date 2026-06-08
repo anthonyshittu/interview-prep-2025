@@ -554,7 +554,7 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
       </div>
-      <div class="progress-text" id="progressText">0 of 9 sections reviewed</div>
+      <div class="progress-text" id="progressText">0 of 21 sections reviewed</div>
     </div>
     <nav class="nav">
       <div class="nav-section-label">Company</div>
@@ -626,6 +626,14 @@
       </div>
       <div class="nav-item" data-page="datateambehavioral" onclick="showPage('datateambehavioral',this)">
         <span class="nav-icon">💬</span> Data Team Behavioral
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="analytics" onclick="showPage('analytics',this)">
+        <span class="nav-icon">📈</span> Analytics & Event Tracking
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="datapipeline" onclick="showPage('datapipeline',this)">
+        <span class="nav-icon">⚙️</span> Data Pipeline Deep Dive
         <span class="nav-check">✓</span>
       </div>
 
@@ -3981,6 +3989,486 @@ async function PersonalisedShelf({ userId }: { userId: string }) {
       <button class="mark-done-btn" onclick="markDone('datateambehavioral', this)">Mark as Done ✓</button>
     </div>
 
+    <!-- ANALYTICS & EVENT TRACKING -->
+    <div class="page" id="page-analytics">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round</div>
+        <div class="page-title">Analytics & Event Instrumentation</div>
+        <div class="page-desc">The data team consumes your frontend events as raw data. How you structure, name, and fire events directly affects the quality of their analysis — funnel reports, A/B test measurements, and retention cohorts all depend on clean events from you.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Why the Data Team Cares</strong>
+          At a data-driven company like Mitra Bio, analytics events are a first-class data product. The data team builds funnels, A/B test analyses, cohort reports, and product insights on top of your events. Poorly structured events — missing properties, inconsistent naming, PII in payloads — make their job impossible and erode trust.
+        </div>
+
+        <h2>The Anatomy of a Well-Structured Event</h2>
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Naming Convention</h3>
+            <ul class="check-list">
+              <li><strong>Object Action</strong> format — noun first, verb second</li>
+              <li><code>Kit Ordered</code>, <code>Report Viewed</code>, <code>Product Added</code></li>
+              <li>Past tense — the event describes something that already happened</li>
+              <li>Consistent casing — PascalCase or snake_case, never mixed</li>
+              <li>Never expose implementation: <code>handleAddToCartClick</code> → <code>Product Added</code></li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Required Properties on Every Event</h3>
+            <ul class="check-list">
+              <li><code>userId</code> — anonymised internal UUID (never email/name)</li>
+              <li><code>sessionId</code> — groups events in a single visit</li>
+              <li><code>timestamp</code> — ISO 8601, always UTC</li>
+              <li><code>pageUrl</code> — path only, never query params containing PII</li>
+              <li><code>platform</code> — <code>web</code> | <code>ios</code> | <code>android</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('anlytcs','events')">Event Schema Code</div>
+          <div class="tab" onclick="switchTab('anlytcs','tracking')">Tracking Plan</div>
+          <div class="tab" onclick="switchTab('anlytcs','privacy')">Privacy & PII</div>
+        </div>
+
+        <div id="tab-anlytcs-events" class="tab-content active">
+<pre><code><span class="cm">// lib/analytics.ts — typed event definitions</span>
+<span class="cm">// The data team can audit the exact shape of every event we fire.</span>
+<span class="cm">// No stringly-typed property bags — every event is fully typed.</span>
+
+<span class="kw">type</span> <span class="ty">ProductAddedEvent</span> = {
+  name: <span class="str">'Product Added'</span>;
+  properties: {
+    productHandle: <span class="ty">string</span>;
+    productName: <span class="ty">string</span>;
+    price: <span class="ty">number</span>;
+    currency: <span class="ty">string</span>;
+    quantity: <span class="ty">number</span>;
+    <span class="cm">// Where did the user find this product? Critical for attribution.</span>
+    source: <span class="str">'personalised_shelf'</span> | <span class="str">'search'</span> | <span class="str">'category_page'</span> | <span class="str">'report_recommendation'</span>;
+    recommendationId?: <span class="ty">string</span>; <span class="cm">// set when source is personalised_shelf</span>
+  };
+};
+
+<span class="kw">type</span> <span class="ty">ReportViewedEvent</span> = {
+  name: <span class="str">'Report Viewed'</span>;
+  properties: {
+    reportId: <span class="ty">string</span>;
+    reportVersion: <span class="ty">number</span>;
+    biomarkerCount: <span class="ty">number</span>;
+    isFirstView: <span class="ty">boolean</span>;
+    daysFromKitReceived: <span class="ty">number</span>; <span class="cm">// data team uses this for pipeline latency analysis</span>
+  };
+};
+
+<span class="kw">type</span> <span class="ty">KitOrderedEvent</span> = {
+  name: <span class="str">'Kit Ordered'</span>;
+  properties: {
+    orderId: <span class="ty">string</span>;
+    price: <span class="ty">number</span>;
+    currency: <span class="ty">string</span>;
+    isSubscription: <span class="ty">boolean</span>;
+    subscriptionInterval?: <span class="str">'monthly'</span> | <span class="str">'quarterly'</span> | <span class="str">'annually'</span>;
+  };
+};
+
+<span class="cm">// Union type — analytics() only accepts known, typed event shapes</span>
+<span class="kw">type</span> <span class="ty">TrackedEvent</span> = <span class="ty">ProductAddedEvent</span> | <span class="ty">ReportViewedEvent</span> | <span class="ty">KitOrderedEvent</span>;
+
+<span class="kw">export function</span> <span class="fn">track</span>(event: <span class="ty">TrackedEvent</span>): <span class="kw">void</span> {
+  <span class="kw">if</span> (<span class="kw">typeof</span> window === <span class="str">'undefined'</span>) <span class="kw">return</span>; <span class="cm">// no-op in SSR</span>
+  window.analytics?.<span class="fn">track</span>(event.name, {
+    ...event.properties,
+    platform: <span class="str">'web'</span>,
+    timestamp: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+  });
+}</code></pre>
+        </div>
+
+        <div id="tab-anlytcs-tracking" class="tab-content">
+          <div class="callout blue">
+            <strong>What is a Tracking Plan?</strong>
+            A tracking plan is a shared document (often a spreadsheet, or a tool like Avo or Segment Protocols) that lists every event, its properties, their types, and who owns them. It is the contract between frontend engineers and the data team. Mentioning it in the interview signals you've worked in an analytics-mature environment.
+          </div>
+          <table>
+            <thead>
+              <tr><th>Event</th><th>Trigger</th><th>Key Properties</th><th>Used For</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Kit Ordered</code></td>
+                <td>Shopify order confirmation</td>
+                <td>orderId, price, isSubscription</td>
+                <td>Revenue attribution, LTV modelling</td>
+              </tr>
+              <tr>
+                <td><code>Report Viewed</code></td>
+                <td>User lands on <code>/dashboard/report/[id]</code></td>
+                <td>reportId, isFirstView, daysFromKitReceived</td>
+                <td>Engagement, pipeline latency analysis</td>
+              </tr>
+              <tr>
+                <td><code>Biomarker Expanded</code></td>
+                <td>User opens a biomarker detail card</td>
+                <td>biomarkerId, biomarkerName, status</td>
+                <td>Content engagement, UX optimisation</td>
+              </tr>
+              <tr>
+                <td><code>Product Added</code></td>
+                <td>Add to cart, any source</td>
+                <td>productHandle, source, price, recommendationId</td>
+                <td>Personalisation conversion rate</td>
+              </tr>
+              <tr>
+                <td><code>Consent Granted</code></td>
+                <td>User confirms in consent modal</td>
+                <td>consentKey, consentVersion</td>
+                <td>Consent audit log, GDPR compliance</td>
+              </tr>
+              <tr>
+                <td><code>Consent Revoked</code></td>
+                <td>User withdraws consent</td>
+                <td>consentKey, reason</td>
+                <td>Erasure trigger, compliance audit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tab-anlytcs-privacy" class="tab-content">
+          <div class="callout red">
+            <strong>PII in Events is a GDPR Violation</strong>
+            Never include names, email addresses, dates of birth, postal codes, or any genetic or health data in analytics event properties. The analytics warehouse is typically queried by many people and exported to third-party tools — it has a much larger attack surface than your production database.
+          </div>
+          <div class="grid2">
+            <div class="card" style="border-left:3px solid var(--red)">
+              <h3>Never Track</h3>
+              <ul class="check-list">
+                <li>Email addresses or full names</li>
+                <li>Date of birth or age (use ranges: "25–34")</li>
+                <li>Genetic scores or raw biomarker values</li>
+                <li>Precise geolocation</li>
+                <li>Payment details</li>
+                <li>Any field that appears in a skin report</li>
+              </ul>
+            </div>
+            <div class="card" style="border-left:3px solid var(--green)">
+              <h3>Safe to Track</h3>
+              <ul class="check-list">
+                <li>Anonymised userId (internal UUID only)</li>
+                <li>Bucketed values (age range, not exact age)</li>
+                <li>Product handles and IDs</li>
+                <li>Boolean flags (isSubscriber, hasCompletedKit)</li>
+                <li>Page paths (no PII in query strings)</li>
+                <li>Event counts and sequences</li>
+              </ul>
+            </div>
+          </div>
+<pre><code><span class="cm">// Sanitise at the tracking layer — never in individual components.</span>
+<span class="cm">// This is a defence-in-depth measure; the primary control is typed events.</span>
+
+<span class="kw">const</span> PII_KEYS = [<span class="str">'email'</span>, <span class="str">'name'</span>, <span class="str">'firstName'</span>, <span class="str">'lastName'</span>, <span class="str">'dob'</span>, <span class="str">'phone'</span>];
+
+<span class="kw">function</span> <span class="fn">sanitiseProperties</span>(props: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="kw">unknown</span>&gt;) {
+  <span class="kw">return</span> Object.<span class="fn">fromEntries</span>(
+    Object.<span class="fn">entries</span>(props).<span class="fn">filter</span>(([key]) => !PII_KEYS.<span class="fn">includes</span>(key))
+  );
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Attribution — Connecting Events Across the Funnel</h2>
+        <p>A personalisation conversion funnel requires events to be joinable. The <code>recommendationId</code> must travel from impression → add to cart → order — not just exist at impression time.</p>
+<pre><code><span class="cm">// When the personalised shelf loads, assign a recommendationId to each product.</span>
+<span class="cm">// Pass it through cart state so it arrives in the Kit Ordered event.</span>
+
+<span class="str">'use client'</span>
+<span class="kw">export function</span> <span class="fn">PersonalisedProductCard</span>({ product }: { product: <span class="ty">PersonalisedProduct</span> }) {
+  <span class="kw">const</span> handleAddToCart = <span class="kw">async</span> () => {
+    <span class="kw">await</span> <span class="fn">addToCart</span>(product.variantId, {
+      attributes: [{ key: <span class="str">'_recommendationId'</span>, value: product.personalisation.recommendationId }]
+    });
+    <span class="cm">// Fire the analytics event with attribution data attached</span>
+    <span class="fn">track</span>({
+      name: <span class="str">'Product Added'</span>,
+      properties: {
+        productHandle: product.handle,
+        productName: product.title,
+        price: product.price,
+        currency: <span class="str">'GBP'</span>,
+        quantity: <span class="ty">1</span>,
+        source: <span class="str">'personalised_shelf'</span>,
+        recommendationId: product.personalisation.recommendationId,
+      },
+    });
+  };
+
+  <span class="kw">return</span> &lt;button <span class="fn">onClick</span>={handleAddToCart}&gt;Add to bag&lt;/button&gt;;
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">The data team says they can't analyse our personalisation conversion funnel because the events are inconsistently named. How do you fix it going forward?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>This is a process problem first, a code problem second. I'd run a joint audit: pull a sample of events from the analytics platform, categorise what's inconsistent (naming, missing required properties, duplicates), and build a canonical tracking plan with the data team's input. Then implement it as a strongly-typed wrapper so future events cannot deviate from the agreed schema — the TypeScript union type approach means any new event that doesn't match a defined shape fails at compile time, not in production. For historical data: document the old event names in the tracking plan with their effective date range, so the data team knows which date range to use for which event name. Going forward: no new analytics event ships without a row in the tracking plan, reviewed by the data team before merging.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you make sure page-view events don't double-fire in React Strict Mode?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Strict Mode double-invokes effects in development to surface side-effect bugs — which means <code>useEffect(() => track('Page Viewed'), [])</code> fires twice in dev. The fix: don't fire page-view events in <code>useEffect</code>. In Next.js App Router, fire them from the router using <code>usePathname</code> with a ref tracking the previous path — handler-level events (like button clicks) don't double-run. For action events, fire in the event handler, not an effect. For server-side events (Kit Ordered from a server action), include an <code>eventId</code> UUID so the analytics platform can deduplicate replays on ingestion. The data team can enforce idempotency on their ingestion pipeline using this ID.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you A/B test two different product shelf layouts and measure which drives more kit purchases?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>The experiment needs to be set up at three layers: (1) <strong>Assignment</strong> — read a feature flag (LaunchDarkly / Statsig) at the BFF layer to determine which variant the user sees. Store the variant in a cookie so it's stable across page loads for that user. (2) <strong>Exposure event</strong> — fire an <code>Experiment Exposure</code> event with <code>experimentId</code> and <code>variant</code> the first time the user sees the shelf. This is the denominator in the conversion rate calculation. (3) <strong>Conversion event</strong> — the existing <code>Kit Ordered</code> event already exists. The data team joins exposures to orders on userId within the experiment window to compute conversion rate by variant. The frontend engineer's job is to make sure the <code>variant</code> property appears consistently on all events where it's relevant — not just the exposure.</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('analytics', this)">Mark as Done ✓</button>
+    </div>
+
+    <!-- DATA PIPELINE DEEP DIVE -->
+    <div class="page" id="page-datapipeline">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round</div>
+        <div class="page-title">Data Pipeline Deep Dive</div>
+        <div class="page-desc">Understanding how the lab-to-dashboard pipeline actually works — batch vs. streaming, latency expectations, failure modes — lets you build the right user experience and speak credibly with the data team about their world, not just yours.</div>
+      </div>
+
+      <div class="section">
+        <h2>The Mitra Bio Pipeline — End to End</h2>
+        <pre><code>
+  Day 0  → User orders kit online (Shopify)
+  Day 1–3  → Kit arrives at user's door, sample collected
+  Day 3–5  → Sample arrives at lab via post
+  Day 5–7  → Lab runs assay — raw methylation / epigenetic readings
+  Day 7–8  → Data pipeline processes:
+               1. Quality check (pass/fail per marker — DNA yield, purity)
+               2. Feature extraction (raw readings → normalised numeric scores)
+               3. Model scoring (features → biomarker 0–1 scores vs reference range)
+               4. Report generation (scores + product recommendations)
+               5. Webhook fired → POST /api/webhooks/report-ready
+                  → BFF cache invalidated → user notified by email
+  Day 8+  → User's dashboard shows results
+        </code></pre>
+        <div class="callout gold">
+          <strong>Key Insight for the Interview</strong>
+          Most of this pipeline is batch, asynchronous, and completely outside your control as a frontend engineer. Your job is to build UI that is honest about this latency, graceful during the wait, and instant the moment results arrive.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Batch vs Streaming — Know the Difference</h2>
+        <div class="grid2">
+          <div class="card">
+            <div class="badge gold">Batch Processing</div>
+            <h3 style="margin-top:10px">The Lab Pipeline Model</h3>
+            <p>Samples are processed together in a lab run. Results arrive hours or days later as a discrete, all-at-once event. The frontend must not expect a live stream — it waits for a webhook or polls for completion.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Higher latency, higher throughput per run</li>
+              <li>Results arrive as a complete unit (all biomarkers together)</li>
+              <li>Appropriate for lab-based and ETL workflows</li>
+              <li>Common in ML training, data warehouse refreshes</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="badge blue">Streaming Processing</div>
+            <h3 style="margin-top:10px">Where Mitra Bio May Use It</h3>
+            <p>Real-time event processing — each record processed as it arrives. Mitra Bio likely uses streaming for analytics ingestion even though the lab pipeline is batch. Kafka / Kinesis / Pub/Sub are the common tools.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Low latency — sub-second event processing</li>
+              <li>Records processed individually as they arrive</li>
+              <li>Higher infrastructure complexity and operational cost</li>
+              <li>Used for: analytics, real-time dashboards, fraud detection</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Async Result Delivery Patterns</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('dpipe','polling')">Polling</div>
+          <div class="tab" onclick="switchTab('dpipe','webhook')">Webhook + Invalidation</div>
+          <div class="tab" onclick="switchTab('dpipe','freshness')">Data Freshness UI</div>
+        </div>
+
+        <div id="tab-dpipe-polling" class="tab-content active">
+          <div class="callout yellow">
+            <strong>Polling is the Last Resort</strong>
+            It wastes server resources and creates artificial load. Prefer webhooks + cache invalidation when you control the backend. Use polling only when the data source doesn't support push and the wait time is under a few minutes.
+          </div>
+<pre><code><span class="str">'use client'</span>;
+<span class="cm">// Exponential back-off polling — don't hammer the server during a long wait.</span>
+
+<span class="kw">export function</span> <span class="fn">useKitStatus</span>(kitId: <span class="ty">string</span>) {
+  <span class="kw">const</span> [status, setStatus] = <span class="fn">useState</span>&lt;<span class="ty">KitStatus</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>);
+  <span class="kw">const</span> intervalRef = <span class="fn">useRef</span>&lt;<span class="ty">ReturnType</span>&lt;<span class="kw">typeof</span> setTimeout&gt;&gt;();
+  <span class="kw">const</span> delayRef = <span class="fn">useRef</span>(<span class="ty">5_000</span>); <span class="cm">// start at 5 seconds</span>
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> poll = <span class="kw">async</span> () => {
+      <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">fetchKitStatus</span>(kitId);
+      <span class="fn">setStatus</span>(result);
+
+      <span class="kw">if</span> (result.stage !== <span class="str">'complete'</span> &amp;&amp; result.stage !== <span class="str">'failed'</span>) {
+        <span class="cm">// Back off: 5s → 10s → 20s → 30s (cap) — 7 day wait doesn't need rapid polling</span>
+        delayRef.current = Math.<span class="fn">min</span>(delayRef.current * <span class="ty">2</span>, <span class="ty">30_000</span>);
+        intervalRef.current = <span class="fn">setTimeout</span>(poll, delayRef.current);
+      }
+    };
+
+    <span class="fn">poll</span>();
+    <span class="kw">return</span> () => <span class="fn">clearTimeout</span>(intervalRef.current);
+  }, [kitId]);
+
+  <span class="kw">return</span> status;
+}</code></pre>
+        </div>
+
+        <div id="tab-dpipe-webhook" class="tab-content">
+<pre><code><span class="cm">// Webhook-driven cache invalidation — the preferred pattern.</span>
+<span class="cm">// Data pipeline fires a signed webhook when results are ready.</span>
+<span class="cm">// BFF invalidates the cache tag; next request serves fresh data.</span>
+
+<span class="cm">// app/api/webhooks/report-ready/route.ts</span>
+<span class="kw">import</span> { revalidateTag } <span class="kw">from</span> <span class="str">'next/cache'</span>;
+<span class="kw">import</span> { createHmac } <span class="kw">from</span> <span class="str">'crypto'</span>;
+
+<span class="kw">export async function</span> <span class="fn">POST</span>(req: <span class="ty">Request</span>) {
+  <span class="kw">const</span> body = <span class="kw">await</span> req.<span class="fn">text</span>();
+  <span class="kw">const</span> signature = req.headers.<span class="fn">get</span>(<span class="str">'x-mitra-signature'</span>);
+
+  <span class="cm">// Always verify the webhook signature — reject unsigned requests</span>
+  <span class="kw">const</span> expected = <span class="fn">createHmac</span>(<span class="str">'sha256'</span>, process.env.DATA_PIPELINE_WEBHOOK_SECRET!)
+    .<span class="fn">update</span>(body).<span class="fn">digest</span>(<span class="str">'hex'</span>);
+  <span class="kw">if</span> (signature !== `sha256=${expected}`) {
+    <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'Unauthorized'</span>, { status: <span class="ty">401</span> });
+  }
+
+  <span class="kw">const</span> { userId, reportId } = <span class="fn">JSON.parse</span>(body);
+
+  <span class="cm">// Invalidate user-specific cache tags — next dashboard load is fresh</span>
+  <span class="kw">await</span> <span class="fn">revalidateTag</span>(`report-${userId}`);
+  <span class="kw">await</span> <span class="fn">revalidateTag</span>(`biomarkers-${userId}`);
+
+  <span class="cm">// Push a notification to the user (email + in-app)</span>
+  <span class="kw">await</span> <span class="fn">notifyUser</span>(userId, { type: <span class="str">'report-ready'</span>, reportId });
+
+  <span class="kw">return new</span> <span class="fn">Response</span>(<span class="str">'OK'</span>, { status: <span class="ty">200</span> });
+}</code></pre>
+          <div class="callout green">
+            <strong>Key Point for the Interview</strong>
+            The webhook is the data team triggering your cache invalidation. You must agree with them on the payload schema and signature method upfront — this is a classic cross-team API contract conversation.
+          </div>
+        </div>
+
+        <div id="tab-dpipe-freshness" class="tab-content">
+          <p>Always surface data freshness to users — especially for health data where staleness could mislead decisions. Users who buy a second kit and check the dashboard must not silently see their old results.</p>
+<pre><code><span class="kw">type</span> <span class="ty">DataFreshness</span> = {
+  generatedAt: <span class="ty">Date</span>;
+  isStale: <span class="ty">boolean</span>; <span class="cm">// newer kit received but not yet processed</span>
+  processingStatus: <span class="str">'up_to_date'</span> | <span class="str">'kit_received'</span> | <span class="str">'processing'</span> | <span class="str">'failed'</span>;
+};
+
+<span class="kw">export function</span> <span class="fn">ReportFreshnessIndicator</span>({ freshness }: { freshness: <span class="ty">DataFreshness</span> }) {
+  <span class="kw">const</span> age = <span class="fn">formatDistanceToNow</span>(freshness.generatedAt, { addSuffix: <span class="kw">true</span> });
+
+  <span class="kw">return</span> (
+    &lt;div role=<span class="str">"status"</span> aria-live=<span class="str">"polite"</span>&gt;
+      {freshness.processingStatus === <span class="str">'processing'</span> ? (
+        &lt;span&gt;Your latest kit is being analysed — results usually ready within 48 hours.&lt;/span&gt;
+      ) : freshness.isStale ? (
+        &lt;span&gt;Showing results from {age}. Your newer kit results are on their way.&lt;/span&gt;
+      ) : (
+        &lt;span&gt;Results from {age}&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Pipeline Failure Modes — What to Show</h2>
+        <table>
+          <thead>
+            <tr><th>Failure Mode</th><th>What the Data Team Sees</th><th>Frontend Response</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Quality check failure</td>
+              <td>Sample didn't pass QC (insufficient DNA yield)</td>
+              <td>Show "We couldn't process this kit" with a re-order CTA. Never expose QC details to the user.</td>
+            </tr>
+            <tr>
+              <td>Partial pipeline failure</td>
+              <td>Some biomarkers scored, others failed</td>
+              <td>Show available biomarkers with a note: "Some results are still being processed." Use the <code>meta.biomarkersAvailable</code> BFF flag.</td>
+            </tr>
+            <tr>
+              <td>Model timeout / retry</td>
+              <td>Scoring model timed out; pipeline retrying internally</td>
+              <td>Show status: "processing" with estimated time. Don't show an error yet — retries are normal.</td>
+            </tr>
+            <tr>
+              <td>Lab volume backlog</td>
+              <td>Normal turnaround SLA exceeded</td>
+              <td>Show "We're experiencing higher volume — your results will arrive within N days." Triggered by an SLA-breach flag from the data team API.</td>
+            </tr>
+            <tr>
+              <td>Data API total outage</td>
+              <td>Data team's API is down</td>
+              <td>Show last cached results with a staleness banner. Never show an empty dashboard — stale is better than nothing. Log and alert.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you build a status page for a long-running pipeline (e.g. 7-day lab process) without over-engineering it?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Start with the simplest thing that works: a webhook from the data pipeline updates a <code>kitStatus</code> field in the database, and a RSC page renders the current status fresh on each load (no cache). Add SSE or real-time polling only if users need live updates within a single session. For a 7-day lab pipeline, users are not sitting on the page refreshing — they come back days later. So: static status page rendered fresh per request, updated via webhook, email notification when results are ready. The "fancy" SSE or WebSocket solution is over-engineering for a process where the meaningful update comes once, days later. Reserve real-time technology for processes that complete in under a minute.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">The data team retrains their model and existing users' scores change. How should the frontend handle this?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>This is a cache invalidation and user communication problem. First: ask the data team to version their model outputs — <code>modelVersion: "2025-06-01"</code> in the API response. When the model is retrained, they should send a bulk webhook (or batch revalidation request) so the BFF invalidates all affected user caches. Second: the UI should surface the model version in the report ("Results calculated using model v2, updated June 2025") so users who remember a previous score understand why it changed — without this, they'll assume the science is wrong. Third: never cache biomarker scores without a model version tag. Stale scores from an old model presented as current results would be medically misleading. The design principle: model retraining is a data event, and like all data events, it flows through the normal cache invalidation path — the BFF absorbs the complexity so the frontend component is unchanged.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What's your understanding of how a machine learning inference pipeline differs from a traditional synchronous API call?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>A traditional API call is deterministic and synchronous — same input always gives same output within milliseconds. ML inference has several differences that shape frontend design: (1) <strong>Latency</strong> — inference on genomics-scale data can take seconds to hours, not milliseconds. Design for async-first, never block UI. (2) <strong>Non-determinism</strong> — outputs can change as the model is retrained on new data, even for the same input. Don't treat ML outputs as immutable facts. (3) <strong>Confidence</strong> — good ML APIs return confidence intervals alongside predictions. Surface this in UI: "Based on 3 kits" carries more weight than "Based on 1 kit." (4) <strong>Batch nature</strong> — many ML models run batch inference overnight, not on-demand per request. Build for async delivery. (5) <strong>Model versioning</strong> — ask the data team how they version models and whether scores are stable between retraining runs. These questions signal you understand their world.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you design the user experience for a product where the core value takes 7+ days to arrive?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Five principles: (1) <strong>Set expectations at purchase</strong> — "Results in 7–10 days" stated clearly at checkout, not buried in an email. Don't let the wait be a surprise. (2) <strong>Progress over silence</strong> — show pipeline stages even for a batch process: "Kit received ✓ → Lab processing → Analysis → Ready." Each stage comes from a webhook. Users feel informed, not forgotten. (3) <strong>Give them something now</strong> — the dashboard doesn't have to be empty while waiting. Show educational content about their upcoming biomarkers, a skin health self-assessment, or their order history. The product experience begins at purchase, not at results. (4) <strong>Push beats pull</strong> — a user won't refresh for 7 days, but they will open an email or push notification. The result notification is as important as the result itself — coordinate with the data team on the webhook-to-notification flow. (5) <strong>Never show "no data" as a final state</strong> — always pair it with what's coming, when, and what they can do meanwhile.</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('datapipeline', this)">Mark as Done ✓</button>
+    </div>
+
   </main>
 </div>
 
@@ -4031,7 +4519,7 @@ async function PersonalisedShelf({ userId }: { userId: string }) {
   }
 
   function updateProgress() {
-    const total = 19
+    const total = 21
     const count = done.size
     const pct = (count / total) * 100
     document.getElementById('progressFill').style.width = pct + '%'
