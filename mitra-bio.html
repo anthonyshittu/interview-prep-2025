@@ -549,12 +549,12 @@
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="logo">Mitra Bio</div>
-      <div class="sidebar-title">Engineering Interview Prep</div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Round 2 · Engineering Team</div>
+      <div class="sidebar-title">Senior Full Stack Engineer</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Round 3 · Data Team · 45 min</div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
       </div>
-      <div class="progress-text" id="progressText">0 of 21 sections reviewed</div>
+      <div class="progress-text" id="progressText">0 of 22 sections reviewed</div>
     </div>
     <nav class="nav">
       <div class="nav-section-label">Company</div>
@@ -612,6 +612,10 @@
       </div>
 
       <div class="nav-section-label">Data Team Round</div>
+      <div class="nav-item" data-page="giovanni" onclick="showPage('giovanni',this)">
+        <span class="nav-icon">🧬</span> Data Team Interviewer
+        <span class="nav-check">✓</span>
+      </div>
       <div class="nav-item" data-page="dataflow" onclick="showPage('dataflow',this)">
         <span class="nav-icon">🔀</span> Data Flow & Visualisation
         <span class="nav-check">✓</span>
@@ -668,8 +672,11 @@
 
       <div class="section">
         <div class="callout gold">
-          <strong>Interview Context</strong>
-          Round 2 with the Engineering Team — multiple engineers, likely including the Head of Engineering. Expect technical depth, system design, and product-thinking questions. They want to see you think, not just recall facts.
+          <strong>Interview Process — 3 Rounds</strong>
+          <strong style="display:block;margin-top:8px;font-size:12px;letter-spacing:0;">Round 1 (Done) — 30-min Talent Acquisition Screen</strong>
+          <strong style="display:block;margin-top:4px;font-size:12px;letter-spacing:0;">Round 2 (Done) — 1-hour Engineering Team Meeting</strong>
+          <strong style="display:block;margin-top:4px;font-size:12px;letter-spacing:0;color:var(--accent2);">Round 3 (NOW) — 45-min Data Team Meeting</strong>
+          <span style="display:block;margin-top:8px;font-size:13px;">The data team round is half technical, half collaboration. Your interviewer is a computational biologist and ML researcher — expect probing on scientific integrity, data quality, and how you collaborate at the frontend/science boundary.</span>
         </div>
 
         <div class="grid2">
@@ -3220,6 +3227,246 @@ model SkinReport {
       </button>
     </div>
 
+    <!-- GIOVANNI INTERVIEWER PROFILE -->
+    <div class="page" id="page-giovanni">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round · Read This First</div>
+        <div class="page-title">Data Team Interviewer Profile</div>
+        <div class="page-desc">Your interviewer is the company's Computational Biology and Machine Learning leader. Understanding their background, what they have built, and what they value is the most leveraged prep you can do for this 45-minute session.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Bottom Line Up Front</strong>
+          Your interviewer is a published computational biologist and bioinformatician who has spent 20+ years working at the intersection of genetics, data, and code. This is not just a check that you can code — it's a test of whether you can be <em>trusted with their science</em>. The biggest concern: a frontend engineer who takes carefully derived model outputs and turns them into misleading or oversimplified claims to users.
+        </div>
+
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Who They Are</h3>
+            <ul class="check-list">
+              <li><strong>Computational Biology & ML leader</strong> — owns the science pipeline</li>
+              <li>UK-based, European research university background</li>
+              <li>Multilingual — reflects international research career</li>
+              <li>3K+ LinkedIn followers — well respected in computational biology community</li>
+              <li>Long-running science blog (18+ years) — deeply invested in communicating science to non-specialists</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Research Background</h3>
+            <ul class="check-list">
+              <li>Multiple peer-reviewed publications in <strong>bioinformatics</strong></li>
+              <li>Research areas: selective sweeps, genotype networks, genome analysis, <strong>population genetics</strong></li>
+              <li>University instructor for computational biology programming (10+ years, ongoing)</li>
+              <li>Certifications: Big Data Modeling, Data Science, Research Data Management, Regression Models</li>
+              <li>A programmer who thinks like a scientist — will notice sloppy data handling</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>What His Background Signals About What He Values</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>He's been a science communicator for 18 years</h3>
+            <p>The science blog has been running for 18+ years — longer than most tech careers. This signals they care deeply about how complex science is explained to people who aren't specialists. They will want to know: will you simplify their data accurately, or will you oversimplify it into something misleading?</p>
+            <p><strong>Show you get this:</strong> "I'd want the data team to review any UI copy that describes a biomarker result — it's a scientific claim, not just product copy."</p>
+          </div>
+          <div class="card">
+            <h3>He teaches programming to biologists</h3>
+            <p>They've taught computational methods to non-engineers for over a decade. They're used to translating between technical and non-technical audiences — and they'll appreciate it when you do the same, translating scientific outputs into user-facing language thoughtfully.</p>
+            <p><strong>Show you get this:</strong> Acknowledge the challenge of translation — "a score of 0.73 is meaningless without context; I'd always show it relative to a reference range."</p>
+          </div>
+          <div class="card">
+            <h3>An ML practitioner, not just a researcher</h3>
+            <p>Certifications in Big Data Modeling, Data Science, Regression Models show he's moved from pure research into applied ML. He understands the difference between a paper result and a production model. He won't be impressed by vague ML buzzwords — he'll probe specifics.</p>
+            <p><strong>Show you get this:</strong> Ask about model versioning, confidence intervals, retraining cycles — the practical engineering questions, not the theoretical ones.</p>
+          </div>
+          <div class="card">
+            <h3>He's been at Mitra Bio building the data infrastructure</h3>
+            <p>Your interviewer owns the pipeline that produces the biomarker scores and recommendations. They've spent significant time defining the schemas, models, and outputs. When you discuss API contracts and data transformation, you're talking about their work. Treat it with respect.</p>
+            <p><strong>Show you get this:</strong> "I'd want to understand the full pipeline — from sample processing to the scores your API exposes — so I can set honest expectations in the UI."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Science Vocabulary You Need to Know Cold</h2>
+        <p>You don't need to be a biologist. You need to be fluent enough that he doesn't have to spend the whole interview explaining basic terms. These will come up.</p>
+        <table>
+          <thead>
+            <tr><th>Term</th><th>What It Means</th><th>How to Use It</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>DNA Methylation</strong></td>
+              <td>A chemical modification to DNA (adding a methyl group to a cytosine) that controls gene expression without changing the DNA sequence. Changes with age, lifestyle, environment.</td>
+              <td>"The methylation scores your pipeline produces — how do you normalise those relative to a reference population?"</td>
+            </tr>
+            <tr>
+              <td><strong>Epigenetic Clock</strong></td>
+              <td>A model that uses methylation patterns at specific sites to estimate biological age. ELOVL2 is one of the most well-validated epigenetic clocks for skin aging.</td>
+              <td>"I understand ELOVL2 methylation is a well-validated marker for skin biological age — is that a primary marker in your model?"</td>
+            </tr>
+            <tr>
+              <td><strong>ELOVL2</strong></td>
+              <td>A real gene (elongation of very long chain fatty acids protein 2) whose methylation level is strongly correlated with chronological age. One of the most cited aging biomarkers in epigenetics research.</td>
+              <td>Mention it by name — it signals you've done real homework, not just skimmed the job description.</td>
+            </tr>
+            <tr>
+              <td><strong>CpG Site</strong></td>
+              <td>A location in the genome where methylation is measured (cytosine followed by guanine). Methylation levels at CpG sites are the raw input to biomarker models.</td>
+              <td>"So the raw input from the lab is CpG methylation levels, which your pipeline then transforms into the biomarker scores the API exposes?"</td>
+            </tr>
+            <tr>
+              <td><strong>Reference Range</strong></td>
+              <td>The expected range of a biomarker value in a healthy reference population. A score of 0.73 is only meaningful relative to what "normal" looks like.</td>
+              <td>"I'd always display a score in the context of its reference range — a raw number without context is meaningless and potentially alarming."</td>
+            </tr>
+            <tr>
+              <td><strong>Feature (ML context)</strong></td>
+              <td>An input variable to a machine learning model. In the data science world, a "feature" is a measured value (like a methylation score) — NOT a product feature.</td>
+              <td>Use "product feature" or "capability" for software, and "feature" or "model input" for data science context. Never mix them in the same breath.</td>
+            </tr>
+            <tr>
+              <td><strong>Model Inference</strong></td>
+              <td>Running a trained ML model on new input data to produce a prediction or score. This is what the data team's API does — it returns inference results, not raw data.</td>
+              <td>"When you say the API returns a score — is that a direct measurement or is it the output of an inference step from a trained model?"</td>
+            </tr>
+            <tr>
+              <td><strong>Confidence / Uncertainty</strong></td>
+              <td>ML models produce predictions with inherent uncertainty. A score from 1 kit is less reliable than one averaged across 3 kits. Responsible data communication surfaces this.</td>
+              <td>"Does your API expose confidence intervals or sample size? I'd want to surface that in the UI so users know how much weight to put on their result."</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Questions Your Interviewer Is Likely To Ask</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you display a methylation score like 0.73 to a user who doesn't know what that means?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>This is his core test question. A raw float is meaningless and potentially alarming to a non-scientist. Strong answer:</p>
+            <ul>
+              <li><strong>Never show the raw number alone.</strong> "0.73" tells a user nothing — is that good? Bad? Alarming?</li>
+              <li><strong>Show it relative to its reference range</strong> — "Your hydration retention score is in the top 30% for your age group." That's a number a human can understand.</li>
+              <li><strong>Translate to plain language</strong> — "Your skin's moisture retention is lower than optimal. Here's what that means for your routine." The translation is reviewed by the data team before shipping.</li>
+              <li><strong>Surface sample size/confidence</strong> — "Based on your first kit" vs "Based on 3 kits over 12 months." One data point is noisier than a trend.</li>
+              <li><strong>Don't overclaim.</strong> If the model says 0.73 is "low" but the standard deviation makes it statistically ambiguous, say "slightly below optimal" not "significantly impaired."</li>
+            </ul>
+            <p><strong>Key phrase to land:</strong> "I'd want you to review the UI copy for any screen that surfaces a biomarker result. It's a scientific claim and the data team should own the wording."</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What do you know about epigenetics and how it relates to what we're building at Mitra Bio?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Don't bluff. Show genuine curiosity and accurate knowledge. A solid answer:</p>
+            <p>"My understanding is that epigenetics studies changes in gene expression that don't involve changes to the underlying DNA sequence — primarily DNA methylation and histone modification. In the context of Mitra Bio, the key insight is that methylation patterns at specific sites like ELOVL2 change predictably with age and lifestyle factors, making them measurable proxies for skin biological age rather than just chronological age. Your non-invasive sampling approach captures those methylation patterns from skin cells, and the pipeline converts the raw CpG methylation levels into the biomarker scores I'd be building the dashboard around."</p>
+            <p>Then show curiosity: "What I'd want to understand more is how Mitra Bio's model differentiates between age-driven methylation changes and environment-driven ones — things like sun exposure or diet — because that determines what's actually actionable for the user."</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">We retrain our model periodically and existing users' scores can change. How should the frontend handle that?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Version model outputs</strong> — the API response should include <code>modelVersion</code>. The UI stores and displays "Results calculated using model v2, updated June 2025" so users who remember a previous score understand why it changed.</li>
+              <li><strong>Cache invalidation</strong> — when the model is retrained, the data team sends a bulk webhook or signals a cache bust. The BFF invalidates affected user caches so next load serves fresh scores.</li>
+              <li><strong>User communication</strong> — a significant model update (not just a minor retrain) warrants in-app messaging: "We've improved our analysis model. Your updated results reflect the latest science."</li>
+              <li><strong>Don't surprise users silently</strong> — a score changing from "optimal" to "low" without explanation will destroy trust, even if it's scientifically correct.</li>
+              <li><strong>Historical data</strong> — preserve historical reports with their original model version so users can see their trend correctly. Don't retroactively recalculate history.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What's your experience working with scientific or data-heavy outputs? How did you handle data quality issues?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Frame your answer around the principles he cares about, even if your experience is more general:</p>
+            <ul>
+              <li><strong>Validate at the boundary</strong> — Zod schema on every API response, so unexpected shapes throw immediately rather than silently producing NaN in a chart three components deep.</li>
+              <li><strong>Fail visibly, not silently</strong> — a chart with a gap where missing data should be is better than a chart that smooths over it. Acknowledge the gap.</li>
+              <li><strong>Flag anomalies to the source</strong> — when the data quality issue is upstream, report it back to the data team with a specific example, not a complaint. "This response broke our Zod schema — here's the payload" is actionable.</li>
+              <li><strong>Separate presentation logic from data logic</strong> — the BFF normalises and validates; the component only handles what to show. Data quality fixes happen in one place.</li>
+            </ul>
+            <p>If you have a specific example of a production data quality bug you caught and fixed, use it here.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you see the relationship between the data team and the frontend team working at a company like this?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>This is the trust-and-collaboration question. He wants to know if you'll be a bottleneck or a bridge.</p>
+            <p><strong>Strong answer:</strong> "The data team owns the science — the models, the scoring methodology, the reference ranges. I own the presentation layer. My job is to be a reliable translation layer, not an interpretation layer. That means: agreeing on API contracts before either side writes code, validating every response at the BFF boundary, and bringing requirements early rather than discovering I need a new field the day before launch. I'd also want the data team to review any UI copy that surfaces their outputs — 'your ELOVL2 score is low' is a scientific claim, and you should own that wording, not a product copywriter."</p>
+            <p>"What I'd want to avoid is the pattern where the frontend team treats the data team as a black box API — you ask for data, it comes back, you display it, and you move on. The quality of what users experience depends on a genuine shared understanding of what the data means."</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Some users' kits don't produce results for all biomarkers — the sample quality wasn't sufficient. How do you handle that in the UI?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>The API contract must make this explicit</strong> — the response should have a per-biomarker <code>status: 'available' | 'insufficient_sample' | 'processing'</code>, not just a missing field. I'd request this in the API spec if it doesn't exist.</li>
+              <li><strong>Never silently hide a biomarker</strong> — a missing card looks like a bug. Show the card with a clear state: "Insufficient sample for this marker" with an explanation of what that means and what to do (often: re-order a kit).</li>
+              <li><strong>Different failed states need different UI</strong> — "processing" (come back tomorrow), "insufficient sample" (re-order), and "assay not applicable" (genuinely not relevant for this user) all need different copy and CTAs.</li>
+              <li><strong>Coordinate the copy with the data team</strong> — "insufficient sample" might have multiple causes (low DNA yield, contamination, etc.) and the copy must be accurate without being alarming.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Questions to Ask Your Interviewer</h2>
+        <div class="callout green">
+          <strong>Ask These</strong>
+          Your interviewer built this pipeline. Asking smart questions about their work is not just interview strategy — it's the right collaborative posture. Genuine curiosity about the science will land well.
+        </div>
+        <ul class="check-list">
+          <li><strong>"What does the pipeline look like from raw kit result to the API response — where are the key transformation steps and where are the failure points?"</strong> — shows you think about the whole system, not just your slice.</li>
+          <li><strong>"Does your API expose model confidence or uncertainty bands alongside the scores? If not, is that something you'd consider adding?"</strong> — signals you think about responsible data representation.</li>
+          <li><strong>"When you retrain the model, do historical scores for existing users change? How do you want the UI to handle that?"</strong> — a practical, important question that also shows you've thought about model versioning.</li>
+          <li><strong>"Are there biomarkers in your model that aren't reliable for certain demographic groups — age, skin type? How should the frontend handle those cases?"</strong> — shows scientific thinking about limitations.</li>
+          <li><strong>"What's the biggest concern you'd have about how a frontend engineer might misrepresent your model's outputs to users?"</strong> — directly addresses his core fear and signals you want to get it right.</li>
+          <li><strong>"Has building a consumer product changed how you think about communicating science to non-specialists? I imagine there's a real tension between scientific accuracy and accessible language."</strong> — a thoughtful question that shows you respect the communication challenge and invites a genuine conversation.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>Red Flags to Avoid</h2>
+        <div class="grid2">
+          <div class="card" style="border-left:3px solid var(--red)">
+            <h3>Don't Bluff the Science</h3>
+            <p>If you don't know what ELOVL2 is, don't pretend you do. They will know immediately. "I don't have deep expertise in the biology but I've done some reading and I'm genuinely curious to learn more" is a perfectly acceptable and honest answer. Bluffing is not.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--red)">
+            <h3>Don't Use "Feature" Carelessly</h3>
+            <p>In a product meeting, a "feature" is a capability. To a data scientist, a "feature" is an input variable to an ML model. Using the word "feature" to mean a product feature while talking about ML will signal you don't understand his domain. Say "product capability" or "functionality" for software.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--yellow)">
+            <h3>Don't Oversimplify His Data</h3>
+            <p>Don't say things like "I'd just show the score as a percentage." That dismisses 20 years of careful scientific methodology. Show you understand the complexity — reference ranges, uncertainty, sample size — even if the UI ultimately presents it simply.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--yellow)">
+            <h3>Don't Treat the API as a Black Box</h3>
+            <p>The data team wants you to understand what you're consuming. "I'd just display whatever the API returns" is the wrong answer. Show that you'd validate the response, understand what the fields mean, and flag anomalies back to the data team when the data is unexpected.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>The One Sentence That Will Land Best</h2>
+        <div class="highlight-box">
+          <p style="font-size:16px;color:var(--accent2);line-height:1.7;">"My job at this boundary is to be a reliable translation layer — not to interpret the science, but to represent it faithfully. The data team should own what the copy says; I own how it's presented."</p>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('giovanni', this)">Mark as Done ✓</button>
+    </div>
+
     <!-- DATA FLOW & VISUALISATION -->
     <div class="page" id="page-dataflow">
       <div class="page-header">
@@ -4519,7 +4766,7 @@ async function PersonalisedShelf({ userId }: { userId: string }) {
   }
 
   function updateProgress() {
-    const total = 21
+    const total = 22
     const count = done.size
     const pct = (count / total) * 100
     document.getElementById('progressFill').style.width = pct + '%'
