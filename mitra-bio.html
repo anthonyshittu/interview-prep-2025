@@ -554,7 +554,7 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
       </div>
-      <div class="progress-text" id="progressText">0 of 22 sections reviewed</div>
+      <div class="progress-text" id="progressText">0 of 23 sections reviewed</div>
     </div>
     <nav class="nav">
       <div class="nav-section-label">Company</div>
@@ -630,6 +630,10 @@
       </div>
       <div class="nav-item" data-page="datateambehavioral" onclick="showPage('datateambehavioral',this)">
         <span class="nav-icon">💬</span> Data Team Behavioral
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="internaltooling" onclick="showPage('internaltooling',this)">
+        <span class="nav-icon">🔧</span> Internal Data Team Tooling
         <span class="nav-check">✓</span>
       </div>
       <div class="nav-item" data-page="analytics" onclick="showPage('analytics',this)">
@@ -713,19 +717,23 @@
         <div class="grid3">
           <div class="card">
             <div class="badge gold">Must Have</div>
-            <h3 style="margin-top:10px">Frontend Excellence</h3>
-            <p>Premium consumer UI. Think luxury brand digital experience. Performance, animation, accessibility, responsiveness — all non-negotiable.</p>
+            <h3 style="margin-top:10px">Consumer Frontend</h3>
+            <p>Premium customer-facing UI — skin results dashboard, product shelf, checkout flow. Performance, animation, accessibility, responsiveness — all non-negotiable.</p>
           </div>
           <div class="card">
             <div class="badge blue">Must Have</div>
-            <h3 style="margin-top:10px">E-Commerce Integration</h3>
-            <p>Shopify or headless commerce. Building BFF layers, connecting checkout, subscriptions, product APIs to the frontend.</p>
+            <h3 style="margin-top:10px">Internal Data Tooling</h3>
+            <p>Tools <em>for</em> the data team: pipeline monitors, data quality dashboards, experiment UIs, report review workflows. You serve internal technical users, not just consumers.</p>
           </div>
           <div class="card">
             <div class="badge purple">Must Have</div>
-            <h3 style="margin-top:10px">Product Mindset</h3>
-            <p>You propose features, push back on bad ideas, understand users, and make call on trade-offs. Not waiting to be told what to build.</p>
+            <h3 style="margin-top:10px">E-Commerce + BFF</h3>
+            <p>Shopify headless integration, BFF layers connecting checkout, subscriptions, and the data science platform to the frontend.</p>
           </div>
+        </div>
+        <div class="callout blue" style="margin-top:16px">
+          <strong>Two Distinct User Types</strong>
+          This role builds for two very different audiences: <strong>consumers</strong> (simplify, reassure, make science accessible) and the <strong>data team</strong> (power users who need accuracy, raw data access, and operational visibility). The data team interview will probe both dimensions.
         </div>
       </div>
 
@@ -3241,6 +3249,11 @@ model SkinReport {
           Your interviewer is a published computational biologist and bioinformatician who has spent 20+ years working at the intersection of genetics, data, and code. This is not just a check that you can code — it's a test of whether you can be <em>trusted with their science</em>. The biggest concern: a frontend engineer who takes carefully derived model outputs and turns them into misleading or oversimplified claims to users.
         </div>
 
+        <div class="callout blue" style="margin-top:16px">
+          <strong>Not Just Consumer Display — You Build For Them Too</strong>
+          Your interviewer isn't only checking how you'll surface their data to end users. They also need you to build tooling <em>for their team</em>: pipeline status dashboards, data quality monitors, experiment management interfaces, report review workflows. A significant part of this role is serving the data team as internal users. This will almost certainly come up — and it changes the conversation from "how do you display science to consumers" to "how do you help us do our jobs better."
+        </div>
+
         <div class="grid2">
           <div class="card accent-border">
             <h3>Who They Are</h3>
@@ -4236,6 +4249,293 @@ async function PersonalisedShelf({ userId }: { userId: string }) {
       <button class="mark-done-btn" onclick="markDone('datateambehavioral', this)">Mark as Done ✓</button>
     </div>
 
+    <!-- INTERNAL DATA TEAM TOOLING -->
+    <div class="page" id="page-internaltooling">
+      <div class="page-header">
+        <div class="page-tag">Data Team Round · High Priority</div>
+        <div class="page-title">Internal Data Team Tooling</div>
+        <div class="page-desc">A major part of this role is building for the data team as internal power users — not just consumers. Pipeline dashboards, data quality monitors, experiment UIs, report review workflows. This is a completely different design and engineering challenge.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>The Key Mental Shift</strong>
+          Consumer UI: simplify, reassure, make science accessible, never show raw numbers. Internal tooling: the opposite — data team users need accuracy, density, raw values, export capabilities, and operational visibility. The same "methylation score of 0.73" that you'd translate to plain English for a consumer, you'd show in full precision with its upstream provenance for the data team.
+        </div>
+
+        <h2>What Internal Tools the Data Team Likely Needs</h2>
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Pipeline Monitoring Dashboard</h3>
+            <p>Real-time visibility into the kit processing pipeline — how many kits are in each stage, what's failing, SLA breach alerts, error rate trends. The data team needs this to operate reliably without digging through logs.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Kit counts by stage (received / QC / scoring / complete / failed)</li>
+              <li>Failure rate by stage, trended over time</li>
+              <li>SLA breach alerts (kit > N days without completing)</li>
+              <li>Drill-down to individual kit detail and error messages</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Data Quality Monitor</h3>
+            <p>Track the distribution of biomarker scores over time. If the model starts producing anomalous scores — drift, outlier spike, unexpected nulls — the data team needs to catch it before consumers see bad results.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Score distribution per biomarker (histogram, daily)</li>
+              <li>Null / missing rate per field</li>
+              <li>Score drift alerts — flag if mean drifts by &gt;N% week-over-week</li>
+              <li>Sample quality metrics (DNA yield, purity) trended</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Experiment Management UI</h3>
+            <p>When the data team runs A/B tests on recommendation algorithms or model versions, they need a UI to set up experiments, monitor assignment, check for statistical significance, and ship winners.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Create/edit experiment with variant configs</li>
+              <li>Assignment distribution by variant (sanity check)</li>
+              <li>Live conversion metrics per variant</li>
+              <li>Statistical significance indicator</li>
+              <li>Ship / pause / stop controls</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Report Review & QA Workflow</h3>
+            <p>Before a generated skin report goes live to a user, a data team member may need to review it — especially for edge cases, new model versions, or flagged anomalies. This needs a structured review UI.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Queue of reports pending review</li>
+              <li>Side-by-side view: raw scores + rendered consumer report</li>
+              <li>Approve / flag / reject with notes</li>
+              <li>Audit trail of all review decisions</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>User Data & Consent Admin</h3>
+            <p>Handle GDPR erasure requests, consent management, and support queries. The data team needs a tool to look up a user's data map and trigger deletion cascades without touching the database directly.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>User lookup by internal ID (never by email in the UI)</li>
+              <li>Data map: what records exist and where</li>
+              <li>Trigger erasure — cascades to all systems</li>
+              <li>Consent history with timestamps</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Model Version Comparator</h3>
+            <p>When a new model version is trained, the data team needs to compare its outputs against the previous version on the same set of samples — check for score drift, unexpected reclassifications, regression.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Select two model versions to compare</li>
+              <li>Per-biomarker score diff distribution</li>
+              <li>Users whose classification changed (optimal → low, etc.)</li>
+              <li>Export diff report for manual review</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>How Internal Tooling Differs From Consumer UI</h2>
+        <table>
+          <thead>
+            <tr><th>Dimension</th><th>Consumer UI</th><th>Internal Data Team Tooling</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Data density</strong></td>
+              <td>One or two key numbers, large text, lots of whitespace</td>
+              <td>Dense tables, raw values, multiple metrics on one screen</td>
+            </tr>
+            <tr>
+              <td><strong>Number precision</strong></td>
+              <td>Rounded, contextualised ("slightly above optimal")</td>
+              <td>Full precision (0.7312), with provenance (model v2, collected 2025-06-01)</td>
+            </tr>
+            <tr>
+              <td><strong>Error states</strong></td>
+              <td>Friendly message, hide technical details</td>
+              <td>Full error message, stack trace link, upstream ID for debugging</td>
+            </tr>
+            <tr>
+              <td><strong>Export</strong></td>
+              <td>Not usually needed</td>
+              <td>CSV / JSON export on almost every data table — data scientists pull into notebooks</td>
+            </tr>
+            <tr>
+              <td><strong>Performance bar</strong></td>
+              <td>Very high — luxury UX, &lt;2s load</td>
+              <td>High — internal users are still users, but can tolerate more for complex queries</td>
+            </tr>
+            <tr>
+              <td><strong>Access control</strong></td>
+              <td>Per-user (show only your own data)</td>
+              <td>Role-based — data scientist vs admin vs read-only analyst</td>
+            </tr>
+            <tr>
+              <td><strong>Audit trail</strong></td>
+              <td>Not typically exposed</td>
+              <td>Required — every action (approve, delete, flag) must be logged with who/when/why</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Patterns & Code for Internal Tools</h2>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('itool','table')">Data Tables + Export</div>
+          <div class="tab" onclick="switchTab('itool','rbac')">Role-Based Access</div>
+          <div class="tab" onclick="switchTab('itool','audit')">Audit Logging</div>
+        </div>
+
+        <div id="tab-itool-table" class="tab-content active">
+          <p>Internal data tables need sorting, filtering, pagination, and CSV export as standard. Every data table the data team uses should be exportable — they will run analysis on it.</p>
+<pre><code><span class="str">'use client'</span>;
+<span class="cm">// Generic data table with server-side pagination + CSV export.</span>
+<span class="cm">// Internal users expect this on every table — build it once.</span>
+
+<span class="kw">export function</span> <span class="fn">DataTable</span>&lt;T <span class="kw">extends</span> Record&lt;<span class="ty">string</span>, <span class="kw">unknown</span>&gt;&gt;({
+  columns, data, total, page, onPage, exportEndpoint,
+}: <span class="ty">DataTableProps</span>&lt;T&gt;) {
+
+  <span class="kw">const</span> handleExport = <span class="kw">async</span> () => {
+    <span class="cm">// Stream CSV directly from a server action — no memory limit on large exports</span>
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(`${exportEndpoint}?format=csv`);
+    <span class="kw">const</span> blob = <span class="kw">await</span> res.<span class="fn">blob</span>();
+    <span class="kw">const</span> url = URL.<span class="fn">createObjectURL</span>(blob);
+    <span class="kw">const</span> a = document.<span class="fn">createElement</span>(<span class="str">'a'</span>);
+    a.href = url;
+    a.download = <span class="str">`export-${new Date().toISOString()}.csv`</span>;
+    a.<span class="fn">click</span>();
+    URL.<span class="fn">revokeObjectURL</span>(url);
+  };
+
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;div style={{ display: <span class="str">'flex'</span>, justifyContent: <span class="str">'space-between'</span>, marginBottom: <span class="ty">12</span> }}&gt;
+        &lt;span&gt;{total} results&lt;/span&gt;
+        &lt;button onClick={handleExport}&gt;Export CSV&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;{columns.<span class="fn">map</span>(col =&gt; &lt;th key={col.key}&gt;{col.label}&lt;/th&gt;)}&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          {data.<span class="fn">map</span>((row, i) =&gt; (
+            &lt;tr key={i}&gt;
+              {columns.<span class="fn">map</span>(col =&gt; &lt;td key={col.key}&gt;{col.<span class="fn">render</span> ? col.<span class="fn">render</span>(row) : <span class="ty">String</span>(row[col.key])}&lt;/td&gt;)}
+            &lt;/tr&gt;
+          ))}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;Pagination current={page} total={total} onChange={onPage} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+
+        <div id="tab-itool-rbac" class="tab-content">
+<pre><code><span class="cm">// Role-based access control for internal tools.</span>
+<span class="cm">// Data team members have different permissions than admins or read-only analysts.</span>
+
+<span class="kw">type</span> <span class="ty">InternalRole</span> = <span class="str">'data_scientist'</span> | <span class="str">'admin'</span> | <span class="str">'analyst_readonly'</span>;
+
+<span class="kw">const</span> PERMISSIONS = {
+  data_scientist: [<span class="str">'view_pipeline'</span>, <span class="str">'review_reports'</span>, <span class="str">'view_quality_metrics'</span>, <span class="str">'export_data'</span>],
+  admin: [<span class="str">'view_pipeline'</span>, <span class="str">'review_reports'</span>, <span class="str">'view_quality_metrics'</span>, <span class="str">'export_data'</span>, <span class="str">'trigger_erasure'</span>, <span class="str">'manage_experiments'</span>],
+  analyst_readonly: [<span class="str">'view_pipeline'</span>, <span class="str">'view_quality_metrics'</span>],
+} <span class="kw">satisfies</span> Record&lt;<span class="ty">InternalRole</span>, <span class="ty">string</span>[]&gt;;
+
+<span class="kw">function</span> <span class="fn">hasPermission</span>(role: <span class="ty">InternalRole</span>, action: <span class="ty">string</span>): <span class="ty">boolean</span> {
+  <span class="kw">return</span> PERMISSIONS[role].<span class="fn">includes</span>(action);
+}
+
+<span class="cm">// In a Server Component — check role before rendering sensitive controls</span>
+<span class="kw">export default async function</span> <span class="fn">PipelineDashboard</span>() {
+  <span class="kw">const</span> session = <span class="kw">await</span> <span class="fn">getInternalSession</span>();
+  <span class="kw">const</span> canTriggerErasure = <span class="fn">hasPermission</span>(session.role, <span class="str">'trigger_erasure'</span>);
+
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;PipelineStatusTable /&gt;
+      {canTriggerErasure &amp;&amp; &lt;ErasureControls /&gt;} <span class="cm">// only rendered for admins</span>
+    &lt;/div&gt;
+  );
+}</code></pre>
+          <div class="callout yellow">
+            <strong>Never Hide via CSS</strong>
+            Access control must happen on the server — in middleware and Server Components. Never rely on hiding elements with CSS or conditional client renders. A data scientist can open DevTools and see hidden elements.
+          </div>
+        </div>
+
+        <div id="tab-itool-audit" class="tab-content">
+<pre><code><span class="cm">// Every write action in internal tools must be logged.</span>
+<span class="cm">// Who did it, what they did, when, what changed — required for GDPR and ops.</span>
+
+<span class="kw">type</span> <span class="ty">AuditEntry</span> = {
+  actorId: <span class="ty">string</span>;       <span class="cm">// internal user who took the action</span>
+  action: <span class="ty">string</span>;        <span class="cm">// 'report.approved' | 'user.erased' | 'experiment.started'</span>
+  subjectId: <span class="ty">string</span>;     <span class="cm">// what entity was acted on (reportId, userId, etc.)</span>
+  detail: <span class="ty">string</span>;        <span class="cm">// human-readable summary</span>
+  timestamp: <span class="ty">Date</span>;
+  ipAddress: <span class="ty">string</span>;
+};
+
+<span class="cm">// Server action — wraps any internal write with audit logging</span>
+<span class="kw">async function</span> <span class="fn">withAudit</span>&lt;T&gt;(
+  action: <span class="ty">string</span>,
+  subjectId: <span class="ty">string</span>,
+  detail: <span class="ty">string</span>,
+  fn: () =&gt; <span class="ty">Promise</span>&lt;T&gt;
+): <span class="ty">Promise</span>&lt;T&gt; {
+  <span class="kw">const</span> session = <span class="kw">await</span> <span class="fn">getInternalSession</span>();
+  <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">fn</span>();
+  <span class="kw">await</span> db.auditLog.<span class="fn">create</span>({
+    data: { actorId: session.userId, action, subjectId, detail, timestamp: <span class="kw">new</span> <span class="fn">Date</span>(), ipAddress: session.ip },
+  });
+  <span class="kw">return</span> result;
+}
+
+<span class="cm">// Usage in a server action</span>
+<span class="kw">export async function</span> <span class="fn">approveReport</span>(reportId: <span class="ty">string</span>) {
+  <span class="kw">return</span> <span class="fn">withAudit</span>(<span class="str">'report.approved'</span>, reportId, <span class="str">'Report approved for release to user'</span>, <span class="kw">async</span> () => {
+    <span class="kw">await</span> db.report.<span class="fn">update</span>({ where: { id: reportId }, data: { status: <span class="str">'approved'</span> } });
+    <span class="kw">await</span> <span class="fn">releaseReportToUser</span>(reportId);
+  });
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What kind of internal tools would you build to help the data team do their jobs better?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>I'd start by asking the data team what their current pain points are — where are they switching to raw SQL, CSV exports, or Jupyter notebooks because there's no UI? The highest-value tools are usually the ones that remove the need to dig through databases directly. Based on what I know about this pipeline, I'd prioritise: (1) a pipeline monitoring dashboard so they can see kit processing status without querying the database, (2) a data quality monitor with score distribution charts so model drift is visible before it reaches users, (3) a report review queue for QA-ing generated reports before release, and (4) a GDPR admin panel for erasure requests that gives them a safe, auditable way to act on deletion requests without direct DB access. Each of these removes a category of operational risk while giving the data team better operational visibility.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How does building for an internal technical user (a data scientist) differ from building for a consumer?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>The core difference is trust and purpose. For a consumer, I'm simplifying and reassuring — translating "0.73" to "your skin moisture is slightly below optimal." For a data scientist, I'm exposing and enabling — they need to see "0.7312, model v2, collected 2025-06-01, reference range 0.65–0.85, QC pass." The same data, completely different presentation. Practically: internal tools need dense data tables with full precision, CSV export on every table (data scientists will pull it into notebooks), raw error messages rather than friendly ones, and an audit trail for every write action. Performance still matters — a slow internal dashboard kills productivity just as much as a slow consumer page. But I can trade animation polish for data density without apology.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you decide what to build vs what to buy for internal tooling?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>My default is: buy or use off-the-shelf for generic ops tools (Retool, Metabase, or even a well-structured Notion) and build custom only when the domain is specific enough that a generic tool creates more friction than it saves. For a company like this, I'd use a tool like Metabase or Redash for ad-hoc data exploration and dashboards that the data team can configure themselves — that avoids a frontend engineer becoming a dashboard factory. I'd build custom for things that are deeply integrated with the product's own data model: the report review workflow, the consent admin panel, the pipeline status page that understands kit states. The key question is: will the data team spend more time fighting the generic tool's abstractions than it would take to build the right thing? If yes, build. If no, buy and move on to higher-value work.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">The data team asks you to build a dashboard to monitor biomarker score distributions over time. How do you approach it?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><strong>Discovery first:</strong> what decision does this dashboard drive? "We want to catch model drift before it reaches users" → the dashboard needs a drift alert, not just a histogram. What's the check-in cadence — daily monitoring or on-demand? Who reviews it — one person or a team? That determines notification strategy.<br/><br/><strong>Data contract:</strong> agree with the data team on the query — do I hit their API or query the database directly? If direct DB, who owns schema stability? I'd prefer an API endpoint they own so schema changes are absorbed by their team.<br/><br/><strong>Key visualisations:</strong> per-biomarker histogram (daily), trend line of mean and p25/p75 over time, null rate table, and an alert badge if any metric is outside the agreed threshold. Full precision, no rounding — this is a technical audience.<br/><br/><strong>Export:</strong> every chart's underlying data should be downloadable as CSV. The data team will want to run their own statistical tests on it.<br/><br/><strong>Access:</strong> internal auth only, read-only for most roles.</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('internaltooling', this)">Mark as Done ✓</button>
+    </div>
+
     <!-- ANALYTICS & EVENT TRACKING -->
     <div class="page" id="page-analytics">
       <div class="page-header">
@@ -4766,7 +5066,7 @@ async function PersonalisedShelf({ userId }: { userId: string }) {
   }
 
   function updateProgress() {
-    const total = 22
+    const total = 23
     const count = done.size
     const pct = (count / total) * 100
     document.getElementById('progressFill').style.width = pct + '%'
