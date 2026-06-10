@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCARB F1 — Interview Prep</title>
+  <style>
+    :root {
+      --bg: #0c0c0e;
+      --surface: #141416;
+      --surface2: #1b1b1e;
+      --surface3: #222226;
+      --border: #27272b;
+      --accent: #e8002d;
+      --accent2: #ff5555;
+      --accent-dim: rgba(232,0,45,0.10);
+      --accent-glow: rgba(232,0,45,0.22);
+      --text: #f0eeeb;
+      --text-dim: #888580;
+      --text-muted: #48474a;
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.12);
+      --blue: #60a5fa;
+      --blue-dim: rgba(96,165,250,0.12);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.12);
+      --purple: #c084fc;
+      --purple-dim: rgba(192,132,252,0.12);
+      --yellow: #fbbf24;
+      --yellow-dim: rgba(251,191,36,0.12);
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    .app { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 270px; min-width: 270px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100; }
+    .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+    .logo { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .sidebar-title { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+    .progress-bar-wrap { margin-top: 14px; background: var(--border); border-radius: 99px; height: 4px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-text { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+    .nav { padding: 12px 0; flex: 1; }
+    .nav-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); padding: 12px 20px 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: var(--text-dim); cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; user-select: none; }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: var(--accent-dim); color: var(--accent); border-left-color: var(--accent); }
+    .nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+    .nav-item .nav-check { margin-left: auto; font-size: 11px; color: var(--green); opacity: 0; transition: opacity 0.2s; }
+    .nav-item.done .nav-check { opacity: 1; }
+
+    /* MAIN */
+    .main { margin-left: 270px; flex: 1; padding: 40px 48px; max-width: calc(100vw - 270px); }
+    .page { display: none; animation: fadeIn 0.2s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* TYPOGRAPHY */
+    .page-header { margin-bottom: 36px; }
+    .page-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); background: var(--accent-dim); padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
+    .page-title { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 10px; }
+    .page-desc { font-size: 15px; color: var(--text-dim); line-height: 1.6; max-width: 680px; }
+    h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 15px; font-weight: 600; color: var(--accent2); margin-bottom: 10px; }
+    p { font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 12px; }
+
+    /* LAYOUT */
+    .section { margin-bottom: 40px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* CARD */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .card.accent-border { border-color: var(--accent); }
+    .card.green-border { border-color: var(--green); }
+    .card.blue-border { border-color: var(--blue); }
+    .card.purple-border { border-color: var(--purple); }
+
+    /* CALLOUT */
+    .callout { border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 16px; font-size: 13.5px; line-height: 1.6; border-left: 3px solid; }
+    .callout.gold { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); }
+    .callout.green { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+    .callout.blue { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+    .callout.red { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+    .callout.purple { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Q&A */
+    .qa-item { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; }
+    .qa-q { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; cursor: pointer; background: var(--surface2); transition: background 0.15s; }
+    .qa-q:hover { background: var(--surface3); }
+    .qa-q-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--accent); min-width: 18px; margin-top: 1px; }
+    .qa-q-text { font-size: 14px; color: var(--text); line-height: 1.5; flex: 1; }
+    .qa-q-arrow { color: var(--text-muted); font-size: 12px; margin-top: 2px; transition: transform 0.2s; }
+    .qa-item.open .qa-q-arrow { transform: rotate(90deg); }
+    .qa-a { display: none; padding: 14px 16px 16px 46px; background: var(--surface); border-top: 1px solid var(--border); font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+    .qa-item.open .qa-a { display: block; }
+    .qa-a ul { margin: 8px 0 8px 18px; }
+    .qa-a ul li { margin-bottom: 6px; }
+    .qa-a strong { color: var(--text); }
+    .qa-a .highlight { color: var(--accent2); }
+
+    /* CODE */
+    pre { background: #0a0a0c; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; overflow-x: auto; margin: 14px 0; font-size: 12.5px; line-height: 1.6; }
+    code { font-family: 'SF Mono', 'Fira Code', Cascadia, monospace; color: var(--accent2); }
+    pre code { color: #e0ddd8; }
+    .kw { color: #c084fc; }
+    .fn { color: #60a5fa; }
+    .str { color: #4ade80; }
+    .cm { color: #444; font-style: italic; }
+    .ty { color: #fbbf24; }
+
+    /* BADGE */
+    .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+    .badge.gold { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow); }
+    .badge.green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+    .badge.blue { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
+    .badge.red { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+    .badge.purple { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); }
+
+    /* CHECK LIST */
+    .check-list { list-style: none; }
+    .check-list li { padding: 7px 0 7px 26px; position: relative; font-size: 13.5px; color: var(--text-dim); border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .check-list li:last-child { border-bottom: none; }
+    .check-list li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-size: 12px; top: 8px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tab { padding: 7px 14px; font-size: 12px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; color: var(--text-dim); transition: all 0.15s; }
+    .tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* MARK DONE */
+    .mark-done-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; padding: 9px 18px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--text-dim); cursor: pointer; transition: all 0.15s; user-select: none; }
+    .mark-done-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+    .mark-done-btn.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+    th { background: var(--surface2); color: var(--text-dim); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; line-height: 1.5; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box { background: linear-gradient(135deg, rgba(232,0,45,0.07), rgba(232,0,45,0.02)); border: 1px solid rgba(232,0,45,0.25); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; }
+
+    /* FLASHCARD */
+    .flashcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; cursor: pointer; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: border-color 0.2s; margin-bottom: 16px; }
+    .flashcard:hover { border-color: var(--accent); }
+    .flashcard .fc-front { font-size: 15px; font-weight: 600; color: var(--text); }
+    .flashcard .fc-back { display: none; font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+    .flashcard.flipped .fc-front { display: none; }
+    .flashcard.flipped .fc-back { display: block; }
+    .flashcard .fc-hint { font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+
+    @media (max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } .main { padding: 24px 20px; } }
+    @media (max-width: 768px) { .sidebar { width: 100%; height: auto; position: relative; } .app { flex-direction: column; } .main { margin-left: 0; max-width: 100%; } }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">VCARB F1</div>
+      <div class="sidebar-title">Senior Web Developer</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Technical Interview · Milton Keynes</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0 of 12 sections reviewed</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section-label">Company</div>
+      <div class="nav-item active" data-page="overview" onclick="showPage('overview',this)">
+        <span class="nav-icon">🏎️</span> Company & Role Overview
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="interviewers" onclick="showPage('interviewers',this)">
+        <span class="nav-icon">👥</span> Your Interviewers
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Technical</div>
+      <div class="nav-item" data-page="react" onclick="showPage('react',this)">
+        <span class="nav-icon">⚛️</span> React & TypeScript
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="dataviz" onclick="showPage('dataviz',this)">
+        <span class="nav-icon">📊</span> Data Visualisation
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="realtime" onclick="showPage('realtime',this)">
+        <span class="nav-icon">⚡</span> Real-Time & Telemetry
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="performance" onclick="showPage('performance',this)">
+        <span class="nav-icon">🚀</span> Performance at Scale
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="tooling" onclick="showPage('tooling',this)">
+        <span class="nav-icon">🔧</span> Internal Tooling Architecture
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Domain</div>
+      <div class="nav-item" data-page="domain" onclick="showPage('domain',this)">
+        <span class="nav-icon">🏁</span> F1 Data Domain
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="systemdesign" onclick="showPage('systemdesign',this)">
+        <span class="nav-icon">🏗️</span> System Design
+        <span class="nav-check">✓</span>
+      </div>
+
+      <div class="nav-section-label">Prep</div>
+      <div class="nav-item" data-page="behavioral" onclick="showPage('behavioral',this)">
+        <span class="nav-icon">🗣️</span> Behavioral
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="questions" onclick="showPage('questions',this)">
+        <span class="nav-icon">💬</span> Questions to Ask Them
+        <span class="nav-check">✓</span>
+      </div>
+      <div class="nav-item" data-page="flashcards" onclick="showPage('flashcards',this)">
+        <span class="nav-icon">🃏</span> Flash Cards
+        <span class="nav-check">✓</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div class="page-tag">Start Here</div>
+        <div class="page-title">Company & Role Overview</div>
+        <div class="page-desc">VCARB is one of two Red Bull-owned F1 teams. This role is not consumer-facing — you are building internal engineering tools for Aerodynamics, Vehicle Performance, and Data Science teams. Understanding that distinction shapes every answer you give.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Interview Format</strong>
+          Technical round with the Software Development Team Leader and Deputy Team Leader, plus a separate HR round. The technical interview will probe real-time data handling, data visualisation, TypeScript depth, and how you work with non-frontend engineering teams.
+        </div>
+
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Who is VCARB?</h3>
+            <ul class="check-list">
+              <li><strong>Visa Cash App Racing Bulls F1 Team</strong> — one of two Red Bull-owned F1 teams</li>
+              <li>Based in Milton Keynes (factory) and Faenza, Italy (legacy Toro Rosso base)</li>
+              <li>Competes in the FIA Formula 1 World Championship</li>
+              <li>"Young and ambitious" — positioned as Red Bull's driver development team</li>
+              <li>Shares some technical resources with Oracle Red Bull Racing</li>
+              <li>Emphasis on innovation — "every member of staff can and should lead innovation"</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>The Role in Plain English</h3>
+            <ul class="check-list">
+              <li>Reports to the <strong>Software Development Team Leader</strong></li>
+              <li>Build and maintain web interfaces for <strong>internal engineering users</strong></li>
+              <li>Users: Aerodynamicists, Vehicle Performance engineers, Data Scientists</li>
+              <li>Data is complex: CFD outputs, lap telemetry, simulation results, real-time feeds</li>
+              <li>Maintain legacy applications as well as build new systems</li>
+              <li>0–10% travel — occasional race weekend support</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>This Role vs a Typical Frontend Role</h2>
+        <div class="callout blue">
+          <strong>Critical Mindset Shift</strong>
+          Your users are world-class engineers who understand data precisely. They will notice wrong numbers, imprecise visualisations, or performance issues immediately. There is no "simplify for the user" here — the user is a CFD specialist who wants full precision, density, and speed.
+        </div>
+        <table>
+          <thead><tr><th>Dimension</th><th>Typical Consumer Frontend</th><th>VCARB Internal Tooling</th></tr></thead>
+          <tbody>
+            <tr><td>Users</td><td>Non-technical consumers</td><td>PhD-level engineers who live in data</td></tr>
+            <tr><td>Data volume</td><td>Dozens of records per page</td><td>Millions of telemetry points per session</td></tr>
+            <tr><td>Precision</td><td>Rounded, contextualised</td><td>Full precision — 0.001s matters in F1</td></tr>
+            <tr><td>Real-time</td><td>Nice-to-have</td><td>Mission-critical during qualifying and race</td></tr>
+            <tr><td>Aesthetics</td><td>Premium, polished, animated</td><td>Dense, functional, fast — beauty is secondary</td></tr>
+            <tr><td>Error states</td><td>Friendly, vague messages</td><td>Raw, specific — engineers want to debug</td></tr>
+            <tr><td>Export</td><td>Rarely needed</td><td>CSV/JSON expected on every data view</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Tech Stack (Likely)</h2>
+        <table>
+          <thead><tr><th>Layer</th><th>Technology</th><th>Your Angle</th></tr></thead>
+          <tbody>
+            <tr><td>Framework</td><td>React (likely) + TypeScript</td><td>Advanced patterns, hooks, performance optimisation</td></tr>
+            <tr><td>Visualisation</td><td>D3, Recharts, or custom Canvas/WebGL</td><td>When to use each, SVG vs Canvas trade-offs</td></tr>
+            <tr><td>Real-time</td><td>WebSockets, SSE</td><td>High-frequency data handling, buffering strategies</td></tr>
+            <tr><td>State</td><td>Zustand / Redux / React Query</td><td>Managing large datasets without re-render thrash</td></tr>
+            <tr><td>Build</td><td>Vite or webpack, CI/CD pipelines</td><td>Code splitting, bundle optimisation</td></tr>
+            <tr><td>Backend</td><td>REST/GraphQL APIs, internal data services</td><td>Efficient querying, pagination, streaming endpoints</td></tr>
+            <tr><td>Testing</td><td>Vitest/Jest, Playwright/Cypress</td><td>Testing data-heavy components, real-time mocks</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>The Three Engineering Teams You Serve</h2>
+        <div class="grid3">
+          <div class="card" style="border-left:3px solid var(--accent)">
+            <h3>Aerodynamics</h3>
+            <p>Analyse CFD simulation results, wind tunnel data, and aero balance across configurations. Need comparative visualisation — "how does this wing configuration compare to last week's baseline?"</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--blue)">
+            <h3>Vehicle Performance</h3>
+            <p>Lap time analysis, tyre performance, setup optimisation, race strategy simulation. Need time-series telemetry — speed, brake, throttle traces overlaid for driver and lap comparison.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--green)">
+            <h3>Data Science</h3>
+            <p>Statistical modelling, ML model outputs, correlation studies between simulation and reality. Need data exploration tools, result tables, and model output visualisation.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('overview',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- INTERVIEWERS -->
+    <div class="page" id="page-interviewers">
+      <div class="page-header">
+        <div class="page-tag">Read Before the Interview</div>
+        <div class="page-title">Your Interviewers</div>
+        <div class="page-desc">Two technical interviewers plus an HR interviewer. The technical pair manage the software development team day-to-day — they are evaluating whether you can do the job and whether you'll fit the team.</div>
+      </div>
+
+      <div class="section">
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>Technical Interviewer 1 — Team Leader</h3>
+            <div class="badge red">Software Development Team Leader</div>
+            <p style="margin-top:10px">Manages the software development team directly. Will focus on <strong>technical depth</strong> — architecture decisions, TypeScript patterns, how you'd approach complex visualisation and real-time problems. As team leader, they also care about how you work, communicate, and handle ambiguity.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Expect system design and architecture questions</li>
+              <li>Will probe TypeScript and React depth</li>
+              <li>Interested in how you handle performance constraints</li>
+              <li>Will assess your engineering judgement — trade-offs, not just answers</li>
+            </ul>
+          </div>
+          <div class="card blue-border">
+            <h3>Technical Interviewer 2 — Deputy Team Leader</h3>
+            <div class="badge blue">Deputy Team Leader</div>
+            <p style="margin-top:10px">Based on public profile: background as Senior Software Engineer in the Aerodynamics software group. Has deep domain knowledge of what the engineering teams actually need from their tools. Will probe <strong>how you work with non-frontend engineers</strong> and whether you understand the data domain.</p>
+            <ul class="check-list" style="margin-top:10px">
+              <li>Will ask how you'd approach building tools for Aero/VP teams</li>
+              <li>May reference specific data challenges (telemetry, CFD outputs)</li>
+              <li>Interested in collaboration patterns — how you gather requirements</li>
+              <li>Will probe real-time data handling and visualisation choices</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout gold" style="margin-top:16px">
+          <strong>What Both Interviewers Are Really Assessing</strong>
+          Can you build tools that world-class engineers will trust with their data? This means: correctness first (wrong visualisations mislead race strategy decisions), performance second (slow tools during a race weekend are useless), and collaboration third (can you work with people who know more about the data than you do?).
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>What to Emphasise With Each Interviewer</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Team Leader angle</th><th>Deputy Leader angle</th></tr></thead>
+          <tbody>
+            <tr><td>Data visualisation</td><td>Architecture — Canvas vs SVG decision, library choice rationale</td><td>What Aero engineers actually need to see, domain fit</td></tr>
+            <tr><td>Real-time data</td><td>WebSocket implementation, buffering strategy, state design</td><td>Telemetry use cases, race weekend latency requirements</td></tr>
+            <tr><td>Performance</td><td>Web Workers, virtualisation, profiling approach</td><td>What "slow" looks like to an engineer mid-session</td></tr>
+            <tr><td>Collaboration</td><td>Code review, team standards, PR process</td><td>Gathering requirements from non-frontend domain experts</td></tr>
+            <tr><td>Legacy code</td><td>Refactoring strategy, incremental improvement</td><td>Not breaking tools engineers depend on daily</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Questions to Ask the Technical Interviewers</h2>
+        <ul class="check-list">
+          <li><strong>"What does the current tech stack look like, and what are the biggest pain points you're looking to address?"</strong></li>
+          <li><strong>"How does the software team interact with Aerodynamics and Vehicle Performance — is there a formal requirements process or is it more ad-hoc?"</strong></li>
+          <li><strong>"What does a race weekend look like for the software team — is there an on-call element or live support role?"</strong></li>
+          <li><strong>"What does the legacy application landscape look like — are there specific systems you'd want a new engineer to focus on first?"</strong></li>
+          <li><strong>"What does good look like in this role at 6 months?"</strong></li>
+        </ul>
+      </div>
+
+      <button class="mark-done-btn" onclick="markDone('interviewers',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- REACT & TYPESCRIPT -->
+    <div class="page" id="page-react">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">React & TypeScript</div>
+        <div class="page-desc">The engineering data domain requires precise types — a telemetry channel mis-typed as <code>string</code> instead of <code>number</code> is a real bug that affects a race engineer's analysis. TypeScript strictness is not optional here.</div>
+      </div>
+
+      <div class="section">
+        <h2>TypeScript Patterns for Engineering Data</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('ts','domain')">Domain Types</div>
+          <div class="tab" onclick="switchTab('ts','generics')">Generic Data Structures</div>
+          <div class="tab" onclick="switchTab('ts','guards')">Narrowing & Guards</div>
+        </div>
+        <div id="tab-ts-domain" class="tab-content active">
+<pre><code><span class="cm">// Precise types for F1 telemetry — wrong types = wrong analysis</span>
+<span class="cm">// Use branded types to prevent accidental mixing of similar units</span>
+
+<span class="kw">type</span> <span class="ty">Seconds</span> = <span class="ty">number</span> & { readonly _brand: <span class="str">'Seconds'</span> }
+<span class="kw">type</span> <span class="ty">Metres</span> = <span class="ty">number</span> & { readonly _brand: <span class="str">'Metres'</span> }
+<span class="kw">type</span> <span class="ty">MetresPerSecond</span> = <span class="ty">number</span> & { readonly _brand: <span class="str">'MetresPerSecond'</span> }
+<span class="kw">type</span> <span class="ty">NMetres</span> = <span class="ty">number</span> & { readonly _brand: <span class="str">'NMetres'</span> } <span class="cm">// Newton-metres</span>
+
+<span class="kw">interface</span> <span class="ty">TelemetryPoint</span> {
+  timestamp: <span class="ty">Seconds</span>
+  lapDistance: <span class="ty">Metres</span>
+  speed: <span class="ty">MetresPerSecond</span>
+  throttle: <span class="ty">number</span>  <span class="cm">// 0–1 normalised</span>
+  brake: <span class="ty">number</span>     <span class="cm">// 0–1 normalised</span>
+  gear: <span class="ty">1</span> | <span class="ty">2</span> | <span class="ty">3</span> | <span class="ty">4</span> | <span class="ty">5</span> | <span class="ty">6</span> | <span class="ty">7</span> | <span class="ty">8</span>
+  drs: <span class="ty">boolean</span>
+  steeringAngle: <span class="ty">number</span> <span class="cm">// degrees</span>
+}
+
+<span class="kw">interface</span> <span class="ty">LapTelemetry</span> {
+  lapId: <span class="ty">string</span>
+  driverCode: <span class="ty">string</span>  <span class="cm">// 'VER', 'HAM', etc.</span>
+  compound: <span class="str">'SOFT'</span> | <span class="str">'MEDIUM'</span> | <span class="str">'HARD'</span> | <span class="str">'INTERMEDIATE'</span> | <span class="str">'WET'</span>
+  lapTime: <span class="ty">Seconds</span>
+  points: <span class="ty">TelemetryPoint</span>[]
+  isValid: <span class="ty">boolean</span>
+  sector1: <span class="ty">Seconds</span>; sector2: <span class="ty">Seconds</span>; sector3: <span class="ty">Seconds</span>
+}</code></pre>
+        </div>
+        <div id="tab-ts-generics" class="tab-content">
+<pre><code><span class="cm">// Generic time-series container — reused for telemetry, aero data, simulation</span>
+<span class="kw">interface</span> <span class="ty">TimeSeries</span>&lt;T&gt; {
+  timestamps: <span class="ty">Float64Array</span>  <span class="cm">// typed arrays — much faster for large datasets</span>
+  values: T <span class="kw">extends</span> <span class="ty">number</span> ? <span class="ty">Float64Array</span> : T[]
+  channel: <span class="ty">string</span>
+  unit: <span class="ty">string</span>
+  sampleRate: <span class="ty">number</span>  <span class="cm">// Hz</span>
+}
+
+<span class="cm">// Generic paginated response from the data API</span>
+<span class="kw">interface</span> <span class="ty">PagedResult</span>&lt;T&gt; {
+  data: T[]
+  total: <span class="ty">number</span>
+  page: <span class="ty">number</span>
+  pageSize: <span class="ty">number</span>
+  hasMore: <span class="ty">boolean</span>
+}
+
+<span class="cm">// Discriminated union for async data states</span>
+<span class="kw">type</span> <span class="ty">AsyncData</span>&lt;T&gt; =
+  | { status: <span class="str">'idle'</span> }
+  | { status: <span class="str">'loading'</span> }
+  | { status: <span class="str">'success'</span>; data: T; fetchedAt: <span class="ty">Date</span> }
+  | { status: <span class="str">'error'</span>; error: <span class="ty">string</span>; retryable: <span class="ty">boolean</span> }</code></pre>
+        </div>
+        <div id="tab-ts-guards" class="tab-content">
+<pre><code><span class="cm">// Type guard for telemetry vs aero data — both come from the same API endpoint</span>
+<span class="kw">function</span> <span class="fn">isTelemetryPoint</span>(point: <span class="kw">unknown</span>): point <span class="kw">is</span> <span class="ty">TelemetryPoint</span> {
+  <span class="kw">return</span> (
+    <span class="kw">typeof</span> point === <span class="str">'object'</span> && point !== <span class="kw">null</span> &&
+    <span class="str">'timestamp'</span> <span class="kw">in</span> point &&
+    <span class="str">'speed'</span> <span class="kw">in</span> point &&
+    <span class="str">'throttle'</span> <span class="kw">in</span> point
+  )
+}
+
+<span class="cm">// Validate at the API boundary with Zod — wrong data from upstream = wrong chart</span>
+<span class="kw">import</span> { z } <span class="kw">from</span> <span class="str">'zod'</span>
+
+<span class="kw">const</span> TelemetryPointSchema = z.<span class="fn">object</span>({
+  timestamp: z.<span class="fn">number</span>().<span class="fn">nonnegative</span>(),
+  speed: z.<span class="fn">number</span>().<span class="fn">min</span>(<span class="ty">0</span>).<span class="fn">max</span>(<span class="ty">100</span>),  <span class="cm">// m/s — 100m/s ≈ 360 km/h</span>
+  throttle: z.<span class="fn">number</span>().<span class="fn">min</span>(<span class="ty">0</span>).<span class="fn">max</span>(<span class="ty">1</span>),
+  brake: z.<span class="fn">number</span>().<span class="fn">min</span>(<span class="ty">0</span>).<span class="fn">max</span>(<span class="ty">1</span>),
+  gear: z.<span class="fn">union</span>([z.<span class="fn">literal</span>(<span class="ty">1</span>), z.<span class="fn">literal</span>(<span class="ty">2</span>), z.<span class="fn">literal</span>(<span class="ty">3</span>), z.<span class="fn">literal</span>(<span class="ty">4</span>), z.<span class="fn">literal</span>(<span class="ty">5</span>), z.<span class="fn">literal</span>(<span class="ty">6</span>), z.<span class="fn">literal</span>(<span class="ty">7</span>), z.<span class="fn">literal</span>(<span class="ty">8</span>)]),
+  drs: z.<span class="fn">boolean</span>(),
+})</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>React Patterns for Data-Heavy UIs</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Avoid Expensive Re-renders</h3>
+            <p>A telemetry dataset of 50,000 points re-rendering on every WebSocket message will freeze the browser. Memoisation is not premature optimisation here — it is required.</p>
+<pre><code><span class="cm">// useMemo for derived data — expensive transform</span>
+<span class="kw">const</span> chartData = <span class="fn">useMemo</span>(() =>
+  downsample(telemetry.points, targetPoints),
+  [telemetry.points, targetPoints]
+)
+
+<span class="cm">// useCallback for handlers passed to chart components</span>
+<span class="kw">const</span> handleBrushChange = <span class="fn">useCallback</span>((range: <span class="ty">Range</span>) => {
+  <span class="fn">setZoomRange</span>(range)
+}, [])
+
+<span class="cm">// memo on the chart component itself</span>
+<span class="kw">const</span> SpeedTrace = <span class="fn">memo</span>(({ data }: { data: <span class="ty">ChartPoint</span>[] }) => {
+  <span class="cm">// only re-renders when data reference changes</span>
+})</code></pre>
+          </div>
+          <div class="card">
+            <h3>useRef for Real-Time Data</h3>
+            <p>High-frequency WebSocket data should update a <code>ref</code>, not state. Committing to state at a capped frame rate prevents flooding React's reconciler.</p>
+<pre><code><span class="str">'use client'</span>
+<span class="kw">export function</span> <span class="fn">useLiveTelemetry</span>(channel: <span class="ty">string</span>) {
+  <span class="kw">const</span> buffer = <span class="fn">useRef</span>&lt;<span class="ty">TelemetryPoint</span>[]&gt;([])
+  <span class="kw">const</span> [snapshot, setSnapshot] = <span class="fn">useState</span>&lt;<span class="ty">TelemetryPoint</span>[]&gt;([])
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(`/ws/telemetry/${channel}`)
+    ws.onmessage = (e) => {
+      buffer.current.<span class="fn">push</span>(<span class="fn">JSON.parse</span>(e.data))
+    }
+    <span class="cm">// Commit to React state at 60fps max — not 200Hz</span>
+    <span class="kw">const</span> rafId = <span class="fn">setInterval</span>(() => {
+      <span class="kw">if</span> (buffer.current.length) {
+        <span class="fn">setSnapshot</span>(prev => [...prev, ...buffer.current.<span class="fn">splice</span>(<span class="ty">0</span>)])
+      }
+    }, <span class="ty">16</span>)
+    <span class="kw">return</span> () => { ws.<span class="fn">close</span>(); <span class="fn">clearInterval</span>(rafId) }
+  }, [channel])
+
+  <span class="kw">return</span> snapshot
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you prevent a React component from re-rendering on every WebSocket message?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>Buffer incoming data in a <code>useRef</code> — refs don't trigger re-renders. Then use <code>setInterval</code> or <code>requestAnimationFrame</code> to commit the buffer to state at a capped rate (60fps / 16ms). This decouples the data arrival rate (could be 200Hz) from React's reconciliation cycle. Additionally: wrap the chart component in <code>memo()</code>, use <code>useMemo</code> for any expensive data transformation, and ensure the data you pass to the chart is stable in reference when content hasn't changed.</p></div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Why use branded/nominal types for engineering values like speed or time?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a"><p>In an F1 data context, you might have a lap time in seconds, a sector delta in milliseconds, and a GPS timestamp in Unix milliseconds — all typed as <code>number</code>. Passing the wrong one to the wrong function compiles fine but produces incorrect analysis. Branded types add a nominal tag so TypeScript enforces that you can't accidentally pass a <code>Milliseconds</code> where a <code>Seconds</code> is expected. The overhead is zero at runtime — it's purely a compile-time guard. In safety-critical or precision-critical domains, this pattern catches a whole class of bugs that unit tests often miss.</p></div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('react',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- DATA VISUALISATION -->
+    <div class="page" id="page-dataviz">
+      <div class="page-header">
+        <div class="page-tag">Technical · Core Skill</div>
+        <div class="page-title">Data Visualisation</div>
+        <div class="page-desc">This is the most critical technical skill for this role. F1 engineers live in charts — speed traces, aero coefficient maps, lap deltas, sector comparisons. Knowing when to use Canvas vs SVG, and how to handle 50,000-point datasets, is what separates candidates.</div>
+      </div>
+
+      <div class="section">
+        <h2>Canvas vs SVG — The Core Trade-off</h2>
+        <div class="grid2">
+          <div class="card" style="border-left:3px solid var(--blue)">
+            <div class="badge blue">SVG</div>
+            <h3 style="margin-top:10px">DOM-based, interactive</h3>
+            <ul class="check-list">
+              <li>Each element is a DOM node — accessible, styleable, hoverable</li>
+              <li>Works well up to ~5,000 elements before performance degrades</li>
+              <li>Built-in CSS transitions and animations</li>
+              <li>Screen-reader accessible with ARIA attributes</li>
+              <li><strong>Use for:</strong> sector indicators, lap comparison overlays, sparse aero data points, interactive selection handles</li>
+            </ul>
+          </div>
+          <div class="card" style="border-left:3px solid var(--accent)">
+            <div class="badge red">Canvas 2D / WebGL</div>
+            <h3 style="margin-top:10px">Pixel-based, high performance</h3>
+            <ul class="check-list">
+              <li>Draws pixels — no DOM nodes per data point</li>
+              <li>Handles 500,000+ points at 60fps</li>
+              <li>Manual hit-testing required for hover/click</li>
+              <li>Not inherently accessible — needs ARIA descriptions</li>
+              <li><strong>Use for:</strong> full-lap telemetry traces, CFD pressure maps, high-frequency live data streams</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout gold">
+          <strong>The answer they want to hear</strong>
+          "I'd use SVG for interactive UI elements and sparse overlays, Canvas for the actual data traces. A telemetry chart might render the 50,000-point speed trace on Canvas, then overlay SVG elements for DRS zones, sector markers, and the hover crosshair."
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Key Visualisation Patterns</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('viz','canvas')">Canvas Time-Series</div>
+          <div class="tab" onclick="switchTab('viz','d3')">D3 for Layout</div>
+          <div class="tab" onclick="switchTab('viz','downsample')">Downsampling</div>
+          <div class="tab" onclick="switchTab('viz','compare')">Lap Comparison</div>
+        </div>
+
+        <div id="tab-viz-canvas" class="tab-content active">
+<pre><code><span class="str">'use client'</span>
+<span class="kw">import</span> { useRef, useEffect } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="cm">// Canvas-based telemetry renderer — handles 50k+ points at 60fps</span>
+<span class="kw">export function</span> <span class="fn">SpeedTraceCanvas</span>({ points, width, height, range }: <span class="ty">Props</span>) {
+  <span class="kw">const</span> canvasRef = <span class="fn">useRef</span>&lt;<span class="ty">HTMLCanvasElement</span>&gt;(<span class="kw">null</span>)
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> canvas = canvasRef.current
+    <span class="kw">if</span> (!canvas) <span class="kw">return</span>
+    <span class="kw">const</span> ctx = canvas.<span class="fn">getContext</span>(<span class="str">'2d'</span>)!
+
+    <span class="cm">// Device pixel ratio — crisp on retina displays</span>
+    <span class="kw">const</span> dpr = window.devicePixelRatio || <span class="ty">1</span>
+    canvas.width = width * dpr; canvas.height = height * dpr
+    canvas.style.width = `${width}px`; canvas.style.height = `${height}px`
+    ctx.<span class="fn">scale</span>(dpr, dpr)
+
+    <span class="kw">const</span> xScale = (d: <span class="ty">number</span>) => ((d - range.xMin) / (range.xMax - range.xMin)) * width
+    <span class="kw">const</span> yScale = (d: <span class="ty">number</span>) => height - ((d - range.yMin) / (range.yMax - range.yMin)) * height
+
+    ctx.<span class="fn">clearRect</span>(<span class="ty">0</span>, <span class="ty">0</span>, width, height)
+    ctx.strokeStyle = <span class="str">'#e8002d'</span>
+    ctx.lineWidth = <span class="ty">1.5</span>
+    ctx.<span class="fn">beginPath</span>()
+
+    points.<span class="fn">forEach</span>((p, i) => {
+      <span class="kw">const</span> x = <span class="fn">xScale</span>(p.lapDistance), y = <span class="fn">yScale</span>(p.speed)
+      i === <span class="ty">0</span> ? ctx.<span class="fn">moveTo</span>(x, y) : ctx.<span class="fn">lineTo</span>(x, y)
+    })
+    ctx.<span class="fn">stroke</span>()
+  }, [points, width, height, range])
+
+  <span class="kw">return</span> &lt;canvas ref={canvasRef} aria-label="Speed trace" /&gt;
+}</code></pre>
+        </div>
+
+        <div id="tab-viz-d3" class="tab-content">
+<pre><code><span class="cm">// Use D3 for scales and axis math — let React own the DOM</span>
+<span class="cm">// Never let D3 call .append() inside a React component</span>
+<span class="kw">import</span> * <span class="kw">as</span> d3 <span class="kw">from</span> <span class="str">'d3'</span>
+<span class="kw">import</span> { useMemo } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="kw">export function</span> <span class="fn">TelemetryAxes</span>({ data, width, height, margin }: <span class="ty">Props</span>) {
+  <span class="kw">const</span> xScale = <span class="fn">useMemo</span>(() =>
+    d3.<span class="fn">scaleLinear</span>()
+      .<span class="fn">domain</span>([<span class="ty">0</span>, d3.<span class="fn">max</span>(data, d => d.lapDistance) ?? <span class="ty">0</span>])
+      .<span class="fn">range</span>([margin.left, width - margin.right]),
+    [data, width, margin]
+  )
+
+  <span class="kw">const</span> yScale = <span class="fn">useMemo</span>(() =>
+    d3.<span class="fn">scaleLinear</span>()
+      .<span class="fn">domain</span>([<span class="ty">0</span>, <span class="ty">100</span>])  <span class="cm">// 0–100 m/s</span>
+      .<span class="fn">range</span>([height - margin.bottom, margin.top]),
+    [height, margin]
+  )
+
+  <span class="cm">// Render tick marks as JSX — React owns the DOM nodes</span>
+  <span class="kw">const</span> xTicks = xScale.<span class="fn">ticks</span>(<span class="ty">10</span>).<span class="fn">map</span>(tick => ({
+    value: tick,
+    x: <span class="fn">xScale</span>(tick),
+    label: `${tick}m`
+  }))
+
+  <span class="kw">return</span> (
+    &lt;svg width={width} height={height}&gt;
+      {xTicks.<span class="fn">map</span>(t =&gt; (
+        &lt;text key={t.value} x={t.x} y={height - <span class="ty">4</span>} textAnchor="middle" fontSize={<span class="ty">10</span>}&gt;
+          {t.label}
+        &lt;/text&gt;
+      ))}
+    &lt;/svg&gt;
+  )
+}</code></pre>
+        </div>
+
+        <div id="tab-viz-downsample" class="tab-content">
+          <p>A 10-lap stint at 200Hz = 720,000 data points. Rendering all of them is unnecessary and slow. Downsample to the display resolution — typically 2–4 points per pixel.</p>
+<pre><code><span class="cm">// Largest Triangle Three Buckets (LTTB) — preserves visual shape while reducing points</span>
+<span class="cm">// Industry-standard downsampling algorithm for time-series data</span>
+<span class="kw">function</span> <span class="fn">lttbDownsample</span>(data: <span class="ty">TelemetryPoint</span>[], targetCount: <span class="ty">number</span>): <span class="ty">TelemetryPoint</span>[] {
+  <span class="kw">if</span> (data.length <= targetCount) <span class="kw">return</span> data
+  <span class="kw">const</span> bucketSize = (data.length - <span class="ty">2</span>) / (targetCount - <span class="ty">2</span>)
+  <span class="kw">const</span> sampled: <span class="ty">TelemetryPoint</span>[] = [data[<span class="ty">0</span>]]
+
+  <span class="kw">let</span> a = <span class="ty">0</span>
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="ty">0</span>; i &lt; targetCount - <span class="ty">2</span>; i++) {
+    <span class="kw">const</span> bucketStart = Math.<span class="fn">floor</span>((i + <span class="ty">1</span>) * bucketSize) + <span class="ty">1</span>
+    <span class="kw">const</span> bucketEnd = Math.<span class="fn">min</span>(Math.<span class="fn">floor</span>((i + <span class="ty">2</span>) * bucketSize) + <span class="ty">1</span>, data.length)
+    <span class="cm">// Pick the point in this bucket that forms the largest triangle with the previous sampled point</span>
+    <span class="kw">let</span> maxArea = -<span class="ty">1</span>, maxIdx = bucketStart
+    <span class="kw">for</span> (<span class="kw">let</span> j = bucketStart; j &lt; bucketEnd; j++) {
+      <span class="kw">const</span> area = Math.<span class="fn">abs</span>((data[a].lapDistance - data[j].lapDistance) * (sampled.at(-<span class="ty">1</span>)!.speed - data[j].speed))
+      <span class="kw">if</span> (area > maxArea) { maxArea = area; maxIdx = j }
+    }
+    sampled.<span class="fn">push</span>(data[maxIdx]); a = maxIdx
+  }
+  sampled.<span class="fn">push</span>(data.at(-<span class="ty">1</span>)!)
+  <span class="kw">return</span> sampled
+}
+
+<span class="cm">// In the component: target 2 points per CSS pixel of chart width</span>
+<span class="kw">const</span> displayData = <span class="fn">useMemo</span>(() => <span class="fn">lttbDownsample</span>(rawPoints, chartWidth * <span class="ty">2</span>), [rawPoints, chartWidth])</code></pre>
+        </div>
+
+        <div id="tab-viz-compare" class="tab-content">
+<pre><code><span class="cm">// Lap comparison overlay — the most common F1 analysis view</span>
+<span class="cm">// Align laps by lap distance (not time) so different lap times are comparable</span>
+
+<span class="kw">type</span> <span class="ty">CompareConfig</span> = { lap: <span class="ty">LapTelemetry</span>; color: <span class="ty">string</span>; label: <span class="ty">string</span> }[]
+
+<span class="kw">export function</span> <span class="fn">LapComparisonChart</span>({ laps, channel }: {
+  laps: <span class="ty">CompareConfig</span>
+  channel: <span class="kw">keyof</span> <span class="ty">TelemetryPoint</span>
+}) {
+  <span class="kw">const</span> allPoints = laps.<span class="fn">flatMap</span>(l => l.lap.points)
+  <span class="kw">const</span> yMin = Math.<span class="fn">min</span>(...allPoints.<span class="fn">map</span>(p => p[channel] <span class="kw">as</span> <span class="ty">number</span>))
+  <span class="kw">const</span> yMax = Math.<span class="fn">max</span>(...allPoints.<span class="fn">map</span>(p => p[channel] <span class="kw">as</span> <span class="ty">number</span>))
+  <span class="kw">const</span> xMax = Math.<span class="fn">max</span>(...allPoints.<span class="fn">map</span>(p => p.lapDistance))
+
+  <span class="kw">return</span> (
+    &lt;div style={{ position: <span class="str">'relative'</span> }}&gt;
+      {laps.<span class="fn">map</span>(({ lap, color }) =&gt; (
+        &lt;SpeedTraceCanvas
+          key={lap.lapId}
+          points={<span class="fn">lttbDownsample</span>(lap.points, <span class="ty">2000</span>)}
+          color={color}
+          range={{ xMin: <span class="ty">0</span>, xMax, yMin, yMax }}
+          style={{ position: <span class="str">'absolute'</span>, top: <span class="ty">0</span>, left: <span class="ty">0</span> }}
+        /&gt;
+      ))}
+      &lt;DeltaTrace laps={laps} /&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you render a 200Hz telemetry trace covering a full race stint without freezing the browser?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Canvas, not SVG</strong> — 200Hz × 5400s race = 1,080,000 points. SVG can't handle that. Canvas 2D renders them all in milliseconds.</li>
+              <li><strong>LTTB downsampling</strong> — at a chart width of 1200px, you need at most ~2400 display points. Downsample to chart resolution using LTTB to preserve shape.</li>
+              <li><strong>Off-screen canvas</strong> — render the trace to an off-screen canvas in a Web Worker, transfer the ImageBitmap to the main thread. Zero main-thread blocking.</li>
+              <li><strong>Progressive loading</strong> — load first 10% of data, render, then load the rest in chunks. The engineer sees something immediately.</li>
+              <li><strong>Zoom = re-downsample</strong> — when the user zooms into a 5-second window, re-downsample that range at full resolution from the raw data buffer.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">A Vehicle Performance engineer wants to compare three drivers' speed traces on the same chart. Walk me through your approach.</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Align by lap distance</strong>, not elapsed time. Different lap times mean time-aligned traces are offset and misleading. Every channel is plotted against metres completed.</li>
+              <li><strong>Shared scales</strong> — all three traces use the same Y-axis scale so visual comparison is accurate. Don't auto-scale per lap.</li>
+              <li><strong>Delta trace</strong> — below the main chart, add a time-delta trace showing Driver B and C vs Driver A (the reference). This is the engineer's primary analysis tool.</li>
+              <li><strong>Colour coding</strong> — each driver gets a distinct colour, persisted in URL state so the engineer can share the view with colleagues.</li>
+              <li><strong>Channel switcher</strong> — same layout, switch between speed / throttle / brake / gear with a single click. State stays in sync.</li>
+              <li><strong>Sector markers</strong> — vertical lines at sector 1 and 2 boundaries overlaid as SVG on top of the Canvas traces.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('dataviz',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- REAL-TIME & TELEMETRY -->
+    <div class="page" id="page-realtime">
+      <div class="page-header">
+        <div class="page-tag">Technical · Critical</div>
+        <div class="page-title">Real-Time & Telemetry</div>
+        <div class="page-desc">During qualifying and the race, engineers need live telemetry with minimal latency. A slow or dropped WebSocket connection during a qualifying lap is a genuine operational problem. Know this domain cold.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>F1 Real-Time Context</strong>
+          A live telemetry stream during qualifying might carry 100+ channels at 10–200Hz each. The WebSocket message rate can exceed 1,000 messages/second. Your job is to ingest this, keep the UI at 60fps, and never drop data that the engineering team needs for post-session analysis.
+        </div>
+
+        <h2>WebSocket Architecture for High-Frequency Data</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('rt','ws')">WebSocket Manager</div>
+          <div class="tab" onclick="switchTab('rt','buffer')">Buffer & Batch</div>
+          <div class="tab" onclick="switchTab('rt','reconnect')">Reconnection</div>
+        </div>
+
+        <div id="tab-rt-ws" class="tab-content active">
+<pre><code><span class="cm">// Singleton WebSocket manager — one connection shared across all chart components</span>
+<span class="cm">// Multiple components subscribing to the same channel don't create multiple connections</span>
+
+<span class="kw">class</span> <span class="ty">TelemetryWSManager</span> {
+  <span class="kw">private</span> ws: <span class="ty">WebSocket</span> | <span class="kw">null</span> = <span class="kw">null</span>
+  <span class="kw">private</span> subscribers = <span class="kw">new</span> Map&lt;<span class="ty">string</span>, Set&lt;(data: <span class="ty">TelemetryPoint</span>) =&gt; <span class="kw">void</span>&gt;&gt;()
+
+  <span class="fn">connect</span>(url: <span class="ty">string</span>) {
+    <span class="kw">if</span> (<span class="kw">this</span>.ws?.readyState === WebSocket.OPEN) <span class="kw">return</span>
+    <span class="kw">this</span>.ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(url)
+    <span class="kw">this</span>.ws.onmessage = (e) => {
+      <span class="kw">const</span> { channel, data } = <span class="fn">JSON.parse</span>(e.data)
+      <span class="kw">this</span>.subscribers.<span class="fn">get</span>(channel)?.<span class="fn">forEach</span>(cb => <span class="fn">cb</span>(data))
+    }
+    <span class="kw">this</span>.ws.onclose = () => <span class="kw">this</span>.<span class="fn">scheduleReconnect</span>(url)
+  }
+
+  <span class="fn">subscribe</span>(channel: <span class="ty">string</span>, cb: (d: <span class="ty">TelemetryPoint</span>) =&gt; <span class="kw">void</span>) {
+    <span class="kw">if</span> (!<span class="kw">this</span>.subscribers.<span class="fn">has</span>(channel)) <span class="kw">this</span>.subscribers.<span class="fn">set</span>(channel, <span class="kw">new</span> Set())
+    <span class="kw">this</span>.subscribers.<span class="fn">get</span>(channel)!.<span class="fn">add</span>(cb)
+    <span class="kw">return</span> () => <span class="kw">this</span>.subscribers.<span class="fn">get</span>(channel)!.<span class="fn">delete</span>(cb)
+  }
+
+  <span class="kw">private</span> <span class="fn">scheduleReconnect</span>(url: <span class="ty">string</span>, delay = <span class="ty">1000</span>) {
+    <span class="fn">setTimeout</span>(() => <span class="kw">this</span>.<span class="fn">connect</span>(url), delay)
+  }
+}
+
+<span class="kw">export const</span> telemetryWS = <span class="kw">new</span> <span class="ty">TelemetryWSManager</span>()
+
+<span class="cm">// Hook for components</span>
+<span class="kw">export function</span> <span class="fn">useTelemetryChannel</span>(channel: <span class="ty">string</span>) {
+  <span class="kw">const</span> buffer = <span class="fn">useRef</span>&lt;<span class="ty">TelemetryPoint</span>[]&gt;([])
+  <span class="kw">const</span> [data, setData] = <span class="fn">useState</span>&lt;<span class="ty">TelemetryPoint</span>[]&gt;([])
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> unsub = telemetryWS.<span class="fn">subscribe</span>(channel, p => buffer.current.<span class="fn">push</span>(p))
+    <span class="kw">const</span> flush = <span class="fn">setInterval</span>(() => {
+      <span class="kw">if</span> (buffer.current.length) setData(prev => [...prev, ...buffer.current.<span class="fn">splice</span>(<span class="ty">0</span>)])
+    }, <span class="ty">100</span>) <span class="cm">// flush every 100ms = 10fps UI updates</span>
+    <span class="kw">return</span> () => { <span class="fn">unsub</span>(); <span class="fn">clearInterval</span>(flush) }
+  }, [channel])
+  <span class="kw">return</span> data
+}</code></pre>
+        </div>
+
+        <div id="tab-rt-buffer" class="tab-content">
+<pre><code><span class="cm">// Binary protocol for high-frequency data — JSON parsing overhead is significant at 1000 msg/s</span>
+<span class="cm">// Use MessagePack or a custom binary format for production telemetry streams</span>
+
+<span class="cm">// Float32Array is 4× smaller than JSON for numeric telemetry</span>
+<span class="kw">function</span> <span class="fn">decodeTelemetryFrame</span>(buffer: <span class="ty">ArrayBuffer</span>): <span class="ty">TelemetryPoint</span> {
+  <span class="kw">const</span> view = <span class="kw">new</span> <span class="ty">DataView</span>(buffer)
+  <span class="kw">return</span> {
+    timestamp: view.<span class="fn">getFloat64</span>(<span class="ty">0</span>),
+    lapDistance: view.<span class="fn">getFloat32</span>(<span class="ty">8</span>),
+    speed: view.<span class="fn">getFloat32</span>(<span class="ty">12</span>),
+    throttle: view.<span class="fn">getFloat32</span>(<span class="ty">16</span>),
+    brake: view.<span class="fn">getFloat32</span>(<span class="ty">20</span>),
+    gear: view.<span class="fn">getInt8</span>(<span class="ty">24</span>) <span class="kw">as</span> <span class="ty">TelemetryPoint</span>[<span class="str">'gear'</span>],
+    drs: view.<span class="fn">getInt8</span>(<span class="ty">25</span>) === <span class="ty">1</span>,
+    steeringAngle: view.<span class="fn">getFloat32</span>(<span class="ty">26</span>),
+  }
+}
+
+<span class="cm">// Circular buffer to cap memory usage during long sessions</span>
+<span class="kw">class</span> <span class="ty">CircularBuffer</span>&lt;T&gt; {
+  <span class="kw">private</span> buf: T[] = []
+  <span class="kw">constructor</span>(<span class="kw">private</span> maxSize: <span class="ty">number</span>) {}
+  <span class="fn">push</span>(item: T) {
+    <span class="kw">this</span>.buf.<span class="fn">push</span>(item)
+    <span class="kw">if</span> (<span class="kw">this</span>.buf.length > <span class="kw">this</span>.maxSize) <span class="kw">this</span>.buf.<span class="fn">shift</span>()
+  }
+  <span class="fn">toArray</span>() { <span class="kw">return</span> [...<span class="kw">this</span>.buf] }
+}</code></pre>
+        </div>
+
+        <div id="tab-rt-reconnect" class="tab-content">
+<pre><code><span class="cm">// Exponential back-off reconnection with connection status tracking</span>
+<span class="cm">// Engineers need to know if live data is stale — show connection state clearly</span>
+
+<span class="kw">type</span> <span class="ty">ConnectionState</span> = <span class="str">'connecting'</span> | <span class="str">'live'</span> | <span class="str">'reconnecting'</span> | <span class="str">'offline'</span>
+
+<span class="kw">function</span> <span class="fn">createReconnectingWS</span>(url: <span class="ty">string</span>, onMessage: (e: <span class="ty">MessageEvent</span>) =&gt; <span class="kw">void</span>) {
+  <span class="kw">let</span> ws: <span class="ty">WebSocket</span>, delay = <span class="ty">500</span>, maxDelay = <span class="ty">15_000</span>
+  <span class="kw">const</span> [state, setState] = [<span class="str">'connecting'</span> <span class="kw">as</span> <span class="ty">ConnectionState</span>]
+
+  <span class="kw">function</span> <span class="fn">connect</span>() {
+    ws = <span class="kw">new</span> <span class="fn">WebSocket</span>(url)
+    ws.onopen = () => { delay = <span class="ty">500</span>; <span class="cm">/* setState('live') */</span> }
+    ws.onmessage = onMessage
+    ws.onclose = () => {
+      <span class="cm">// setState('reconnecting')</span>
+      <span class="fn">setTimeout</span>(() => { delay = Math.<span class="fn">min</span>(delay * <span class="ty">2</span>, maxDelay); <span class="fn">connect</span>() }, delay)
+    }
+  }
+  <span class="fn">connect</span>()
+  <span class="kw">return</span> { close: () => ws.<span class="fn">close</span>() }
+}
+
+<span class="cm">// Always show connection state in the UI — never silently show stale data</span>
+<span class="kw">function</span> <span class="fn">ConnectionBadge</span>({ state }: { state: <span class="ty">ConnectionState</span> }) {
+  <span class="kw">const</span> colors = { live: <span class="str">'#4ade80'</span>, reconnecting: <span class="str">'#fbbf24'</span>, offline: <span class="str">'#f87171'</span>, connecting: <span class="str">'#888'</span> }
+  <span class="kw">return</span> &lt;span style={{ color: colors[state] }}&gt;● {state.<span class="fn">toUpperCase</span>()}&lt;/span&gt;
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">The WebSocket drops during qualifying. What happens in the UI and how do you recover?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Immediate visual indicator</strong> — the connection state badge switches to "RECONNECTING" in amber. Engineers must never be looking at stale data without knowing it.</li>
+              <li><strong>Exponential back-off reconnect</strong> — attempt at 500ms, 1s, 2s, 4s... cap at 15s. Don't hammer the server during a network blip.</li>
+              <li><strong>On reconnect, request a gap fill</strong> — send the last received timestamp so the server can replay any missed points. This ensures the post-session analysis has a complete dataset even if the UI briefly disconnected.</li>
+              <li><strong>Buffer the most recent N seconds</strong> — in a circular buffer. If reconnect is near-instant, the live trace is seamless. If it takes longer, the engineer sees a gap in the trace rather than corrupt data.</li>
+              <li><strong>Never silently resume</strong> — when reconnected, briefly flash "RECONNECTED" so the engineer knows there was a drop and can assess if any critical data was missed.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">WebSockets vs SSE vs polling — when would you use each in an F1 context?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>WebSockets</strong> — full-duplex, high-frequency telemetry during live sessions. Client can also send control messages (subscribe/unsubscribe to channels). The right choice for live race data.</li>
+              <li><strong>SSE (Server-Sent Events)</strong> — server-push only, simpler, auto-reconnects. Good for pipeline status updates, session state changes (yellow flag, safety car), result notifications. Simpler to implement and debug than WebSockets for one-directional flows.</li>
+              <li><strong>Polling</strong> — only when live data isn't needed and the source doesn't support push. Wind tunnel batch results, historical lap data loads. The simplicity is worth it when latency doesn't matter.</li>
+              <li><strong>F1 split:</strong> WebSocket for all live telemetry channels; SSE for session status (track state, flag conditions, tyre strategy alerts); REST for historical data retrieval.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('realtime',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- PERFORMANCE AT SCALE -->
+    <div class="page" id="page-performance">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">Performance at Scale</div>
+        <div class="page-desc">F1 datasets are large. A single race session produces millions of telemetry points. A CFD run produces gigabytes of output. Your job is to keep the browser responsive while engineers navigate all of it.</div>
+      </div>
+
+      <div class="section">
+        <h2>Web Workers for Heavy Computation</h2>
+        <p>Data processing — downsampling, filtering, aggregation, coordinate transforms — should never run on the main thread. Web Workers keep the UI at 60fps regardless of dataset size.</p>
+<pre><code><span class="cm">// worker/telemetry.worker.ts — runs off the main thread</span>
+<span class="kw">self</span>.onmessage = (e: <span class="ty">MessageEvent</span>&lt;{ points: <span class="ty">TelemetryPoint</span>[]; targetCount: <span class="ty">number</span> }&gt;) => {
+  <span class="kw">const</span> { points, targetCount } = e.data
+  <span class="kw">const</span> downsampled = <span class="fn">lttbDownsample</span>(points, targetCount)
+  <span class="kw">self</span>.<span class="fn">postMessage</span>({ downsampled })
+}
+
+<span class="cm">// Hook to use the worker</span>
+<span class="kw">export function</span> <span class="fn">useDownsampledData</span>(points: <span class="ty">TelemetryPoint</span>[], targetCount: <span class="ty">number</span>) {
+  <span class="kw">const</span> worker = <span class="fn">useRef</span>(<span class="kw">new</span> <span class="ty">Worker</span>(<span class="kw">new</span> <span class="ty">URL</span>(<span class="str">'../worker/telemetry.worker'</span>, import.meta.url)))
+  <span class="kw">const</span> [result, setResult] = <span class="fn">useState</span>&lt;<span class="ty">TelemetryPoint</span>[]&gt;([])
+
+  <span class="fn">useEffect</span>(() => {
+    worker.current.<span class="fn">postMessage</span>({ points, targetCount })
+    worker.current.onmessage = (e) => <span class="fn">setResult</span>(e.data.downsampled)
+  }, [points, targetCount])
+
+  <span class="kw">return</span> result
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Virtual Scrolling for Large Tables</h2>
+        <p>An engineer browsing 10,000 laps of historical data needs a table. Rendering 10,000 DOM rows freezes the browser. Virtualise — render only what's visible.</p>
+<pre><code><span class="cm">// Use @tanstack/react-virtual — battle-tested, works with variable row heights</span>
+<span class="kw">import</span> { useVirtualizer } <span class="kw">from</span> <span class="str">'@tanstack/react-virtual'</span>
+
+<span class="kw">export function</span> <span class="fn">LapHistoryTable</span>({ laps }: { laps: <span class="ty">LapSummary</span>[] }) {
+  <span class="kw">const</span> parentRef = <span class="fn">useRef</span>&lt;<span class="ty">HTMLDivElement</span>&gt;(<span class="kw">null</span>)
+  <span class="kw">const</span> virtualizer = <span class="fn">useVirtualizer</span>({
+    count: laps.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => <span class="ty">40</span>,
+  })
+
+  <span class="kw">return</span> (
+    &lt;div ref={parentRef} style={{ height: <span class="str">'600px'</span>, overflow: <span class="str">'auto'</span> }}&gt;
+      &lt;div style={{ height: virtualizer.<span class="fn">getTotalSize</span>(), position: <span class="str">'relative'</span> }}&gt;
+        {virtualizer.<span class="fn">getVirtualItems</span>().<span class="fn">map</span>(vItem =&gt; (
+          &lt;div key={vItem.key} style={{ position: <span class="str">'absolute'</span>, top: vItem.start, height: vItem.size, width: <span class="str">'100%'</span> }}&gt;
+            &lt;LapRow lap={laps[vItem.index]} /&gt;
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Memory Management for Long Sessions</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Cap Live Data Buffers</h3>
+            <p>A 2-hour race at 200Hz = 1.44M points per channel. Keep the last N points in a circular buffer for the live view. Store the full dataset on the server — fetch historical ranges on demand.</p>
+          </div>
+          <div class="card">
+            <h3>Typed Arrays Over Object Arrays</h3>
+            <p><code>Float64Array</code> of 1M numbers uses ~8MB. An equivalent array of objects uses ~100MB+ (object overhead, GC pressure). Use typed arrays for all numeric time-series channels.</p>
+          </div>
+          <div class="card">
+            <h3>Lazy Load Heavy Charts</h3>
+            <p>Load chart libraries (D3, heavy charting dependencies) only when the chart is in view. <code>dynamic(() => import('./HeavyChart'))</code> with IntersectionObserver. A dashboard with 10 charts shouldn't download all chart code upfront.</p>
+          </div>
+          <div class="card">
+            <h3>Cleanup on Unmount</h3>
+            <p>Always close WebSockets, cancel pending fetches, clear intervals in <code>useEffect</code> cleanup. An engineer navigating between sessions must not accumulate background connections that consume bandwidth and CPU.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you profile and diagnose performance issues in a React data visualisation app?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>React DevTools Profiler</strong> — identify which components re-render on every update and how long they take. Start here before guessing.</li>
+              <li><strong>Chrome Performance panel</strong> — record a session, look for long tasks (&gt;50ms) on the main thread. Usually find expensive transforms running synchronously on every render.</li>
+              <li><strong>Why Did You Render</strong> — library that logs unnecessary re-renders with the props that changed. Invaluable for spotting missing <code>memo()</code> or unstable object references.</li>
+              <li><strong>Memory panel</strong> — take heap snapshots before and after navigating between sessions. Detached DOM nodes or accumulating event listeners show up here.</li>
+              <li><strong>Fix order</strong>: first eliminate unnecessary re-renders (memo, useMemo, useCallback), then move heavy computation to Web Workers, then switch SVG → Canvas for high-data-point renders, then profile again.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('performance',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- INTERNAL TOOLING ARCHITECTURE -->
+    <div class="page" id="page-tooling">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">Internal Tooling Architecture</div>
+        <div class="page-desc">Everything you build is for internal engineering users — not consumers. The architecture reflects this: dense, precise, fast, with export capabilities and role-based access. Legacy maintenance is also explicitly part of this role.</div>
+      </div>
+
+      <div class="section">
+        <h2>What "Internal Tools for Engineers" Means in Practice</h2>
+        <div class="grid2">
+          <div class="card accent-border">
+            <h3>The Users Are Domain Experts</h3>
+            <p>Aerodynamicists, simulation engineers, and data scientists know their data better than you do. They will immediately notice a wrong scale, a missing data point, or a chart axis that doesn't start at zero. Build with precision — correctness is more important than aesthetics.</p>
+          </div>
+          <div class="card blue-border">
+            <h3>Every Table Needs Export</h3>
+            <p>Engineers will always want to pull the data into Excel or a Python notebook for their own analysis. Build CSV/JSON export into every data table from day one — it's not a feature, it's a basic expectation.</p>
+          </div>
+          <div class="card">
+            <h3>URL State Is Critical</h3>
+            <p>An engineer who finds an interesting pattern in the data needs to share the exact view with a colleague — same lap selection, same channel, same zoom window. Encode all filter/selection state in the URL. This is a collaboration tool, not just a display tool.</p>
+          </div>
+          <div class="card">
+            <h3>Legacy Systems Are Part of the Job</h3>
+            <p>The JD explicitly mentions maintaining legacy applications. Show you can work with existing codebases — incrementally improve rather than rewrite, understand why something was built the way it was before changing it, and don't break tools engineers depend on daily.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>URL State — Shareable Analysis Views</h2>
+<pre><code><span class="cm">// Encode the full analysis state in the URL — laps selected, channel, zoom range</span>
+<span class="cm">// So engineers can share exact views via a link</span>
+
+<span class="kw">import</span> { useSearchParams } <span class="kw">from</span> <span class="str">'next/navigation'</span>
+
+<span class="kw">function</span> <span class="fn">useTelemetryState</span>() {
+  <span class="kw">const</span> [params, setParams] = <span class="fn">useSearchParams</span>()
+
+  <span class="kw">const</span> state = {
+    lapIds: params.<span class="fn">getAll</span>(<span class="str">'lap'</span>),           <span class="cm">// ?lap=abc&lap=def</span>
+    channel: params.<span class="fn">get</span>(<span class="str">'ch'</span>) ?? <span class="str">'speed'</span>,   <span class="cm">// ?ch=throttle</span>
+    zoomMin: <span class="ty">Number</span>(params.<span class="fn">get</span>(<span class="str">'zMin'</span>)) || <span class="ty">0</span>,
+    zoomMax: <span class="ty">Number</span>(params.<span class="fn">get</span>(<span class="str">'zMax'</span>)) || <span class="ty">Infinity</span>,
+  }
+
+  <span class="kw">const</span> setChannel = (ch: <span class="ty">string</span>) => {
+    <span class="kw">const</span> next = <span class="kw">new</span> <span class="ty">URLSearchParams</span>(params.<span class="fn">toString</span>())
+    next.<span class="fn">set</span>(<span class="str">'ch'</span>, ch)
+    <span class="cm">// router.replace with the new params — no page reload</span>
+  }
+
+  <span class="kw">return</span> { ...state, setChannel }
+}</code></pre>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">You're handed a legacy web app built 6 years ago — no tests, jQuery, inline styles. How do you approach it?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Understand before touching.</strong> Run it, talk to the engineers who use it, understand what it does and what they rely on. The worst outcome is a rewrite that breaks something they depended on silently.</li>
+              <li><strong>Don't rewrite first.</strong> Rewriting legacy code is almost always slower and riskier than incremental improvement. Rewrites lose institutional knowledge baked into the original code.</li>
+              <li><strong>Add tests around the critical paths first.</strong> Characterisation tests — tests that document the current behaviour, not ideal behaviour. This gives you a safety net for any future change.</li>
+              <li><strong>Identify the highest-value incremental improvements.</strong> Can I replace jQuery DOM manipulation with React for one component without touching the rest? Can I add TypeScript to the file I'm touching today?</li>
+              <li><strong>Make it better than you found it, not perfect.</strong> The boy scout rule — leave the code cleaner than you found it, without a full rewrite blocking feature work.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you gather requirements from an Aerodynamics engineer who knows nothing about frontend development?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Ask about the job, not the software.</strong> "Walk me through what you do with this data" not "what features do you want in the UI?" They know their workflow — you discover the software requirements from that.</li>
+              <li><strong>Show, don't ask.</strong> Bring a rough prototype or mockup. Engineers respond much better to a concrete thing they can react to than an abstract requirements conversation.</li>
+              <li><strong>Ask about the current workaround.</strong> "What do you do today when you need to compare two CFD runs?" — the answer tells you exactly what the tool needs to replace.</li>
+              <li><strong>Validate the data model early.</strong> "So you'd have one row per CFD run, and columns for each aero coefficient — does that match how you think about it?" Get this wrong and the whole UI is wrong.</li>
+              <li><strong>Establish what "correct" means.</strong> For an Aero engineer, the chart being visually nice matters less than the numbers being right. Make sure you know what correct looks like before you ship.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('tooling',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- F1 DATA DOMAIN -->
+    <div class="page" id="page-domain">
+      <div class="page-header">
+        <div class="page-tag">Domain Knowledge</div>
+        <div class="page-title">F1 Data Domain</div>
+        <div class="page-desc">You don't need to be an engineer to interview well here — but you need enough F1 data vocabulary to hold a technical conversation without needing everything explained. Know what CFD is, what telemetry channels exist, and what each engineering team actually does with data.</div>
+      </div>
+
+      <div class="section">
+        <h2>F1 Vocabulary to Know Cold</h2>
+        <table>
+          <thead><tr><th>Term</th><th>What it means</th><th>Relevance to your role</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Telemetry</strong></td><td>Real-time sensor data from the car — speed, throttle, brake, G-forces, tyre temps, etc.</td><td>The primary data source you visualise. Comes via WebSocket during sessions.</td></tr>
+            <tr><td><strong>CFD</strong></td><td>Computational Fluid Dynamics — simulating airflow around the car to predict aerodynamic performance.</td><td>CFD outputs are complex datasets (pressure maps, velocity fields). Aero engineers compare CFD runs in tools you build.</td></tr>
+            <tr><td><strong>Aero Balance</strong></td><td>The front/rear downforce distribution. Affects how the car turns vs how stable it is on straights.</td><td>Aero engineers track this across car configurations. Your tools surface the trend.</td></tr>
+            <tr><td><strong>Lap Delta</strong></td><td>The time difference between two laps at every point on the circuit.</td><td>The most important derived data view. A positive delta means you're losing time, negative means gaining.</td></tr>
+            <tr><td><strong>Tyre Compound</strong></td><td>Soft / Medium / Hard / Intermediate / Wet — different rubber compositions with different performance and degradation profiles.</td><td>Tyre data must always be annotated with compound — a lap time on Softs vs Hards is not comparable.</td></tr>
+            <tr><td><strong>DRS</strong></td><td>Drag Reduction System — a movable flap on the rear wing that reduces drag on straights. Open/closed binary state.</td><td>A telemetry channel you'd show — affects straight-line speed. DRS zones are fixed points on a circuit.</td></tr>
+            <tr><td><strong>Sector Time</strong></td><td>The circuit is divided into 3 sectors. Sector times reveal where time is lost/gained vs a reference.</td><td>Your lap comparison tools always show sector times alongside full lap time.</td></tr>
+            <tr><td><strong>Correlation</strong></td><td>How well the simulation (CFD, lap sim) predicts the real car's performance. A key metric the engineering teams track.</td><td>Your tools might surface correlation data — "the simulation predicted X, we measured Y".</td></tr>
+            <tr><td><strong>ERS</strong></td><td>Energy Recovery System — harvests energy under braking, deploys it as extra power. Battery state of charge is a live channel.</td><td>Another telemetry channel. Power unit data is sensitive — may be restricted in tooling.</td></tr>
+            <tr><td><strong>Understeer / Oversteer</strong></td><td>Understeer = front slides first, car goes wide. Oversteer = rear slides first, car rotates. Related to aero balance and setup.</td><td>Vehicle Performance engineers discuss these in the context of setup changes. Know the terms.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>What Each Team's Data Looks Like</h2>
+        <div class="grid3">
+          <div class="card" style="border-left:3px solid var(--accent)">
+            <h3>Aerodynamics</h3>
+            <p>CFD run results: pressure coefficients, drag/downforce values, surface flow visualisations. Time-series of aero metrics across a development campaign (many runs, tracked over weeks/months).</p>
+            <p><strong>Needs from your tools:</strong> comparative analysis across runs, trend charts over the development cycle, side-by-side config comparison, data export for further analysis.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--blue)">
+            <h3>Vehicle Performance</h3>
+            <p>Lap telemetry (50+ channels at high frequency), sector times, tyre degradation data, setup parameter changes and their effect on lap time. Race strategy simulations.</p>
+            <p><strong>Needs from your tools:</strong> multi-lap speed trace overlay, channel-switching viewer, delta traces, setup comparison, live telemetry during sessions.</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--green)">
+            <h3>Data Science</h3>
+            <p>ML model outputs, statistical analyses, correlation studies between sim and reality. Lap time prediction models, tyre degradation models, race strategy optimisation.</p>
+            <p><strong>Needs from your tools:</strong> model output visualisation, data exploration tables with export, experiment comparison, anomaly flagging.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">What's the difference between a CFD run comparison tool and a telemetry viewer — and why does it matter for how you build them?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>CFD data is <strong>batch, spatial, and relatively small</strong> — a run produces a fixed set of aero coefficients and surface maps. The key query is "compare run A against run B across a parameter sweep." This is a table + overlay chart problem. Data arrives once, no real-time stream.</p>
+            <p>Telemetry is <strong>time-series, high-frequency, and potentially live</strong> — 50+ channels at up to 200Hz per session. The key query is "show me speed and throttle overlaid for laps 23 and 31 across the S1 braking zone." This is a Canvas rendering problem with zoom/brush interaction. During a session, data streams in live.</p>
+            <p>They need different architectures: CFD is a standard React app with a comparison table and SVG overlay charts. Telemetry needs Canvas rendering, LTTB downsampling, Web Workers for processing, and WebSocket for live feeds. Conflating them leads to over-engineering one and under-engineering the other.</p>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('domain',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- SYSTEM DESIGN -->
+    <div class="page" id="page-systemdesign">
+      <div class="page-header">
+        <div class="page-tag">Technical</div>
+        <div class="page-title">System Design</div>
+        <div class="page-desc">Expect a system design question. The most likely scenario: "Design a telemetry dashboard for Vehicle Performance engineers." Walk through architecture, data flow, component structure, real-time handling, and performance strategy.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Most Likely Design Question</strong>
+          "Design a web application that lets Vehicle Performance engineers compare telemetry from multiple laps in real-time during a session." This touches every core skill: React architecture, real-time data, Canvas visualisation, performance, and understanding the user.
+        </div>
+
+        <h2>Telemetry Dashboard — Full Design</h2>
+        <pre><code>
+  ┌──────────────────────────────────────────────────────────────┐
+  │  Browser                                                     │
+  │  ┌─────────────────────────────────────────────────────┐    │
+  │  │ Lap Selector  (session data via REST on load)        │    │
+  │  ├─────────────────────────────────────────────────────┤    │
+  │  │ Channel Tabs: Speed | Throttle | Brake | Gear | DRS │    │
+  │  ├─────────────────────────────────────────────────────┤    │
+  │  │ Canvas: Multi-lap trace (LTTB downsampled)           │    │
+  │  │         SVG overlay: sector markers, DRS zones       │    │
+  │  ├─────────────────────────────────────────────────────┤    │
+  │  │ Canvas: Delta trace (Driver B - Reference)           │    │
+  │  ├─────────────────────────────────────────────────────┤    │
+  │  │ Live Lap Panel (WebSocket) — current lap updating    │    │
+  │  ├─────────────────────────────────────────────────────┤    │
+  │  │ Sector Time Table | Export CSV                       │    │
+  │  └─────────────────────────────────────────────────────┘    │
+  └──────────────────┬───────────────────────────────────────────┘
+                     │ REST (historical laps)
+                     │ WebSocket (live telemetry)
+  ┌──────────────────▼───────────────────────────────────────────┐
+  │  API Gateway / BFF                                           │
+  │  • REST endpoint: GET /sessions/:id/laps                     │
+  │  • REST endpoint: GET /laps/:id/telemetry?channels=speed,... │
+  │  • WebSocket: /ws/live/:sessionId (fan-out to subscribers)   │
+  └──────────────────────────────────────────────────────────────┘</code></pre>
+
+        <h2>Architecture Decisions to Explain</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>State Architecture</h3>
+            <ul class="check-list">
+              <li>URL params hold: selected lap IDs, active channel, zoom range — shareable</li>
+              <li>Zustand store holds: raw telemetry buffers, live data, session metadata</li>
+              <li>Derived data (downsampled points, delta trace) computed with <code>useMemo</code></li>
+              <li>Live WebSocket data → <code>useRef</code> buffer → flushed to store at 10fps</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Rendering Architecture</h3>
+            <ul class="check-list">
+              <li>Canvas 2D for all high-point-count traces</li>
+              <li>SVG overlay for interactive markers, hover crosshair, zoom handles</li>
+              <li>Web Worker for LTTB downsampling — off main thread</li>
+              <li>Each trace is a separate Canvas layer — z-stacked with CSS</li>
+              <li><code>requestAnimationFrame</code> loop for live trace updates</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How would you handle a shared component library across multiple internal tools — aero tool, telemetry viewer, strategy tool?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <ul>
+              <li><strong>Start with colocated components</strong> — don't abstract prematurely. Extract to a shared library only when the same component is genuinely needed in 2+ tools with the same requirements.</li>
+              <li><strong>Shared design tokens first</strong> — colours, spacing, typography as CSS variables or a shared theme object. This is the highest value, lowest complexity starting point.</li>
+              <li><strong>Internal package</strong> — an <code>@vcarb/ui</code> npm package in a monorepo. Each tool imports from it. Versioned so a breaking change in one chart component doesn't break all tools simultaneously.</li>
+              <li><strong>Storybook</strong> — document every shared component with real engineering data. Makes it easy for the team to see what exists before building something new.</li>
+              <li><strong>Don't share domain logic</strong> — the telemetry downsampling algorithm lives in the telemetry tool, not the shared library. Shared libraries should contain UI components, not F1 domain knowledge.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('systemdesign',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- BEHAVIOURAL -->
+    <div class="page" id="page-behavioral">
+      <div class="page-header">
+        <div class="page-tag">Behavioural</div>
+        <div class="page-title">Behavioural &amp; Soft Skills</div>
+        <div class="page-desc">Both interviewers are technically senior but also team leaders — they're evaluating whether you'll communicate well with non-web engineers, handle ambiguity in a fast-paced race team, and elevate the team rather than just deliver tasks.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout">
+          <strong>What "good" looks like to this team:</strong> Someone who <em>asks good questions before writing code</em>, pushes back constructively when requirements are unclear, understands that an unusable tool costs more than a delayed one, and communicates complexity to non-web colleagues clearly.
+        </div>
+
+        <h2>Story Bank — Prepare One Per Theme</h2>
+        <table>
+          <thead><tr><th>Theme</th><th>What they're probing</th><th>Story angle</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Cross-functional collaboration</strong></td><td>Can you work with domain experts (aerodynamicists, data scientists) who aren't software engineers?</td><td>A time you had to extract precise requirements from someone with zero interest in the technical constraints.</td></tr>
+            <tr><td><strong>Ambiguous requirements</strong></td><td>F1 moves fast. Requirements change race to race. Can you work with incomplete information?</td><td>A project where the spec kept moving — how you stabilised it (prototype + feedback loop, not endless meetings).</td></tr>
+            <tr><td><strong>Technical disagreement</strong></td><td>Can you push back without alienating people? Will you capitulate under pressure?</td><td>A time you defended a technical decision, lost (or won), and what you did next.</td></tr>
+            <tr><td><strong>Legacy code</strong></td><td>They have tools in production. Can you improve incrementally without breaking things?</td><td>A codebase you inherited that was a mess — your strategy for improving it alongside feature delivery.</td></tr>
+            <tr><td><strong>Deadline pressure</strong></td><td>In F1, deadlines are race weekends. Non-negotiable. Can you scope under pressure?</td><td>When you had to cut scope and how you decided what to cut (most impact first, not easiest first).</td></tr>
+            <tr><td><strong>Proactive improvement</strong></td><td>Are you waiting to be told what to build or do you notice problems and propose solutions?</td><td>Something you identified as a pain point for your team/users and fixed without being asked.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>Q&A</h2>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">How do you approach building tools for engineers who know their domain deeply but can't articulate what they need from a UI?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>I don't start with requirements documents. I start by watching them use the current tool (or workaround) for 20 minutes. The pain points surface in that session more clearly than any brief would.</p>
+            <p>Then I build a clickable prototype — not a complete feature, a navigable mock — and sit with them while they try to complete a real task. The questions they ask ("can I sort this by that?", "where's the thing I used yesterday?") tell me what the mental model is.</p>
+            <p>I also try to learn just enough domain language to speak it. I won't understand aero balance as well as an aerodynamicist, but if I know what a CFD run is and why front/rear balance matters, I can have the conversation without making them explain the same thing three times.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">This is a small web team within a large engineering organisation. How do you stay visible and ensure your work has impact?</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p>Small teams in large orgs have an advantage: a focused scope. I'd stay close to the engineering teams we serve — regular check-ins, attending a few of their standups or reviews to hear what's slowing them down.</p>
+            <p>For visibility: demo what you ship, internally. A five-minute demo of a new telemetry view to the VP team creates more goodwill than a Confluence page describing it. Engineers are pragmatic — if the tool saves them an hour a week, they'll advocate for the web team.</p>
+            <p>And I'd be deliberate about measuring impact. If a new export feature means the data science team spends 30 minutes less per analysis run, track that. Numbers make the invisible team visible.</p>
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">Tell me about a time you disagreed with a technical decision that was made above you.</span><span class="qa-q-arrow">▶</span></div>
+          <div class="qa-a">
+            <p><em>[Your own story here — use the STAR structure. Situation, Task, Action, Result]</em></p>
+            <p><strong>Key points to hit:</strong></p>
+            <ul>
+              <li>You raised the concern clearly, with reasoning, not emotion</li>
+              <li>You were specific about the risk — not "I don't like it" but "this will cause X in production"</li>
+              <li>You accepted the outcome even if you disagreed, and didn't revisit it unless your prediction proved correct</li>
+              <li>If you were right: you were matter-of-fact about it, not vindicated-feeling</li>
+              <li>If you were wrong: you updated your model, which is the correct outcome</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('behavioral',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- QUESTIONS TO ASK -->
+    <div class="page" id="page-questions">
+      <div class="page-header">
+        <div class="page-tag">Strategy</div>
+        <div class="page-title">Questions to Ask</div>
+        <div class="page-desc">Your questions signal what you care about. Don't ask things you could have Googled. Ask things that show you've thought deeply about the role and are genuinely curious about how this team works.</div>
+      </div>
+
+      <div class="section">
+        <div class="callout gold">
+          <strong>Rule of thumb:</strong> One question about the tech stack, one about team dynamics, one about impact measurement, one about growth. Don't ask about salary or benefits in the technical round.
+        </div>
+
+        <h2>For the Technical Leads</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>On the Product &amp; Team</h3>
+            <ul class="check-list">
+              <li>What does a good week for the web team look like? What would a bad week look like?</li>
+              <li>How do you decide what to build next — does the engineering team come to you with requests, or does the web team proactively identify pain points?</li>
+              <li>How large is the web team and how is work divided between you?</li>
+              <li>What's the tool that's currently causing the most friction for the engineering teams you serve?</li>
+              <li>How close does the web team work with aerodynamics and vehicle performance day-to-day?</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>On the Technology</h3>
+            <ul class="check-list">
+              <li>What's the current frontend stack and what's been the biggest pain point with it?</li>
+              <li>How much of the existing tooling is greenfield vs inherited legacy — and is there an active programme to modernise?</li>
+              <li>How does live telemetry data reach the browser today — is there an existing WebSocket infrastructure or would that be something new?</li>
+              <li>What does the data team expect in terms of API design — do they care about the shape of the JSON, or do you own the API layer entirely?</li>
+              <li>How do you handle the security model — some data (ERS, strategy) must be restricted. Is that access control already in place?</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>On Growth &amp; Direction</h2>
+        <div class="grid2">
+          <div class="card">
+            <ul class="check-list">
+              <li>Where do you see the web tooling capability in 2 years — more tooling, more real-time, closer integration with simulation?</li>
+              <li>Is there any appetite to build reusable component infrastructure that spans multiple internal tools — or is it each tool is its own codebase?</li>
+              <li>What would make someone exceptionally good in this role — beyond technical skills?</li>
+            </ul>
+          </div>
+          <div class="card">
+            <ul class="check-list">
+              <li>How do race weekends affect the team — are you expected to be available, or is operations handled separately?</li>
+              <li>What's the balance between long-form project work (building new tools) and reactive work (fixing issues, quick feature requests)?</li>
+              <li>How do you measure success for this team — usage metrics, engineer satisfaction, deployment frequency?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('questions',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+    <!-- FLASHCARDS -->
+    <div class="page" id="page-flashcards">
+      <div class="page-header">
+        <div class="page-tag">Quick Reference</div>
+        <div class="page-title">Flashcards</div>
+        <div class="page-desc">Quick-fire definitions and answers. Use these 30 minutes before the interview to prime your brain. Don't read them cold — think your own answer first, then reveal.</div>
+      </div>
+
+      <div class="section">
+        <h2>Core Concepts</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What is LTTB and when do you use it?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a"><strong>Largest-Triangle-Three-Buckets.</strong> A downsampling algorithm that preserves the visual shape of a time-series while reducing point count. Use it when you have millions of telemetry samples but a canvas width of only 1200px — there's no point rendering more points than pixels. Run in a Web Worker to avoid blocking the main thread.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">Canvas vs SVG — when does Canvas win?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">Canvas wins when you have <strong>more than ~5,000 points</strong> or need animation at 60fps. SVG becomes a DOM bottleneck at scale. Canvas is a pixel buffer — once drawn, the browser doesn't care about individual elements. SVG wins when you need accessibility, CSS animations, or interactive per-element hover.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">Why align lap comparison by distance, not time?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">Two laps take different amounts of time — the faster lap is shorter in duration. If you align by time, the traces are out of phase by the lap delta at every point. Aligning by <strong>distance along the circuit</strong> keeps both laps at the same physical location on the x-axis, so you can see where time is lost and gained.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What is a discriminated union in TypeScript?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">A union type where each member has a <strong>shared literal field</strong> (usually <code>type</code> or <code>kind</code>) that narrows the type in a switch/if block. <code>{ type: 'loaded'; data: T } | { type: 'error'; error: Error }</code> — after checking <code>state.type === 'loaded'</code>, TypeScript knows <code>data</code> exists.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What's a circular buffer and why use it for telemetry?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">A fixed-size array that overwrites the oldest entry when full. For live telemetry, you only want the <strong>last N seconds</strong> of data visible in the live view. A circular buffer means you never allocate more memory than needed and never need to shift the array (expensive for large arrays).</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">Why use <code>useRef</code> instead of <code>useState</code> for a WebSocket buffer?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">WebSocket messages can arrive 200 times per second. Every <code>setState</code> triggers a re-render. Storing incoming data in a <code>useRef</code> buffer and <strong>flushing to state at a capped rate</strong> (e.g. every 100ms) means React renders at ~10fps, not 200fps. The ref update is synchronous and doesn't trigger re-renders.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What is a branded/nominal type in TypeScript?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">TypeScript uses structural typing — two types with the same shape are interchangeable. A branded type adds a <strong>phantom field</strong> (<code>_brand: 'Seconds'</code>) to make types nominally distinct. Prevents <code>speed: Metres</code> being passed as <code>duration: Seconds</code> — they're both <code>number</code> structurally, but the brand makes the compiler reject the swap.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What is DPR and why does it matter for Canvas?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a"><strong>devicePixelRatio.</strong> On retina/HiDPI screens, 1 CSS pixel = 2+ physical pixels. If your Canvas element is 800px wide but you only draw at 800px resolution, it looks blurry. Fix: set canvas width/height to <code>800 * dpr</code>, scale the context by <code>dpr</code>, but keep CSS size at 800px. Sharp on all displays.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">What is a Web Worker and what work should go there?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">A background thread that can run JavaScript without blocking the main thread (and therefore the UI). Send it: <strong>CPU-heavy computation</strong> — LTTB downsampling of 500k telemetry points, parsing large binary buffers, statistical calculations. Don't send it: DOM manipulation (can't), state management, UI logic. Communicate via <code>postMessage</code>.</div>
+          </div>
+
+          <div class="qa-item" onclick="toggleQA(this)">
+            <div class="qa-q"><span class="qa-q-label">?</span><span class="qa-q-text">Why encode complex state in the URL for internal tools?</span><span class="qa-q-arrow">▶</span></div>
+            <div class="qa-a">Because engineers share results with colleagues. If the active laps, channel selection, and zoom range are in the URL, you can copy the address bar and send it — the recipient sees the exact same view. Without URL state, sharing requires screenshots or lengthy descriptions. Internal tools get enormous value from <strong>shareable, bookmarkable views</strong>.</div>
+          </div>
+
+        </div>
+      </div>
+      <button class="mark-done-btn" onclick="markDone('flashcards',this)"><span>✓</span> Mark section reviewed</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const pages = ['overview','interviewers','react','dataviz','realtime','performance','tooling','domain','systemdesign','behavioral','questions','flashcards'];
+  const total = pages.length;
+  const done = new Set();
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+    const navItem = document.querySelector('[data-page="' + id + '"]');
+    if (navItem) navItem.classList.add('active');
+  }
+
+  function switchTab(group, tab) {
+    document.querySelectorAll('.tab[data-group="' + group + '"]').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn[data-group="' + group + '"]').forEach(b => b.classList.remove('active'));
+    const target = document.getElementById('tab-' + group + '-' + tab);
+    if (target) target.classList.add('active');
+    const btn = document.querySelector('.tab-btn[data-group="' + group + '"][data-tab="' + tab + '"]');
+    if (btn) btn.classList.add('active');
+  }
+
+  function toggleQA(el) {
+    el.classList.toggle('open');
+  }
+
+  function markDone(id, btn) {
+    done.add(id);
+    btn.classList.add('done');
+    btn.innerHTML = '<span>✓</span> Reviewed';
+    const navItem = document.querySelector('[data-page="' + id + '"]');
+    if (navItem) navItem.classList.add('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = done.size;
+    document.querySelector('.progress-text').textContent = count + ' of ' + total + ' sections reviewed';
+    document.querySelector('.progress-fill').style.width = ((count / total) * 100) + '%';
+  }
+
+  // Init
+  showPage('overview');
+  updateProgress();
+</script>
+</body>
+</html>
